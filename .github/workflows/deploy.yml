@@ -15,7 +15,7 @@ jobs:
       - name: Deploy to public repository
         uses: peaceiris/actions-gh-pages@v4
         with:
-          deploy_key: ${{ secrets.DEPLOY_KEY }}
+          personal_token: ${{ secrets.DEPLOY_TOKEN }}
           external_repository: XOverLib/xoverlib.github.io
           publish_branch: main
           publish_dir: ./
