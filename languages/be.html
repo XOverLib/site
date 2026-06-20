@@ -1,1 +1,223 @@
+<!DOCTYPE html>
+<html lang="be">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XOVER — Міжнародны цэнтр графічнай літаратуры</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            background: #ffffff;
+            color: #1e1e1e;
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 2.5rem 2rem;
+            border-radius: 24px;
+        }
+        .lang-switch {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 0.3rem;
+            margin-bottom: 1.5rem;
+        }
+        .lang-btn {
+            background: none;
+            border: 2px solid #c44536;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            color: #c44536;
+            transition: 0.2s;
+            white-space: nowrap;
+            text-decoration: none;
+        }
+        .lang-btn.active {
+            background: #c44536;
+            color: #fff;
+        }
+        .lang-btn:hover {
+            background: #c44536;
+            color: #fff;
+        }
+        .lang-btn .flag { margin-right: 0.2rem; }
 
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .logo-area img { height: 60px; width: auto; }
+
+        h1 { font-size: 3rem; font-weight: 700; letter-spacing: -0.02em; color: #0b1a2e; }
+        .subhead {
+            font-size: 1.4rem;
+            font-weight: 400;
+            color: #c44536;
+            margin-top: 0.25rem;
+            border-left: 5px solid #c44536;
+            padding-left: 1.25rem;
+        }
+        .badge-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem 2.5rem;
+            margin: 2rem 0 2.5rem;
+            background: #f8f6f2;
+            padding: 1.25rem 1.75rem;
+            border-radius: 40px;
+        }
+        .badge-item { font-weight: 600; font-size: 1.1rem; color: #0b1a2e; }
+        .badge-item span { font-weight: 300; color: #c44536; }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-top: 2.8rem;
+            margin-bottom: 1.2rem;
+            border-bottom: 3px solid #c44536;
+            padding-bottom: 0.5rem;
+            color: #0b1a2e;
+        }
+        .gcd-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px,1fr));
+            gap: 1rem;
+            background: #f8f6f2;
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin: 1.2rem 0 1.8rem;
+        }
+        .stat { text-align: center; }
+        .stat-number { font-size: 2.2rem; font-weight: 700; color: #0b1a2e; }
+        .stat-label { font-size: 0.9rem; color: #c44536; }
+
+        ul { padding-left: 1.5rem; margin: 0.8rem 0 1.5rem; }
+        li { margin-bottom: 0.4rem; }
+        .link-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem 2rem;
+            margin: 1.5rem 0 0.5rem;
+        }
+        .link-list a {
+            color: #c44536;
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px solid transparent;
+            transition: 0.2s;
+        }
+        .link-list a:hover { border-bottom-color: #c44536; }
+        .footer {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #c44536;
+            font-size: 0.95rem;
+            color: #0b1a2e;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2.2rem; }
+            .subhead { font-size: 1.1rem; }
+            .badge-grid { flex-direction: column; gap: 0.5rem; }
+            .logo-area img { height: 40px; }
+            .lang-btn { font-size: 0.7rem; padding: 0.1rem 0.4rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="lang-switch">
+        <a href="/" class="lang-btn"><span class="flag">🇷🇺</span></a>
+        <a href="/languages/en.html" class="lang-btn"><span class="flag">🇬🇧</span></a>
+        <a href="/languages/am.html" class="lang-btn"><span class="flag">🇦🇲</span></a>
+        <a href="/languages/be.html" class="lang-btn active"><span class="flag">🇧🇾</span></a>
+        <a href="/languages/hu.html" class="lang-btn"><span class="flag">🇭🇺</span></a>
+        <a href="/languages/nl.html" class="lang-btn"><span class="flag">🇳🇱</span></a>
+        <a href="/languages/es.html" class="lang-btn"><span class="flag">🇪🇸</span></a>
+        <a href="/languages/it.html" class="lang-btn"><span class="flag">🇮🇹</span></a>
+        <a href="/languages/de.html" class="lang-btn"><span class="flag">🇩🇪</span></a>
+        <a href="/languages/pl.html" class="lang-btn"><span class="flag">🇵🇱</span></a>
+        <a href="/languages/pt.html" class="lang-btn"><span class="flag">🇵🇹</span></a>
+        <a href="/languages/ro.html" class="lang-btn"><span class="flag">🇷🇴</span></a>
+        <a href="/languages/sr.html" class="lang-btn"><span class="flag">🇷🇸</span></a>
+        <a href="/languages/fi.html" class="lang-btn"><span class="flag">🇫🇮</span></a>
+        <a href="/languages/fr.html" class="lang-btn"><span class="flag">🇫🇷</span></a>
+        <a href="/languages/hr.html" class="lang-btn"><span class="flag">🇭🇷</span></a>
+    </div>
+
+    <div class="logo-area">
+        <img src="../logo.png" alt="XOVER logo" />
+    </div>
+
+    <!-- ===== BELARUSIAN ===== -->
+    <div class="subhead">Міжнародны цэнтр графічнай літаратуры</div>
+
+    <div class="badge-grid">
+        <div class="badge-item">2500+ выданняў <span>у фондзе</span></div>
+        <div class="badge-item">Топ-600 <span>свету па GCD</span></div>
+        <div class="badge-item">Топ-3 <span>у Расіі па GCD</span></div>
+        <div class="badge-item">1427 IMP <span>і расце</span></div>
+    </div>
+
+    <p style="font-size:1.2rem; margin-bottom:1.8rem; color:#0b1a2e;">
+        Сістэмная праца па захаванні, каталогізацыі і папулярызацыі графічных гісторый — ад лакальнага архіва да міжнароднага прызнання.
+    </p>
+
+    <h2 class="section-title">Актыўнасць у GCD</h2>
+    <div class="gcd-stats">
+        <div class="stat"><div class="stat-number">1427</div><div class="stat-label">IMPs</div></div>
+        <div class="stat"><div class="stat-number">#591</div><div class="stat-label">Сусветны рэйтынг</div></div>
+        <div class="stat"><div class="stat-number">#3</div><div class="stat-label">Расія</div></div>
+        <div class="stat"><div class="stat-number">1127</div><div class="stat-label">адрыў ад 4-га месца</div></div>
+    </div>
+    <p style="margin-top:-0.2rem;">
+        <a href="https://www.comics.org/contributor/38733/" target="_blank" style="color:#c44536;">Профіль у GCD →</a>
+    </p>
+
+    <h2 class="section-title">Пра праект</h2>
+    <p style="color:#0b1a2e;">XOVER — гэта міжнародны цэнтр графічнай літаратуры, створаны на стыку архіўнай справы, даследаванняў і выдавецкай дзейнасці. Цэнтр заснаваны на калекцыі з больш чым 2500 коміксаў, мангі і графічных раманаў, сістэматызаванай па сусветных стандартах.</p>
+    <p style="margin-top:0.6rem; color:#0b1a2e;">Місія — захаванне і папулярызацыя графічнай спадчыны, інтэграцыя лакальнай культуры ў глабальны кантэкст, падтрымка даследчыкаў, аўтараў і чытачоў.</p>
+
+    <h2 class="section-title">Выдавецкія праекты</h2>
+    <ul style="color:#0b1a2e;">
+        <li><strong>«Візуальныя каментары»</strong> — штогадовы зін па матывах фальклору сацсетак</li>
+        <li><strong>«Летапіс Цэнтра»</strong> — штогадовы часопіс-справаздача</li>
+        <li><strong>«Бюлетэнь калекцыі»</strong> — каталог новых паступленняў</li>
+    </ul>
+
+    <h2 class="section-title">Апошнія паступленні</h2>
+    <ul style="color:#0b1a2e;">
+        <li><strong>Calugareni</strong> — Radu Theodoru, Румынія, 1977</li>
+        <li><strong>Басаногі Гэн</strong> — поўны збор, першае выданне ў Расіі</li>
+        <li><strong>Blueberry</strong> — Жан Жыро (Мёбіус), легенда еўрапейскага комікса</li>
+        <li><strong>Вылячэнне Іллі Мурамца</strong> — сучасны графічны былінны сказ</li>
+    </ul>
+
+    <h2 class="section-title">Навігацыя</h2>
+    <div class="link-list">
+        <a href="https://vk.ru/graphic.literature" target="_blank">VK</a>
+        <a href="https://t.me/graphicliterature" target="_blank">Telegram</a>
+        <a href="https://www.comics.org/contributor/38733/" target="_blank">Профіль GCD</a>
+        <a href="https://fantlab.ru/edition451026" target="_blank">«Белая страла»</a>
+    </div>
+
+    <div class="footer">
+        XOVER — Міжнародны цэнтр графічнай літаратуры<br />
+        Заснаваны ў Растове-на-Доне · Працуе для свету
+    </div>
+
+</div>
+</body>
+</html>
