@@ -21,17 +21,8 @@
             border-radius: 24px;
             box-shadow: 0 8px 30px rgba(0,0,0,0.06);
         }
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #0b1a2e;
-            margin-bottom: 0.5rem;
-        }
-        .subhead {
-            color: #c44536;
-            font-size: 1.1rem;
-            margin-bottom: 1.5rem;
-        }
+        h1 { font-size: 2.5rem; font-weight: 700; color: #0b1a2e; }
+        .subhead { color: #c44536; font-size: 1.1rem; margin-bottom: 1.5rem; }
         .back-link {
             display: inline-block;
             margin-bottom: 1.5rem;
@@ -39,11 +30,8 @@
             text-decoration: none;
             font-weight: 500;
             border-bottom: 1px solid transparent;
-            transition: 0.2s;
         }
-        .back-link:hover {
-            border-bottom-color: #c44536;
-        }
+        .back-link:hover { border-bottom-color: #c44536; }
 
         .search-box {
             display: flex;
@@ -59,10 +47,7 @@
             font-size: 1rem;
             min-width: 200px;
         }
-        .search-box input:focus {
-            outline: none;
-            border-color: #c44536;
-        }
+        .search-box input:focus { outline: none; border-color: #c44536; }
         .search-box select {
             padding: 0.6rem 1rem;
             border: 2px solid #e0dcd4;
@@ -79,27 +64,13 @@
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
-            transition: 0.2s;
         }
-        .search-box button:hover {
-            background: #a8352a;
-        }
-        .search-box .reset-btn {
-            background: #e0dcd4;
-            color: #1e1e1e;
-        }
-        .search-box .reset-btn:hover {
-            background: #ccc;
-        }
+        .search-box button:hover { background: #a8352a; }
+        .search-box .reset-btn { background: #e0dcd4; color: #1e1e1e; }
+        .search-box .reset-btn:hover { background: #ccc; }
 
-        .table-wrapper {
-            overflow-x: auto;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.9rem;
-        }
+        .table-wrapper { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
         th {
             background: #0b1a2e;
             color: #fff;
@@ -112,16 +83,9 @@
         td {
             padding: 0.5rem 0.8rem;
             border-bottom: 1px solid #e0dcd4;
-            vertical-align: top;
             cursor: pointer;
-            transition: background 0.15s;
         }
-        tr:hover td {
-            background: #f8f6f2;
-        }
-        tr:active td {
-            background: #e8e0d8;
-        }
+        tr:hover td { background: #f8f6f2; }
         .col-title { min-width: 180px; font-weight: 500; }
         .col-series { min-width: 120px; }
         .col-authors { min-width: 120px; }
@@ -143,26 +107,14 @@
             border-radius: 6px;
             cursor: pointer;
             font-weight: 500;
-            transition: 0.2s;
         }
         .pagination button:hover,
-        .pagination button.active {
-            background: #c44536;
-            color: #fff;
-        }
-        .pagination button:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
+        .pagination button.active { background: #c44536; color: #fff; }
+        .pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
 
-        .counter {
-            margin-top: 1rem;
-            color: #4a5a6e;
-            font-size: 0.9rem;
-            text-align: center;
-        }
+        .counter { margin-top: 1rem; color: #4a5a6e; font-size: 0.9rem; text-align: center; }
 
-        /* Модальное окно с карточкой */
+        /* Модальное окно */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -176,9 +128,7 @@
             z-index: 1000;
             padding: 1rem;
         }
-        .modal-overlay.open {
-            display: flex;
-        }
+        .modal-overlay.open { display: flex; }
         .modal {
             background: #fff;
             max-width: 600px;
@@ -199,15 +149,13 @@
             color: #4a5a6e;
             background: none;
             border: none;
-            line-height: 1;
         }
-        .modal-close:hover {
-            color: #c44536;
-        }
+        .modal-close:hover { color: #c44536; }
         .modal h2 {
             color: #0b1a2e;
             margin-bottom: 1.2rem;
             padding-right: 2rem;
+            font-size: 1.5rem;
         }
         .modal .field {
             display: flex;
@@ -220,13 +168,24 @@
             width: 40%;
             flex-shrink: 0;
         }
-        .modal .field-value {
-            width: 60%;
-            color: #1e1e1e;
+        .modal .field-value { width: 60%; color: #1e1e1e; }
+        .modal .field-value.empty { color: #aaa; font-style: italic; }
+        .modal .cover-wrapper {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0ede8;
         }
-        .modal .field-value.empty {
+        .modal .cover-wrapper img {
+            max-width: 200px;
+            max-height: 300px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .modal .cover-wrapper .no-cover {
             color: #aaa;
             font-style: italic;
+            padding: 0.5rem;
         }
         .modal .close-btn-bottom {
             margin-top: 1.5rem;
@@ -239,17 +198,7 @@
             cursor: pointer;
             width: 100%;
         }
-        .modal .close-btn-bottom:hover {
-            background: #a8352a;
-        }
-        .cover-image {
-            max-width: 200px;
-            max-height: 300px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            display: block;
-            margin: 0 auto;
-        }
+        .modal .close-btn-bottom:hover { background: #a8352a; }
 
         @media (max-width: 768px) {
             .container { padding: 1rem; }
@@ -270,7 +219,7 @@
 <div class="container">
 
     <a href="/" class="back-link">← На главную</a>
-    <h1>Каталог коллекции</h1>
+    <h1>📚 Каталог коллекции</h1>
     <div class="subhead">Все издания, которые есть в фонде XOVER</div>
 
     <div class="search-box">
@@ -321,7 +270,7 @@
     let currentPage = 1;
     const perPage = 25;
 
-    // Поля для карточки (все, которые есть в JSON)
+    // Поля для карточки (все, кроме "Превью")
     const cardFields = [
         { key: 'Название', label: 'Название' },
         { key: 'Тип литературы', label: 'Тип литературы' },
@@ -351,6 +300,7 @@
         { key: 'Количество', label: 'Количество' }
     ];
 
+    // Загружаем данные
     fetch('catalog.json')
         .then(res => {
             if (!res.ok) throw new Error('Не удалось загрузить каталог');
@@ -453,7 +403,6 @@
         }
 
         let html = `<button onclick="goToPage(1)" ${currentPage === 1 ? 'disabled' : ''}>«</button>`;
-
         for (let i = 1; i <= totalPages; i++) {
             if (i === 1 || i === totalPages || Math.abs(i - currentPage) <= 2) {
                 html += `<button onclick="goToPage(${i})" class="${i === currentPage ? 'active' : ''}">${i}</button>`;
@@ -461,7 +410,6 @@
                 html += `<button disabled>…</button>`;
             }
         }
-
         html += `<button onclick="goToPage(${totalPages})" ${currentPage === totalPages ? 'disabled' : ''}>»</button>`;
         pagination.innerHTML = html;
     }
@@ -473,32 +421,47 @@
         renderTable();
     }
 
-    // === Карточка издания ===
+    // ============================================================
+    // КАРТОЧКА ИЗДАНИЯ — ПРОСТАЯ И НАДЁЖНАЯ
+    // ============================================================
     function openCard(index) {
         const item = filteredData[index];
         if (!item) return;
-    
+
+        // Заголовок
         document.getElementById('modalTitle').textContent = item['Название'] || 'Без названия';
-    
+
         const body = document.getElementById('modalBody');
         body.innerHTML = '';
-    
-        // ===== ОБЛОЖКА из поля "Превью" =====
+
+        // --- 1. Обложка (если есть) ---
         const coverUrl = item['Превью'] || '';
+        const coverWrapper = document.createElement('div');
+        coverWrapper.className = 'cover-wrapper';
+
         if (coverUrl && coverUrl.trim() !== '') {
-            const coverDiv = document.createElement('div');
-            coverDiv.className = 'field';
-            coverDiv.innerHTML = `
-                <div class="field-label">Обложка</div>
-                <div class="field-value">
-                    <img src="${coverUrl}" alt="Обложка" class="cover-image" loading="lazy" 
-                         onerror="this.style.display='none'">
-                </div>
-            `;
-            body.appendChild(coverDiv);
+            const img = document.createElement('img');
+            img.src = coverUrl;
+            img.alt = 'Обложка';
+            img.loading = 'lazy';
+            // Если картинка не загрузится — показываем текст
+            img.onerror = function() {
+                this.style.display = 'none';
+                const msg = document.createElement('div');
+                msg.className = 'no-cover';
+                msg.textContent = '❌ Обложка не загрузилась';
+                coverWrapper.appendChild(msg);
+            };
+            coverWrapper.appendChild(img);
+        } else {
+            const msg = document.createElement('div');
+            msg.className = 'no-cover';
+            msg.textContent = '❌ Нет обложки';
+            coverWrapper.appendChild(msg);
         }
-    
-        // ===== Остальные поля (кроме "Превью") =====
+        body.appendChild(coverWrapper);
+
+        // --- 2. Все остальные поля (кроме "Превью") ---
         const fieldsToShow = cardFields.filter(f => f.key !== 'Превью');
         fieldsToShow.forEach(field => {
             const value = item[field.key];
@@ -511,7 +474,8 @@
             `;
             body.appendChild(div);
         });
-    
+
+        // Показываем модальное окно
         document.getElementById('modalOverlay').classList.add('open');
         document.body.style.overflow = 'hidden';
     }
