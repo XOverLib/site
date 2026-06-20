@@ -124,6 +124,32 @@
             color: #0b1a2e;
             text-align: center;
         }
+        .recent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .recent-item {
+            text-align: center;
+            background: #f8f6f2;
+            border-radius: 12px;
+            padding: 0.75rem;
+        }
+        .recent-item img {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 2 / 3;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        }
+        .recent-item .caption {
+            margin-top: 0.4rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #0b1a2e;
+        }
 
         @media (max-width: 600px) {
             h1 { font-size: 2.2rem; }
@@ -316,13 +342,9 @@
         <li id="publish_3"></li>
     </ul>
 
-    <h2 class="section-title" id="recent_title"></h2>
-    <ul style="color:#0b1a2e;">
-        <li id="recent_1"></li>
-        <li id="recent_2"></li>
-        <li id="recent_3"></li>
-        <li id="recent_4"></li>
-    </ul>
+    <div id="recent-grid" class="recent-grid">
+        <!-- Содержимое будет подставляться из JS -->
+    </div>
 
     <h2 class="section-title" id="nav_title"></h2>
     <div class="link-list">
