@@ -199,6 +199,81 @@
             width: 100%;
         }
         .modal .close-btn-bottom:hover { background: #a8352a; }
+        /* Новая карточка — обложка слева, текст справа */
+        .modal .card-layout {
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-start;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        .modal .card-cover {
+            flex: 0 0 160px;
+            max-width: 160px;
+        }
+        .modal .card-cover img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .modal .card-cover .no-cover {
+            color: #aaa;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem 0;
+        }
+        .modal .card-fields {
+            flex: 1;
+            min-width: 0;
+        }
+        .modal .card-fields .field {
+            display: flex;
+            padding: 0.2rem 0;
+            border-bottom: 1px solid #f0ede8;
+        }
+        .modal .card-fields .field-label {
+            font-weight: 600;
+            color: #0b1a2e;
+            width: 35%;
+            flex-shrink: 0;
+        }
+        .modal .card-fields .field-value {
+            width: 65%;
+            color: #1e1e1e;
+        }
+        .modal .card-fields .field-value.empty {
+            color: #aaa;
+            font-style: italic;
+        }
+        .modal h2 {
+            margin-bottom: 0.8rem;
+        }
+        .modal .close-btn-bottom {
+            margin-top: 1rem;
+            padding: 0.5rem 2rem;
+            background: #c44536;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+        }
+        .modal .close-btn-bottom:hover {
+            background: #a8352a;
+        }
+        
+        @media (max-width: 600px) {
+            .modal .card-layout {
+                flex-direction: column;
+                align-items: center;
+            }
+            .modal .card-cover {
+                flex: 0 0 auto;
+                max-width: 120px;
+            }
+        }
 
         @media (max-width: 768px) {
             .container { padding: 1rem; }
@@ -259,7 +334,12 @@
     <div class="modal" id="modal">
         <button class="modal-close" onclick="closeModal()">✕</button>
         <h2 id="modalTitle">Название</h2>
-        <div id="modalBody"></div>
+        <div class="card-layout" id="modalBody">
+            <!-- Слева: обложка -->
+            <div class="card-cover" id="modalCover"></div>
+            <!-- Справа: текст -->
+            <div class="card-fields" id="modalFields"></div>
+        </div>
         <button class="close-btn-bottom" onclick="closeModal()">Закрыть</button>
     </div>
 </div>
@@ -427,42 +507,39 @@
     function openCard(index) {
         const item = filteredData[index];
         if (!item) return;
-
+    
         // Заголовок
         document.getElementById('modalTitle').textContent = item['Название'] || 'Без названия';
-
-        const body = document.getElementById('modalBody');
-        body.innerHTML = '';
-
-        // --- 1. Обложка (если есть) ---
+    
+        // === ОБЛОЖКА (слева) ===
+        const coverContainer = document.getElementById('modalCover');
+        coverContainer.innerHTML = '';
         const coverUrl = item['превью'] || '';
-        const coverWrapper = document.createElement('div');
-        coverWrapper.className = 'cover-wrapper';
-
         if (coverUrl && coverUrl.trim() !== '') {
             const img = document.createElement('img');
             img.src = coverUrl;
             img.alt = 'Обложка';
             img.loading = 'lazy';
-            // Если картинка не загрузится — показываем текст
             img.onerror = function() {
                 this.style.display = 'none';
                 const msg = document.createElement('div');
                 msg.className = 'no-cover';
                 msg.textContent = '❌ Обложка не загрузилась';
-                coverWrapper.appendChild(msg);
+                coverContainer.appendChild(msg);
             };
-            coverWrapper.appendChild(img);
+            coverContainer.appendChild(img);
         } else {
             const msg = document.createElement('div');
             msg.className = 'no-cover';
             msg.textContent = '❌ Нет обложки';
-            coverWrapper.appendChild(msg);
+            coverContainer.appendChild(msg);
         }
-        body.appendChild(coverWrapper);
-
-        // --- 2. Все остальные поля (кроме "Превью") ---
-        const fieldsToShow = cardFields.filter(f => f.key !== 'Превью');
+    
+        // === ТЕКСТ (справа) ===
+        const fieldsContainer = document.getElementById('modalFields');
+        fieldsContainer.innerHTML = '';
+    
+        const fieldsToShow = cardFields.filter(f => f.key !== 'Превью' && f.key !== 'превью');
         fieldsToShow.forEach(field => {
             const value = item[field.key];
             const hasValue = value && String(value).trim() !== '';
@@ -472,9 +549,9 @@
                 <div class="field-label">${field.label}</div>
                 <div class="field-value ${hasValue ? '' : 'empty'}">${hasValue ? value : '—'}</div>
             `;
-            body.appendChild(div);
+            fieldsContainer.appendChild(div);
         });
-
+    
         // Показываем модальное окно
         document.getElementById('modalOverlay').classList.add('open');
         document.body.style.overflow = 'hidden';
