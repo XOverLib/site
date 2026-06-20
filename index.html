@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>XOVER — Международный центр графической литературы</title>
+    <title>XOVER — International Center for Graphic Literature</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -137,25 +137,27 @@
 <body>
 <div class="container">
 
+    <!-- Кнопки-флаги (по алфавиту языковых кодов) -->
     <div class="lang-switch">
-        <button class="lang-btn active" data-lang="ru"><span class="flag">🇷🇺</span></button>
-        <button class="lang-btn" data-lang="en"><span class="flag">🇬🇧</span></button>
         <button class="lang-btn" data-lang="am"><span class="flag">🇦🇲</span></button>
         <button class="lang-btn" data-lang="be"><span class="flag">🇧🇾</span></button>
-        <button class="lang-btn" data-lang="hu"><span class="flag">🇭🇺</span></button>
-        <button class="lang-btn" data-lang="nl"><span class="flag">🇳🇱</span></button>
-        <button class="lang-btn" data-lang="es"><span class="flag">🇪🇸</span></button>
-        <button class="lang-btn" data-lang="it"><span class="flag">🇮🇹</span></button>
         <button class="lang-btn" data-lang="de"><span class="flag">🇩🇪</span></button>
-        <button class="lang-btn" data-lang="pl"><span class="flag">🇵🇱</span></button>
-        <button class="lang-btn" data-lang="pt"><span class="flag">🇵🇹</span></button>
-        <button class="lang-btn" data-lang="ro"><span class="flag">🇷🇴</span></button>
-        <button class="lang-btn" data-lang="sr"><span class="flag">🇷🇸</span></button>
+        <button class="lang-btn active" data-lang="en"><span class="flag">🇬🇧</span></button>
+        <button class="lang-btn" data-lang="es"><span class="flag">🇪🇸</span></button>
         <button class="lang-btn" data-lang="fi"><span class="flag">🇫🇮</span></button>
         <button class="lang-btn" data-lang="fr"><span class="flag">🇫🇷</span></button>
         <button class="lang-btn" data-lang="hr"><span class="flag">🇭🇷</span></button>
+        <button class="lang-btn" data-lang="hu"><span class="flag">🇭🇺</span></button>
+        <button class="lang-btn" data-lang="it"><span class="flag">🇮🇹</span></button>
+        <button class="lang-btn" data-lang="nl"><span class="flag">🇳🇱</span></button>
+        <button class="lang-btn" data-lang="pl"><span class="flag">🇵🇱</span></button>
+        <button class="lang-btn" data-lang="pt"><span class="flag">🇵🇹</span></button>
+        <button class="lang-btn" data-lang="ro"><span class="flag">🇷🇴</span></button>
+        <button class="lang-btn" data-lang="ru"><span class="flag">🇷🇺</span></button>
+        <button class="lang-btn" data-lang="sr"><span class="flag">🇷🇸</span></button>
     </div>
 
+    <!-- Логотип -->
     <div class="logo-area">
         <img src="logo.png" alt="XOVER logo" />
     </div>
@@ -215,7 +217,6 @@
 </div>
 
 <script>
-    // Загружаем переводы
     let translations = {};
 
     async function loadTranslations() {
@@ -263,28 +264,20 @@
         document.getElementById('nav_arrow').textContent = t.nav_arrow;
         document.getElementById('footer').innerHTML = t.footer;
 
-        // Обновляем активную кнопку
         document.querySelectorAll('.lang-btn').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.lang === lang);
         });
 
-        // Меняем язык в теге html
         document.documentElement.lang = lang;
     }
 
-    // Инициализация
     document.addEventListener('DOMContentLoaded', async () => {
         await loadTranslations();
-        
-        // Устанавливаем язык по умолчанию (русский)
-        const defaultLang = 'ru';
-        setLanguage(defaultLang);
+        setLanguage('en');
 
-        // Обработчики на кнопки
         document.querySelectorAll('.lang-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                const lang = btn.dataset.lang;
-                setLanguage(lang);
+                setLanguage(btn.dataset.lang);
             });
         });
     });
