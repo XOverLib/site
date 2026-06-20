@@ -202,14 +202,13 @@
         /* Новая карточка — обложка слева, текст справа */
         .modal .card-layout {
             display: flex;
-            gap: 1.5rem;
+            gap: 2rem;
             align-items: flex-start;
             max-height: 70vh;
-            overflow-y: auto;
         }
         .modal .card-cover {
-            flex: 0 0 160px;
-            max-width: 160px;
+            flex: 0 0 200px;
+            max-width: 220px;
         }
         .modal .card-cover img {
             width: 100%;
@@ -227,27 +226,35 @@
             flex: 1;
             min-width: 0;
         }
-        .modal .card-fields .field {
+        .modal .fields-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.2rem 1.5rem;
+        }
+        .modal .fields-grid .field {
             display: flex;
             padding: 0.2rem 0;
             border-bottom: 1px solid #f0ede8;
         }
-        .modal .card-fields .field-label {
+        .modal .fields-grid .field-label {
             font-weight: 600;
             color: #0b1a2e;
-            width: 35%;
+            width: 40%;
             flex-shrink: 0;
+            font-size: 0.85rem;
         }
-        .modal .card-fields .field-value {
-            width: 65%;
+        .modal .fields-grid .field-value {
+            width: 60%;
             color: #1e1e1e;
+            font-size: 0.85rem;
         }
-        .modal .card-fields .field-value.empty {
+        .modal .fields-grid .field-value.empty {
             color: #aaa;
             font-style: italic;
         }
         .modal h2 {
             margin-bottom: 0.8rem;
+            font-size: 1.4rem;
         }
         .modal .close-btn-bottom {
             margin-top: 1rem;
@@ -262,6 +269,20 @@
         }
         .modal .close-btn-bottom:hover {
             background: #a8352a;
+        }
+        
+        @media (max-width: 600px) {
+            .modal .card-layout {
+                flex-direction: column;
+                align-items: center;
+            }
+            .modal .card-cover {
+                flex: 0 0 auto;
+                max-width: 150px;
+            }
+            .modal .fields-grid {
+                grid-template-columns: 1fr;
+            }
         }
         
         @media (max-width: 600px) {
