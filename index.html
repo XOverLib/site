@@ -369,8 +369,10 @@
 
     function setLanguage(lang) {
         if (!translations[lang]) return;
-
+    
         const t = translations[lang];
+    
+        // Текстовые поля
         document.getElementById('subhead').textContent = t.subhead;
         document.getElementById('badge1').textContent = t.badge1;
         document.getElementById('badge1_desc').textContent = t.badge1_desc;
@@ -395,21 +397,33 @@
         document.getElementById('publish_2').textContent = t.publish_2;
         document.getElementById('publish_3').textContent = t.publish_3;
         document.getElementById('recent_title').textContent = t.recent_title;
-        document.getElementById('recent_1').textContent = t.recent_1;
-        document.getElementById('recent_2').textContent = t.recent_2;
-        document.getElementById('recent_3').textContent = t.recent_3;
-        document.getElementById('recent_4').textContent = t.recent_4;
         document.getElementById('nav_title').textContent = t.nav_title;
         document.getElementById('nav_vk').textContent = t.nav_vk;
         document.getElementById('nav_tg').textContent = t.nav_tg;
         document.getElementById('nav_gcd').textContent = t.nav_gcd;
         document.getElementById('nav_arrow').textContent = t.nav_arrow;
         document.getElementById('footer').innerHTML = t.footer;
-
+    
+        // Блок "Последние поступления" с картинками
+        const grid = document.getElementById('recent-grid');
+        grid.innerHTML = '';
+        if (t.recent_items && t.recent_items.length > 0) {
+            t.recent_items.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'recent-item';
+                div.innerHTML = `
+                    <img src="${item.img}" alt="${item.caption}">
+                    <div class="caption">${item.caption}</div>
+                `;
+                grid.appendChild(div);
+            });
+        }
+    
+        // Обновляем активную кнопку
         document.querySelectorAll('.lang-btn').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.lang === lang);
         });
-
+    
         document.documentElement.lang = lang;
     }
 
