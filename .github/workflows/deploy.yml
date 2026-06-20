@@ -1,0 +1,22 @@
+name: Deploy to Public Repo
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to public repository
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          deploy_key: ${{ secrets.DEPLOY_KEY }}
+          external_repository: XOverLib/xoverlib.github.io
+          publish_branch: main
+          publish_dir: ./
+          allow_empty_commit: true
