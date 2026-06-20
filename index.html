@@ -33,12 +33,11 @@
             padding: 0.2rem 0.6rem;
             border-radius: 20px;
             font-weight: 600;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             cursor: pointer;
             color: #c44536;
             transition: 0.2s;
             white-space: nowrap;
-            text-decoration: none;
         }
         .lang-btn.active {
             background: #c44536;
@@ -57,8 +56,6 @@
             margin-bottom: 1rem;
         }
         .logo-area img { height: 60px; width: auto; }
-        .logo-text { font-size: 1.8rem; font-weight: 700; color: #0b1a2e; }
-        .logo-text span { color: #c44536; }
 
         h1 { font-size: 3rem; font-weight: 700; letter-spacing: -0.02em; color: #0b1a2e; }
         .subhead {
@@ -133,7 +130,6 @@
             .subhead { font-size: 1.1rem; }
             .badge-grid { flex-direction: column; gap: 0.5rem; }
             .logo-area img { height: 40px; }
-            .logo-text { font-size: 1.2rem; }
             .lang-btn { font-size: 0.7rem; padding: 0.1rem 0.4rem; }
         }
     </style>
@@ -141,88 +137,158 @@
 <body>
 <div class="container">
 
-    <!-- Переключатель языков -->
     <div class="lang-switch">
-        <a href="/" class="lang-btn active"><span class="flag">🇷🇺</span> RU</a>
-        <a href="/languages/en.html" class="lang-btn"><span class="flag">🇬🇧</span> EN</a>
-        <a href="/languages/am.html" class="lang-btn"><span class="flag">🇦🇲</span> AM</a>
-        <a href="/languages/be.html" class="lang-btn"><span class="flag">🇧🇾</span> BE</a>
-        <a href="/languages/hu.html" class="lang-btn"><span class="flag">🇭🇺</span> HU</a>
-        <a href="/languages/nl.html" class="lang-btn"><span class="flag">🇳🇱</span> NL</a>
-        <a href="/languages/es.html" class="lang-btn"><span class="flag">🇪🇸</span> ES</a>
-        <a href="/languages/it.html" class="lang-btn"><span class="flag">🇮🇹</span> IT</a>
-        <a href="/languages/de.html" class="lang-btn"><span class="flag">🇩🇪</span> DE</a>
-        <a href="/languages/pl.html" class="lang-btn"><span class="flag">🇵🇱</span> PL</a>
-        <a href="/languages/pt.html" class="lang-btn"><span class="flag">🇵🇹</span> PT</a>
-        <a href="/languages/ro.html" class="lang-btn"><span class="flag">🇷🇴</span> RO</a>
-        <a href="/languages/sr.html" class="lang-btn"><span class="flag">🇷🇸</span> SR</a>
-        <a href="/languages/fi.html" class="lang-btn"><span class="flag">🇫🇮</span> FI</a>
-        <a href="/languages/fr.html" class="lang-btn"><span class="flag">🇫🇷</span> FR</a>
-        <a href="/languages/hr.html" class="lang-btn"><span class="flag">🇭🇷</span> HR</a>
+        <button class="lang-btn active" data-lang="ru"><span class="flag">🇷🇺</span></button>
+        <button class="lang-btn" data-lang="en"><span class="flag">🇬🇧</span></button>
+        <button class="lang-btn" data-lang="am"><span class="flag">🇦🇲</span></button>
+        <button class="lang-btn" data-lang="be"><span class="flag">🇧🇾</span></button>
+        <button class="lang-btn" data-lang="hu"><span class="flag">🇭🇺</span></button>
+        <button class="lang-btn" data-lang="nl"><span class="flag">🇳🇱</span></button>
+        <button class="lang-btn" data-lang="es"><span class="flag">🇪🇸</span></button>
+        <button class="lang-btn" data-lang="it"><span class="flag">🇮🇹</span></button>
+        <button class="lang-btn" data-lang="de"><span class="flag">🇩🇪</span></button>
+        <button class="lang-btn" data-lang="pl"><span class="flag">🇵🇱</span></button>
+        <button class="lang-btn" data-lang="pt"><span class="flag">🇵🇹</span></button>
+        <button class="lang-btn" data-lang="ro"><span class="flag">🇷🇴</span></button>
+        <button class="lang-btn" data-lang="sr"><span class="flag">🇷🇸</span></button>
+        <button class="lang-btn" data-lang="fi"><span class="flag">🇫🇮</span></button>
+        <button class="lang-btn" data-lang="fr"><span class="flag">🇫🇷</span></button>
+        <button class="lang-btn" data-lang="hr"><span class="flag">🇭🇷</span></button>
     </div>
 
-    <!-- Логотип -->
     <div class="logo-area">
-        <img src="logo.png" alt="XOVER logo" />        
+        <img src="logo.png" alt="XOVER logo" />
     </div>
 
-    <!-- ===== RUSSIAN ===== -->
-    <div class="subhead">Международный центр графической литературы</div>
+    <!-- ===== КОНТЕЙНЕРЫ ДЛЯ ТЕКСТА ===== -->
+    <div class="subhead" id="subhead"></div>
 
     <div class="badge-grid">
-        <div class="badge-item">2500+ изданий <span>в фонде</span></div>
-        <div class="badge-item">Топ-600 <span>мира по GCD</span></div>
-        <div class="badge-item">Топ-3 <span>в России по GCD</span></div>
-        <div class="badge-item">1427 IMP <span>и растёт</span></div>
+        <div class="badge-item"><span id="badge1"></span> <span id="badge1_desc"></span></div>
+        <div class="badge-item"><span id="badge2"></span> <span id="badge2_desc"></span></div>
+        <div class="badge-item"><span id="badge3"></span> <span id="badge3_desc"></span></div>
+        <div class="badge-item"><span id="badge4"></span> <span id="badge4_desc"></span></div>
     </div>
 
-    <p style="font-size:1.2rem; margin-bottom:1.8rem; color:#0b1a2e;">
-        Системная работа по сохранению, каталогизации и популяризации графических историй — от локального архива к международному признанию.
-    </p>
+    <p style="font-size:1.2rem; margin-bottom:1.8rem; color:#0b1a2e;" id="desc"></p>
 
-    <h2 class="section-title">Активность в GCD</h2>
+    <h2 class="section-title" id="gcd_title"></h2>
     <div class="gcd-stats">
-        <div class="stat"><div class="stat-number">1427</div><div class="stat-label">IMPs</div></div>
-        <div class="stat"><div class="stat-number">#591</div><div class="stat-label">Мировой рейтинг</div></div>
-        <div class="stat"><div class="stat-number">#3</div><div class="stat-label">Россия</div></div>
-        <div class="stat"><div class="stat-number">1127</div><div class="stat-label">отрыв от 4-го места</div></div>
+        <div class="stat"><div class="stat-number">1427</div><div class="stat-label" id="gcd_imp"></div></div>
+        <div class="stat"><div class="stat-number">#591</div><div class="stat-label" id="gcd_world"></div></div>
+        <div class="stat"><div class="stat-number">#3</div><div class="stat-label" id="gcd_russia"></div></div>
+        <div class="stat"><div class="stat-number">1127</div><div class="stat-label" id="gcd_gap"></div></div>
     </div>
     <p style="margin-top:-0.2rem;">
-        <a href="https://www.comics.org/contributor/38733/" target="_blank" style="color:#c44536;">Профиль в GCD →</a>
+        <a href="https://www.comics.org/contributor/38733/" target="_blank" style="color:#c44536;" id="profile_link"></a>
     </p>
 
-    <h2 class="section-title">О проекте</h2>
-    <p style="color:#0b1a2e;">XOVER — это международный центр графической литературы, созданный на стыке архивного дела, исследования и издательской деятельности. Центр основан на коллекции из более чем 2500 комиксов, манги и графических романов, систематизированной по мировым стандартам.</p>
-    <p style="margin-top:0.6rem; color:#0b1a2e;">Миссия — сохранение и популяризация графического наследия, интеграция локальной культуры в глобальный контекст, поддержка исследователей, авторов и читателей.</p>
+    <h2 class="section-title" id="about_title"></h2>
+    <p style="color:#0b1a2e;" id="about_text"></p>
+    <p style="margin-top:0.6rem; color:#0b1a2e;" id="about_mission"></p>
 
-    <h2 class="section-title">Издательские проекты</h2>
+    <h2 class="section-title" id="publish_title"></h2>
     <ul style="color:#0b1a2e;">
-        <li><strong>«Визуальные комментарии»</strong> — ежегодный зин по мотивам соцсетевого фольклора</li>
-        <li><strong>«Летопись Центра»</strong> — ежегодный отчёт-журнал о пополнениях и событиях</li>
-        <li><strong>«Бюллетень коллекции»</strong> — каталог новых поступлений с аннотациями</li>
+        <li id="publish_1"></li>
+        <li id="publish_2"></li>
+        <li id="publish_3"></li>
     </ul>
 
-    <h2 class="section-title">Последние поступления</h2>
+    <h2 class="section-title" id="recent_title"></h2>
     <ul style="color:#0b1a2e;">
-        <li><strong>Calugareni</strong> — Radu Theodoru, Румыния, 1977</li>
-        <li><strong>Босоногий Гэн</strong> — полное собрание, первое издание в России</li>
-        <li><strong>Блюберри</strong> — Жан Жиро (Мёбиус), легенда европейского комикса</li>
-        <li><strong>Исцеление Ильи Муромца</strong> — современный графический былинный сказ</li>
+        <li id="recent_1"></li>
+        <li id="recent_2"></li>
+        <li id="recent_3"></li>
+        <li id="recent_4"></li>
     </ul>
 
-    <h2 class="section-title">Навигация</h2>
+    <h2 class="section-title" id="nav_title"></h2>
     <div class="link-list">
-        <a href="https://vk.ru/graphic.literature" target="_blank">ВКонтакте</a>
-        <a href="https://t.me/graphicliterature" target="_blank">Telegram</a>
-        <a href="https://www.comics.org/contributor/38733/" target="_blank">GCD профиль</a>
-        <a href="https://fantlab.ru/edition451026" target="_blank">«Белая стрела»</a>
+        <a href="https://vk.ru/graphic.literature" target="_blank" id="nav_vk"></a>
+        <a href="https://t.me/graphicliterature" target="_blank" id="nav_tg"></a>
+        <a href="https://www.comics.org/contributor/38733/" target="_blank" id="nav_gcd"></a>
+        <a href="https://fantlab.ru/edition451026" target="_blank" id="nav_arrow"></a>
     </div>
 
-    <div class="footer">
-        XOVER — Международный центр графической литературы<br />
-        Основан в Ростове-на-Дону · Работает для мира
-    </div>
+    <div class="footer" id="footer"></div>
 
 </div>
+
+<script>
+    // Загружаем переводы
+    let translations = {};
+
+    async function loadTranslations() {
+        const response = await fetch('languages.json');
+        translations = await response.json();
+        return translations;
+    }
+
+    function setLanguage(lang) {
+        if (!translations[lang]) return;
+
+        const t = translations[lang];
+        document.getElementById('subhead').textContent = t.subhead;
+        document.getElementById('badge1').textContent = t.badge1;
+        document.getElementById('badge1_desc').textContent = t.badge1_desc;
+        document.getElementById('badge2').textContent = t.badge2;
+        document.getElementById('badge2_desc').textContent = t.badge2_desc;
+        document.getElementById('badge3').textContent = t.badge3;
+        document.getElementById('badge3_desc').textContent = t.badge3_desc;
+        document.getElementById('badge4').textContent = t.badge4;
+        document.getElementById('badge4_desc').textContent = t.badge4_desc;
+        document.getElementById('desc').textContent = t.desc;
+        document.getElementById('gcd_title').textContent = t.gcd_title;
+        document.getElementById('gcd_imp').textContent = t.gcd_imp;
+        document.getElementById('gcd_world').textContent = t.gcd_world;
+        document.getElementById('gcd_russia').textContent = t.gcd_russia;
+        document.getElementById('gcd_gap').textContent = t.gcd_gap;
+        document.getElementById('profile_link').textContent = t.profile_link;
+        document.getElementById('about_title').textContent = t.about_title;
+        document.getElementById('about_text').textContent = t.about_text;
+        document.getElementById('about_mission').textContent = t.about_mission;
+        document.getElementById('publish_title').textContent = t.publish_title;
+        document.getElementById('publish_1').textContent = t.publish_1;
+        document.getElementById('publish_2').textContent = t.publish_2;
+        document.getElementById('publish_3').textContent = t.publish_3;
+        document.getElementById('recent_title').textContent = t.recent_title;
+        document.getElementById('recent_1').textContent = t.recent_1;
+        document.getElementById('recent_2').textContent = t.recent_2;
+        document.getElementById('recent_3').textContent = t.recent_3;
+        document.getElementById('recent_4').textContent = t.recent_4;
+        document.getElementById('nav_title').textContent = t.nav_title;
+        document.getElementById('nav_vk').textContent = t.nav_vk;
+        document.getElementById('nav_tg').textContent = t.nav_tg;
+        document.getElementById('nav_gcd').textContent = t.nav_gcd;
+        document.getElementById('nav_arrow').textContent = t.nav_arrow;
+        document.getElementById('footer').innerHTML = t.footer;
+
+        // Обновляем активную кнопку
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.lang === lang);
+        });
+
+        // Меняем язык в теге html
+        document.documentElement.lang = lang;
+    }
+
+    // Инициализация
+    document.addEventListener('DOMContentLoaded', async () => {
+        await loadTranslations();
+        
+        // Устанавливаем язык по умолчанию (русский)
+        const defaultLang = 'ru';
+        setLanguage(defaultLang);
+
+        // Обработчики на кнопки
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const lang = btn.dataset.lang;
+                setLanguage(lang);
+            });
+        });
+    });
+</script>
+
 </body>
 </html>
