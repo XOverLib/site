@@ -5,14 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>XOVER — Международный центр графической литературы</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
-            background: #f8f6f2;
+            background: #ffffff;
             color: #1e1e1e;
             line-height: 1.6;
             padding: 2rem 1rem;
@@ -23,8 +19,9 @@
             background: #ffffff;
             padding: 2.5rem 2rem;
             border-radius: 24px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.06);
         }
+
+        /* КНОПКИ ЯЗЫКА */
         .lang-switch {
             display: flex;
             justify-content: flex-end;
@@ -50,6 +47,37 @@
             background: #c44536;
             color: #fff;
         }
+
+        /* ЛОГОТИП */
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .logo-placeholder {
+            width: 60px;
+            height: 60px;
+            background: #c44536;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            letter-spacing: 0.1em;
+        }
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0b1a2e;
+        }
+        .logo-text span {
+            color: #c44536;
+        }
+
+        /* ЗАГОЛОВКИ */
         h1 {
             font-size: 3rem;
             font-weight: 700;
@@ -59,41 +87,49 @@
         .subhead {
             font-size: 1.4rem;
             font-weight: 400;
-            color: #3a4a5e;
+            color: #c44536;
             margin-top: 0.25rem;
             border-left: 5px solid #c44536;
             padding-left: 1.25rem;
         }
+
+        /* ПЛАШКИ */
         .badge-grid {
             display: flex;
             flex-wrap: wrap;
             gap: 1.5rem 2.5rem;
             margin: 2rem 0 2.5rem;
-            background: #f0ede8;
+            background: #f8f6f2;
             padding: 1.25rem 1.75rem;
             border-radius: 40px;
         }
         .badge-item {
             font-weight: 600;
             font-size: 1.1rem;
+            color: #0b1a2e;
         }
         .badge-item span {
             font-weight: 300;
-            color: #3a4a5e;
+            color: #c44536;
         }
+
+        /* СЕКЦИИ */
         .section-title {
             font-size: 1.8rem;
             font-weight: 600;
             margin-top: 2.8rem;
             margin-bottom: 1.2rem;
-            border-bottom: 3px solid #e6e2da;
+            border-bottom: 3px solid #c44536;
             padding-bottom: 0.5rem;
+            color: #0b1a2e;
         }
+
+        /* СТАТИСТИКА GCD */
         .gcd-stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(160px,1fr));
             gap: 1rem;
-            background: #f4f2ed;
+            background: #f8f6f2;
             border-radius: 20px;
             padding: 1.5rem;
             margin: 1.2rem 0 1.8rem;
@@ -108,8 +144,9 @@
         }
         .stat-label {
             font-size: 0.9rem;
-            color: #4a5a6e;
+            color: #c44536;
         }
+
         ul {
             padding-left: 1.5rem;
             margin: 0.8rem 0 1.5rem;
@@ -136,26 +173,19 @@
         .footer {
             margin-top: 3rem;
             padding-top: 1.5rem;
-            border-top: 1px solid #e0dcd4;
+            border-top: 1px solid #c44536;
             font-size: 0.95rem;
-            color: #4a5a6e;
+            color: #0b1a2e;
             text-align: center;
         }
+
         .lang-ru, .lang-en {
+            display: none;
+        }
+        .lang-ru.active, .lang-en.active {
             display: block;
         }
-        .lang-en {
-            display: none;
-        }
-        .lang-en.active, .lang-ru.active {
-            display: block;
-        }
-        .lang-ru.active ~ .lang-en {
-            display: none;
-        }
-        .lang-en.active ~ .lang-ru {
-            display: none;
-        }
+
         @media (max-width: 600px) {
             h1 { font-size: 2.2rem; }
             .subhead { font-size: 1.1rem; }
@@ -166,15 +196,20 @@
 <body>
 <div class="container">
 
-    <!-- Переключатель языков -->
+    <!-- Переключатель языка -->
     <div class="lang-switch">
-        <button class="lang-btn active" data-lang="ru">RU</button>
-        <button class="lang-btn" data-lang="en">EN</button>
+        <button class="lang-btn active" id="btn-ru">RU</button>
+        <button class="lang-btn" id="btn-en">EN</button>
     </div>
 
-    <!-- ========== РУССКАЯ ВЕРСИЯ ========== -->
+    <!-- Логотип -->
+    <div class="logo-area">
+        <div class="logo-placeholder">X</div>
+        <div class="logo-text"><span>X</span>OVER</div>
+    </div>
+
+    <!-- ===== РУССКАЯ ВЕРСИЯ ===== -->
     <div class="lang-ru active" id="lang-ru">
-        <h1>XOVER</h1>
         <div class="subhead">Международный центр графической литературы</div>
 
         <div class="badge-grid">
@@ -184,7 +219,7 @@
             <div class="badge-item">🧾 1427 IMP <span>и растёт</span></div>
         </div>
 
-        <p style="font-size:1.2rem; margin-bottom:1.8rem;">
+        <p style="font-size:1.2rem; margin-bottom:1.8rem; color:#0b1a2e;">
             Системная работа по сохранению, каталогизации и популяризации графических историй — от локального архива к международному признанию.
         </p>
 
@@ -200,18 +235,18 @@
         </p>
 
         <h2 class="section-title">🏛️ О проекте</h2>
-        <p>XOVER — это международный центр графической литературы, созданный на стыке архивного дела, исследования и издательской деятельности. Центр основан на коллекции из более чем 2500 комиксов, манги и графических романов, систематизированной по мировым стандартам.</p>
-        <p style="margin-top:0.6rem;">Миссия — сохранение и популяризация графического наследия, интеграция локальной культуры в глобальный контекст, поддержка исследователей, авторов и читателей.</p>
+        <p style="color:#0b1a2e;">XOVER — это международный центр графической литературы, созданный на стыке архивного дела, исследования и издательской деятельности. Центр основан на коллекции из более чем 2500 комиксов, манги и графических романов, систематизированной по мировым стандартам.</p>
+        <p style="margin-top:0.6rem; color:#0b1a2e;">Миссия — сохранение и популяризация графического наследия, интеграция локальной культуры в глобальный контекст, поддержка исследователей, авторов и читателей.</p>
 
         <h2 class="section-title">📦 Издательские проекты</h2>
-        <ul>
+        <ul style="color:#0b1a2e;">
             <li><strong>«Визуальные комментарии»</strong> — ежегодный зин по мотивам соцсетевого фольклора</li>
             <li><strong>«Летопись Центра»</strong> — ежегодный отчёт-журнал о пополнениях и событиях</li>
             <li><strong>«Бюллетень коллекции»</strong> — каталог новых поступлений с аннотациями</li>
         </ul>
 
         <h2 class="section-title">📌 Последние поступления</h2>
-        <ul>
+        <ul style="color:#0b1a2e;">
             <li><strong>Calugareni</strong> — Radu Theodoru, Румыния, 1977</li>
             <li><strong>Босоногий Гэн</strong> — полное собрание, первое издание в России</li>
             <li><strong>Блюберри</strong> — Жан Жиро (Мёбиус), легенда европейского комикса</li>
@@ -232,9 +267,8 @@
         </div>
     </div>
 
-    <!-- ========== АНГЛИЙСКАЯ ВЕРСИЯ ========== -->
+    <!-- ===== АНГЛИЙСКАЯ ВЕРСИЯ ===== -->
     <div class="lang-en" id="lang-en">
-        <h1>XOVER</h1>
         <div class="subhead">International Center for Graphic Literature</div>
 
         <div class="badge-grid">
@@ -244,7 +278,7 @@
             <div class="badge-item">🧾 1427 IMP <span>and growing</span></div>
         </div>
 
-        <p style="font-size:1.2rem; margin-bottom:1.8rem;">
+        <p style="font-size:1.2rem; margin-bottom:1.8rem; color:#0b1a2e;">
             Systematic work on preserving, cataloging, and promoting graphic narratives — from a local archive to international recognition.
         </p>
 
@@ -260,18 +294,18 @@
         </p>
 
         <h2 class="section-title">🏛️ About the Project</h2>
-        <p>XOVER is an international center for graphic literature, built at the intersection of archival work, research, and publishing. The center is founded on a collection of over 2,500 comics, manga, and graphic novels, systematically organized according to global standards.</p>
-        <p style="margin-top:0.6rem;">Our mission is to preserve and promote graphic heritage, connect local culture to a global context, and support researchers, authors, and readers around the world.</p>
+        <p style="color:#0b1a2e;">XOVER is an international center for graphic literature, built at the intersection of archival work, research, and publishing. The center is founded on a collection of over 2,500 comics, manga, and graphic novels, systematically organized according to global standards.</p>
+        <p style="margin-top:0.6rem; color:#0b1a2e;">Our mission is to preserve and promote graphic heritage, connect local culture to a global context, and support researchers, authors, and readers around the world.</p>
 
         <h2 class="section-title">📦 Publishing Projects</h2>
-        <ul>
+        <ul style="color:#0b1a2e;">
             <li><strong>Visual Comments</strong> — annual zine based on social media folklore</li>
             <li><strong>Center Chronicle</strong> — annual review journal of acquisitions and events</li>
             <li><strong>Collection Bulletin</strong> — catalog of new arrivals with annotations</li>
         </ul>
 
         <h2 class="section-title">📌 Recent Additions</h2>
-        <ul>
+        <ul style="color:#0b1a2e;">
             <li><strong>Calugareni</strong> — Radu Theodoru, Romania, 1977</li>
             <li><strong>Barefoot Gen</strong> — complete set, first Russian edition</li>
             <li><strong>Blueberry</strong> — Jean Giraud (Mœbius), European comics legend</li>
@@ -296,8 +330,8 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const ruBtn = document.querySelector('.lang-btn[data-lang="ru"]');
-        const enBtn = document.querySelector('.lang-btn[data-lang="en"]');
+        const ruBtn = document.getElementById('btn-ru');
+        const enBtn = document.getElementById('btn-en');
         const ruBlock = document.getElementById('lang-ru');
         const enBlock = document.getElementById('lang-en');
 
