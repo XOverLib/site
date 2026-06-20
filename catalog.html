@@ -556,9 +556,12 @@
             coverContainer.appendChild(msg);
         }
     
-        // === ТЕКСТ (справа) ===
+        // === ДАННЫЕ (справа, в две колонки) ===
         const fieldsContainer = document.getElementById('modalFields');
         fieldsContainer.innerHTML = '';
+    
+        const grid = document.createElement('div');
+        grid.className = 'fields-grid';
     
         const fieldsToShow = cardFields.filter(f => f.key !== 'Превью' && f.key !== 'превью');
         fieldsToShow.forEach(field => {
@@ -570,8 +573,10 @@
                 <div class="field-label">${field.label}</div>
                 <div class="field-value ${hasValue ? '' : 'empty'}">${hasValue ? value : '—'}</div>
             `;
-            fieldsContainer.appendChild(div);
+            grid.appendChild(div);
         });
+    
+        fieldsContainer.appendChild(grid);
     
         // Показываем модальное окно
         document.getElementById('modalOverlay').classList.add('open');
