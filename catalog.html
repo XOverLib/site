@@ -469,13 +469,30 @@
     function openCard(index) {
         const item = filteredData[index];
         if (!item) return;
-
+    
         document.getElementById('modalTitle').textContent = item['Название'] || 'Без названия';
-
+    
         const body = document.getElementById('modalBody');
         body.innerHTML = '';
-
-        cardFields.forEach(field => {
+    
+        // ===== ОБЛОЖКА из поля "Превью" =====
+        const coverUrl = item['Превью'] || '';
+        if (coverUrl && coverUrl.trim() !== '') {
+            const coverDiv = document.createElement('div');
+            coverDiv.className = 'field';
+            coverDiv.innerHTML = `
+                <div class="field-label">Обложка</div>
+                <div class="field-value">
+                    <img src="${coverUrl}" alt="Обложка" class="cover-image" loading="lazy" 
+                         onerror="this.style.display='none'">
+                </div>
+            `;
+            body.appendChild(coverDiv);
+        }
+    
+        // ===== Остальные поля (кроме "Превью") =====
+        const fieldsToShow = cardFields.filter(f => f.key !== 'Превью');
+        fieldsToShow.forEach(field => {
             const value = item[field.key];
             const hasValue = value && String(value).trim() !== '';
             const div = document.createElement('div');
@@ -486,7 +503,7 @@
             `;
             body.appendChild(div);
         });
-
+    
         document.getElementById('modalOverlay').classList.add('open');
         document.body.style.overflow = 'hidden';
     }
