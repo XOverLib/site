@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XOVER — International Center for Graphic Literature</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+            background: #f8f6f2;
+            color: #1e1e1e;
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 2.5rem 2rem;
+            border-radius: 24px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+        }
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #0b1a2e;
+        }
+        .subhead {
+            font-size: 1.4rem;
+            font-weight: 400;
+            color: #3a4a5e;
+            margin-top: 0.25rem;
+            border-left: 5px solid #c44536;
+            padding-left: 1.25rem;
+        }
+        .badge-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem 2.5rem;
+            margin: 2rem 0 2.5rem;
+            background: #f0ede8;
+            padding: 1.25rem 1.75rem;
+            border-radius: 40px;
+        }
+        .badge-item {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        .badge-item span {
+            font-weight: 300;
+            color: #3a4a5e;
+        }
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-top: 2.8rem;
+            margin-bottom: 1.2rem;
+            border-bottom: 3px solid #e6e2da;
+            padding-bottom: 0.5rem;
+        }
+        .gcd-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px,1fr));
+            gap: 1rem;
+            background: #f4f2ed;
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin: 1.2rem 0 1.8rem;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #0b1a2e;
+        }
+        .stat-label {
+            font-size: 0.9rem;
+            color: #4a5a6e;
+        }
+        ul {
+            padding-left: 1.5rem;
+            margin: 0.8rem 0 1.5rem;
+        }
+        li {
+            margin-bottom: 0.4rem;
+        }
+        .link-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem 2rem;
+            margin: 1.5rem 0 0.5rem;
+        }
+        .link-list a {
+            color: #c44536;
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px solid transparent;
+            transition: 0.2s;
+        }
+        .link-list a:hover {
+            border-bottom-color: #c44536;
+        }
+        .footer {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e0dcd4;
+            font-size: 0.95rem;
+            color: #4a5a6e;
+            text-align: center;
+        }
+        @media (max-width: 600px) {
+            h1 { font-size: 2.2rem; }
+            .subhead { font-size: 1.1rem; }
+            .badge-grid { flex-direction: column; gap: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <h1>XOVER</h1>
+    <div class="subhead">International Center for Graphic Literature</div>
+
+    <div class="badge-grid">
+        <div class="badge-item">📚 2500+ items <span>in the collection</span></div>
+        <div class="badge-item">🌍 Top‑600 <span>worldwide by GCD</span></div>
+        <div class="badge-item">🇷🇺 Top‑3 <span>in Russia by GCD</span></div>
+        <div class="badge-item">🧾 1427 IMP <span>and growing</span></div>
+    </div>
+
+    <p style="font-size:1.2rem; margin-bottom:1.8rem;">
+        Systematic work on preserving, cataloging, and promoting graphic narratives —
+        from a local archive to international recognition.
+    </p>
+
+    <h2 class="section-title">⚡ GCD Activity</h2>
+    <div class="gcd-stats">
+        <div class="stat"><div class="stat-number">1427</div><div class="stat-label">IMPs</div></div>
+        <div class="stat"><div class="stat-number">#591</div><div class="stat-label">World Rank</div></div>
+        <div class="stat"><div class="stat-number">#3</div><div class="stat-label">Russia</div></div>
+        <div class="stat"><div class="stat-number">1127</div><div class="stat-label">gap from 4th place</div></div>
+    </div>
+    <p style="margin-top:-0.2rem;">
+        <a href="https://www.comics.org/contributor/" target="_blank" style="color:#c44536;">My GCD profile →</a>
+    </p>
+
+    <h2 class="section-title">🏛️ About the Project</h2>
+    <p>
+        XOVER is an international center for graphic literature, built at the intersection of
+        archival work, research, and publishing. The center is founded on a collection of over
+        2,500 comics, manga, and graphic novels, systematically organized according to global standards.
+    </p>
+    <p style="margin-top:0.6rem;">
+        Our mission is to preserve and promote graphic heritage, connect local culture to a global
+        context, and support researchers, authors, and readers around the world.
+    </p>
+
+    <h2 class="section-title">📦 Publishing Projects</h2>
+    <ul>
+        <li><strong>Visual Comments</strong> — annual zine based on social media folklore</li>
+        <li><strong>Center Chronicle</strong> — annual review journal of acquisitions and events</li>
+        <li><strong>Collection Bulletin</strong> — catalog of new arrivals with annotations</li>
+    </ul>
+
+    <h2 class="section-title">📌 Recent Additions</h2>
+    <ul>
+        <li><strong>Calugareni</strong> — Radu Theodoru, Romania, 1977</li>
+        <li><strong>Barefoot Gen</strong> — complete set, first Russian edition</li>
+        <li><strong>Blueberry</strong> — Jean Giraud (Mœbius), European comics legend</li>
+        <li><strong>The Healing of Ilya Muromets</strong> — modern graphic epic</li>
+    </ul>
+
+    <h2 class="section-title">🧭 Connect</h2>
+    <div class="link-list">
+        <a href="https://vk.ru/graphic.literature" target="_blank">VK</a>
+        <a href="https://t.me/graphicliterature" target="_blank">Telegram</a>
+        <a href="https://www.comics.org/contributor/" target="_blank">GCD Profile</a>
+        <a href="https://fantlab.ru/edition451026" target="_blank">"White Arrow"</a>
+    </div>
+
+    <div class="footer">
+        XOVER — International Center for Graphic Literature<br />
+        Founded in Rostov-on-Don · Working for the world
+    </div>
+
+</div>
+</body>
+</html>
