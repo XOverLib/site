@@ -21,7 +21,6 @@
             border-radius: 24px;
         }
 
-        /* КНОПКИ ЯЗЫКА */
         .lang-switch {
             display: flex;
             justify-content: flex-end;
@@ -48,25 +47,15 @@
             color: #fff;
         }
 
-        /* ЛОГОТИП */
         .logo-area {
             display: flex;
             align-items: center;
             gap: 1rem;
             margin-bottom: 1rem;
         }
-        .logo-placeholder {
-            width: 60px;
+        .logo-area img {
             height: 60px;
-            background: #c44536;
-            color: #ffffff;
-            font-weight: 700;
-            font-size: 1.4rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 12px;
-            letter-spacing: 0.1em;
+            width: auto;
         }
         .logo-text {
             font-size: 1.8rem;
@@ -77,7 +66,6 @@
             color: #c44536;
         }
 
-        /* ЗАГОЛОВКИ */
         h1 {
             font-size: 3rem;
             font-weight: 700;
@@ -93,7 +81,6 @@
             padding-left: 1.25rem;
         }
 
-        /* ПЛАШКИ */
         .badge-grid {
             display: flex;
             flex-wrap: wrap;
@@ -113,7 +100,6 @@
             color: #c44536;
         }
 
-        /* СЕКЦИИ */
         .section-title {
             font-size: 1.8rem;
             font-weight: 600;
@@ -124,7 +110,6 @@
             color: #0b1a2e;
         }
 
-        /* СТАТИСТИКА GCD */
         .gcd-stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(160px,1fr));
@@ -190,40 +175,41 @@
             h1 { font-size: 2.2rem; }
             .subhead { font-size: 1.1rem; }
             .badge-grid { flex-direction: column; gap: 0.5rem; }
+            .logo-area img { height: 40px; }
+            .logo-text { font-size: 1.2rem; }
         }
     </style>
 </head>
 <body>
 <div class="container">
 
-    <!-- Переключатель языка -->
     <div class="lang-switch">
         <button class="lang-btn active" id="btn-ru">RU</button>
         <button class="lang-btn" id="btn-en">EN</button>
     </div>
 
-    <!-- Логотип -->
+    <!-- ЛОГОТИП (замени logo.png на свой файл) -->
     <div class="logo-area">
-        <div class="logo-placeholder">X</div>
+        <img src="logo.png" alt="XOVER logo" />
         <div class="logo-text"><span>X</span>OVER</div>
     </div>
 
-    <!-- ===== РУССКАЯ ВЕРСИЯ ===== -->
+    <!-- ===== RUSSIAN ===== -->
     <div class="lang-ru active" id="lang-ru">
         <div class="subhead">Международный центр графической литературы</div>
 
         <div class="badge-grid">
-            <div class="badge-item">📚 2500+ изданий <span>в фонде</span></div>
-            <div class="badge-item">🌍 Топ‑600 <span>мира по GCD</span></div>
-            <div class="badge-item">🇷🇺 Топ‑3 <span>в России по GCD</span></div>
-            <div class="badge-item">🧾 1427 IMP <span>и растёт</span></div>
+            <div class="badge-item">2500+ изданий <span>в фонде</span></div>
+            <div class="badge-item">Топ-600 <span>мира по GCD</span></div>
+            <div class="badge-item">Топ-3 <span>в России по GCD</span></div>
+            <div class="badge-item">1427 IMP <span>и растёт</span></div>
         </div>
 
         <p style="font-size:1.2rem; margin-bottom:1.8rem; color:#0b1a2e;">
             Системная работа по сохранению, каталогизации и популяризации графических историй — от локального архива к международному признанию.
         </p>
 
-        <h2 class="section-title">⚡ Активность в GCD</h2>
+        <h2 class="section-title">Активность в GCD</h2>
         <div class="gcd-stats">
             <div class="stat"><div class="stat-number">1427</div><div class="stat-label">IMPs</div></div>
             <div class="stat"><div class="stat-number">#591</div><div class="stat-label">Мировой рейтинг</div></div>
@@ -231,21 +217,21 @@
             <div class="stat"><div class="stat-number">1127</div><div class="stat-label">отрыв от 4-го места</div></div>
         </div>
         <p style="margin-top:-0.2rem;">
-            <a href="https://www.comics.org/contributor/38733/" target="_blank" style="color:#c44536;">Мой профиль в GCD →</a>
+            <a href="https://www.comics.org/contributor/38733/" target="_blank" style="color:#c44536;">Профиль в GCD →</a>
         </p>
 
-        <h2 class="section-title">🏛️ О проекте</h2>
+        <h2 class="section-title">О проекте</h2>
         <p style="color:#0b1a2e;">XOVER — это международный центр графической литературы, созданный на стыке архивного дела, исследования и издательской деятельности. Центр основан на коллекции из более чем 2500 комиксов, манги и графических романов, систематизированной по мировым стандартам.</p>
         <p style="margin-top:0.6rem; color:#0b1a2e;">Миссия — сохранение и популяризация графического наследия, интеграция локальной культуры в глобальный контекст, поддержка исследователей, авторов и читателей.</p>
 
-        <h2 class="section-title">📦 Издательские проекты</h2>
+        <h2 class="section-title">Издательские проекты</h2>
         <ul style="color:#0b1a2e;">
             <li><strong>«Визуальные комментарии»</strong> — ежегодный зин по мотивам соцсетевого фольклора</li>
             <li><strong>«Летопись Центра»</strong> — ежегодный отчёт-журнал о пополнениях и событиях</li>
             <li><strong>«Бюллетень коллекции»</strong> — каталог новых поступлений с аннотациями</li>
         </ul>
 
-        <h2 class="section-title">📌 Последние поступления</h2>
+        <h2 class="section-title">Последние поступления</h2>
         <ul style="color:#0b1a2e;">
             <li><strong>Calugareni</strong> — Radu Theodoru, Румыния, 1977</li>
             <li><strong>Босоногий Гэн</strong> — полное собрание, первое издание в России</li>
@@ -253,7 +239,7 @@
             <li><strong>Исцеление Ильи Муромца</strong> — современный графический былинный сказ</li>
         </ul>
 
-        <h2 class="section-title">🧭 Навигация</h2>
+        <h2 class="section-title">Навигация</h2>
         <div class="link-list">
             <a href="https://vk.ru/graphic.literature" target="_blank">ВКонтакте</a>
             <a href="https://t.me/graphicliterature" target="_blank">Telegram</a>
@@ -267,22 +253,22 @@
         </div>
     </div>
 
-    <!-- ===== АНГЛИЙСКАЯ ВЕРСИЯ ===== -->
+    <!-- ===== ENGLISH ===== -->
     <div class="lang-en" id="lang-en">
         <div class="subhead">International Center for Graphic Literature</div>
 
         <div class="badge-grid">
-            <div class="badge-item">📚 2500+ items <span>in the collection</span></div>
-            <div class="badge-item">🌍 Top‑600 <span>worldwide by GCD</span></div>
-            <div class="badge-item">🇷🇺 Top‑3 <span>in Russia by GCD</span></div>
-            <div class="badge-item">🧾 1427 IMP <span>and growing</span></div>
+            <div class="badge-item">2500+ items <span>in the collection</span></div>
+            <div class="badge-item">Top-600 <span>worldwide by GCD</span></div>
+            <div class="badge-item">Top-3 <span>in Russia by GCD</span></div>
+            <div class="badge-item">1427 IMP <span>and growing</span></div>
         </div>
 
         <p style="font-size:1.2rem; margin-bottom:1.8rem; color:#0b1a2e;">
             Systematic work on preserving, cataloging, and promoting graphic narratives — from a local archive to international recognition.
         </p>
 
-        <h2 class="section-title">⚡ GCD Activity</h2>
+        <h2 class="section-title">GCD Activity</h2>
         <div class="gcd-stats">
             <div class="stat"><div class="stat-number">1427</div><div class="stat-label">IMPs</div></div>
             <div class="stat"><div class="stat-number">#591</div><div class="stat-label">World Rank</div></div>
@@ -290,21 +276,21 @@
             <div class="stat"><div class="stat-number">1127</div><div class="stat-label">gap from 4th place</div></div>
         </div>
         <p style="margin-top:-0.2rem;">
-            <a href="https://www.comics.org/contributor/38733/" target="_blank" style="color:#c44536;">My GCD profile →</a>
+            <a href="https://www.comics.org/contributor/38733/" target="_blank" style="color:#c44536;">GCD Profile →</a>
         </p>
 
-        <h2 class="section-title">🏛️ About the Project</h2>
+        <h2 class="section-title">About the Project</h2>
         <p style="color:#0b1a2e;">XOVER is an international center for graphic literature, built at the intersection of archival work, research, and publishing. The center is founded on a collection of over 2,500 comics, manga, and graphic novels, systematically organized according to global standards.</p>
         <p style="margin-top:0.6rem; color:#0b1a2e;">Our mission is to preserve and promote graphic heritage, connect local culture to a global context, and support researchers, authors, and readers around the world.</p>
 
-        <h2 class="section-title">📦 Publishing Projects</h2>
+        <h2 class="section-title">Publishing Projects</h2>
         <ul style="color:#0b1a2e;">
             <li><strong>Visual Comments</strong> — annual zine based on social media folklore</li>
             <li><strong>Center Chronicle</strong> — annual review journal of acquisitions and events</li>
             <li><strong>Collection Bulletin</strong> — catalog of new arrivals with annotations</li>
         </ul>
 
-        <h2 class="section-title">📌 Recent Additions</h2>
+        <h2 class="section-title">Recent Additions</h2>
         <ul style="color:#0b1a2e;">
             <li><strong>Calugareni</strong> — Radu Theodoru, Romania, 1977</li>
             <li><strong>Barefoot Gen</strong> — complete set, first Russian edition</li>
@@ -312,7 +298,7 @@
             <li><strong>The Healing of Ilya Muromets</strong> — modern graphic epic</li>
         </ul>
 
-        <h2 class="section-title">🧭 Connect</h2>
+        <h2 class="section-title">Connect</h2>
         <div class="link-list">
             <a href="https://vk.ru/graphic.literature" target="_blank">VK</a>
             <a href="https://t.me/graphicliterature" target="_blank">Telegram</a>
