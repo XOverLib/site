@@ -137,24 +137,24 @@
 <body>
 <div class="container">
 
-    <!-- Переключатель языков: флаги в порядке алфавита языковых кодов -->
+    <!-- Кнопки-флаги (по алфавиту языковых кодов) -->
     <div class="lang-switch">
-        <button class="lang-btn" data-lang="am">🇦🇲</button>
-        <button class="lang-btn" data-lang="be">🇧🇾</button>
-        <button class="lang-btn" data-lang="de">🇩🇪</button>
-        <button class="lang-btn active" data-lang="en">🇬🇧</button>
-        <button class="lang-btn" data-lang="es">🇪🇸</button>
-        <button class="lang-btn" data-lang="fi">🇫🇮</button>
-        <button class="lang-btn" data-lang="fr">🇫🇷</button>
-        <button class="lang-btn" data-lang="hr">🇭🇷</button>
-        <button class="lang-btn" data-lang="hu">🇭🇺</button>
-        <button class="lang-btn" data-lang="it">🇮🇹</button>
-        <button class="lang-btn" data-lang="nl">🇳🇱</button>
-        <button class="lang-btn" data-lang="pl">🇵🇱</button>
-        <button class="lang-btn" data-lang="pt">🇵🇹</button>
-        <button class="lang-btn" data-lang="ro">🇷🇴</button>
-        <button class="lang-btn" data-lang="ru">🇷🇺</button>
-        <button class="lang-btn" data-lang="sr">🇷🇸</button>
+        <button class="lang-btn" data-lang="am"><span class="flag">🇦🇲</span></button>
+        <button class="lang-btn" data-lang="be"><span class="flag">🇧🇾</span></button>
+        <button class="lang-btn" data-lang="de"><span class="flag">🇩🇪</span></button>
+        <button class="lang-btn active" data-lang="en"><span class="flag">🇬🇧</span></button>
+        <button class="lang-btn" data-lang="es"><span class="flag">🇪🇸</span></button>
+        <button class="lang-btn" data-lang="fi"><span class="flag">🇫🇮</span></button>
+        <button class="lang-btn" data-lang="fr"><span class="flag">🇫🇷</span></button>
+        <button class="lang-btn" data-lang="hr"><span class="flag">🇭🇷</span></button>
+        <button class="lang-btn" data-lang="hu"><span class="flag">🇭🇺</span></button>
+        <button class="lang-btn" data-lang="it"><span class="flag">🇮🇹</span></button>
+        <button class="lang-btn" data-lang="nl"><span class="flag">🇳🇱</span></button>
+        <button class="lang-btn" data-lang="pl"><span class="flag">🇵🇱</span></button>
+        <button class="lang-btn" data-lang="pt"><span class="flag">🇵🇹</span></button>
+        <button class="lang-btn" data-lang="ro"><span class="flag">🇷🇴</span></button>
+        <button class="lang-btn" data-lang="ru"><span class="flag">🇷🇺</span></button>
+        <button class="lang-btn" data-lang="sr"><span class="flag">🇷🇸</span></button>
     </div>
 
     <!-- Логотип -->
@@ -264,12 +264,10 @@
         document.getElementById('nav_arrow').textContent = t.nav_arrow;
         document.getElementById('footer').innerHTML = t.footer;
 
-        // Обновляем активную кнопку
         document.querySelectorAll('.lang-btn').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.lang === lang);
         });
 
-        // Меняем язык в теге html
         document.documentElement.lang = lang;
     }
 
@@ -277,10 +275,9 @@
         await loadTranslations();
         setLanguage('en');
 
-        // Назначаем обработчики на все кнопки
         document.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                setLanguage(this.dataset.lang);
+            btn.addEventListener('click', () => {
+                setLanguage(btn.dataset.lang);
             });
         });
     });
