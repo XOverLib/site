@@ -35,6 +35,7 @@
     "nav_tg": "Telegram",
     "nav_gcd": "GCD-ի պրոֆիլ",
     "nav_arrow": "«Սպիտակ նետ»",
+    "nav_catalog": "Կատալոգ",
     "footer": "XOVER — Գրաֆիկական գրականության միջազգային կենտրոն<br />Հիմնադրվել է Դոնի Ռոստովում · Աշխատում է աշխարհի համար"
   },
   "be": {
@@ -73,6 +74,7 @@
     "nav_tg": "Telegram",
     "nav_gcd": "Профіль GCD",
     "nav_arrow": "«Белая страла»",
+    "nav_catalog": "Каталог",
     "footer": "XOVER — Міжнародны цэнтр графічнай літаратуры<br />Заснаваны ў Растове-на-Доне · Працуе для свету"
   },
   "de": {
@@ -111,6 +113,7 @@
     "nav_tg": "Telegram",
     "nav_gcd": "GCD-Profil",
     "nav_arrow": "„Weißer Pfeil“",
+    "nav_catalog": "Katalog",
     "footer": "XOVER — Internationales Zentrum für grafische Literatur<br />Gegründet in Rostow am Don · Arbeitet für die Welt"
   },
   "en": {
@@ -149,6 +152,7 @@
     "nav_tg": "Telegram",
     "nav_gcd": "GCD Profile",
     "nav_arrow": "White Arrow",
+    "nav_catalog": "Catalog",
     "footer": "XOVER — International Center for Graphic Literature<br />Founded in Rostov-on-Don · Working for the world"
   },
   "es": {
@@ -187,6 +191,7 @@
     "nav_tg": "Telegram",
     "nav_gcd": "Perfil GCD",
     "nav_arrow": "«Flecha blanca»",
+    "nav_catalog": "Catálogo",
     "footer": "XOVER — Centro Internacional de Literatura Gráfica<br />Fundado en Rostov del Don · Trabajando para el mundo"
   },
   "fi": {
@@ -225,6 +230,7 @@
     "nav_tg": "Telegram",
     "nav_gcd": "GCD-profiili",
     "nav_arrow": "«Valkoinen nuoli»",
+    "nav_catalog": "Luettelo",
     "footer": "XOVER — Kansainvälinen graafisen kirjallisuuden keskus<br />Perustettu Rostov-on-Donissa · Työskentelee maailman hyväksi"
   },
   "fr": {
@@ -263,6 +269,7 @@
     "nav_tg": "Telegram",
     "nav_gcd": "Profil GCD",
     "nav_arrow": "« Flèche blanche »",
+    "nav_catalog": "Catalogue",
     "footer": "XOVER — Centre international de littérature graphique<br />Fondé à Rostov-sur-le-Don · Œuvre pour le monde"
   },
   "hr": {
@@ -301,6 +308,7 @@
     "nav_tg": "Telegram",
     "nav_gcd": "GCD profil",
     "nav_arrow": "«Bijela strijela»",
+    "nav_catalog": "Katalog",
     "footer": "XOVER — Međunarodni centar za grafičku književnost<br />Osnovan u Rostovu na Donu · Radi za svijet"
   },
   "hu": {
@@ -339,6 +347,7 @@
     "nav_tg": "Telegram",
     "nav_gcd": "GCD-profil",
     "nav_arrow": "„Fehér nyíl”",
+    "nav_catalog": "Katalógus",
     "footer": "XOVER — Grafikai Irodalom Nemzetközi Központja<br />Alapítva: Rosztov-na-Donu · A világért dolgozik"
   },
   "it": {
@@ -377,6 +386,7 @@
     "nav_tg": "Telegram",
     "nav_gcd": "Profilo GCD",
     "nav_arrow": "«Freccia bianca»",
+    "nav_catalog": "Catalogo",
     "footer": "XOVER — Centro Internazionale di Letteratura Grafica<br />Fondato a Rostov sul Don · Lavora per il mondo"
   },
   "ja": {
@@ -415,6 +425,7 @@
     "nav_tg": "Telegram",
     "nav_gcd": "GCDプロフィール",
     "nav_arrow": "『白い矢』",
+    "nav_catalog": "カタログ",
     "footer": "XOVER — 国際グラフィック文学センター<br />ロストフ・ナ・ドヌに創設 · 世界のために活動"
   },
   "nl": {
@@ -453,6 +464,7 @@
     "nav_tg": "Telegram",
     "nav_gcd": "GCD-profiel",
     "nav_arrow": "„Witte pijl”",
+    "nav_catalog": "Catalogus",
     "footer": "XOVER — Internationaal Centrum voor Grafische Literatuur<br />Opgericht in Rostov aan de Don · Werkt voor de wereld"
   },
   "pl": {
@@ -491,6 +503,7 @@
     "nav_tg": "Telegram",
     "nav_gcd": "Profil GCD",
     "nav_arrow": "„Biała strzała”",
+    "nav_catalog": "Katalog",
     "footer": "XOVER — Międzynarodowe Centrum Literatury Graficznej<br />Założone w Rostowie nad Donem · Pracuje dla świata"
   },
   "pt": {
@@ -529,6 +542,7 @@
     "nav_tg": "Telegram",
     "nav_gcd": "Perfil GCD",
     "nav_arrow": "«Seta branca»",
+    "nav_catalog": "Catálogo",
     "footer": "XOVER — Centro Internacional de Literatura Gráfica<br />Fundado em Rostov-on-Don · A trabalhar para o mundo"
   },
   "ro": {
@@ -567,6 +581,7 @@
     "nav_tg": "Telegram",
     "nav_gcd": "Profil GCD",
     "nav_arrow": "«Săgeata albă»",
+    "nav_catalog": "Catalog",
     "footer": "XOVER — Centrul Internațional de Literatură Grafică<br />Fondat în Rostov-pe-Don · Lucrează pentru lume"
   },
   "ru": {
@@ -605,6 +620,7 @@
     "nav_tg": "Telegram",
     "nav_gcd": "GCD профиль",
     "nav_arrow": "«Белая стрела»",
+    "nav_catalog": "Каталог",
     "footer": "XOVER — Международный центр графической литературы<br />Основан в Ростове-на-Дону · Работает для мира"
   },
   "sr": {
@@ -643,6 +659,7 @@
     "nav_tg": "Telegram",
     "nav_gcd": "GCD профил",
     "nav_arrow": "«Бела стрела»",
+    "nav_catalog": "Каталог",
     "footer": "XOVER — Међународни центар за графичку књижевност<br />Основан у Ростову на Дону · Ради за свет"
   },
   "zh": {
@@ -681,6 +698,7 @@
     "nav_tg": "Telegram",
     "nav_gcd": "GCD档案",
     "nav_arrow": "《白箭》",
+    "nav_catalog": "目录",
     "footer": "XOVER — 国际图形文学中心<br />创立于顿河畔罗斯托夫 · 为世界服务"
   }
 }
