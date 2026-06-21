@@ -591,8 +591,8 @@
     <div class="view-toggle">
         <span class="label">Вид отображения:</span>
         <div class="buttons">
-            <button id="viewList" class="active" onclick="setView('list')">📋 Список</button>
-            <button id="viewGrid" onclick="setView('grid')">📐 Плитка</button>
+            <button id="viewList" class="active" onclick="setView('list')">Список</button>
+            <button id="viewGrid" onclick="setView('grid')">Плитка</button>
         </div>
     </div>
 
@@ -625,7 +625,7 @@
 
 <div class="cover-tooltip" id="coverTooltip">
     <img id="tooltipImage" src="" alt="Обложка" />
-    <div class="no-cover-big" id="tooltipNoCover" style="display:none;">❌ Нет обложки</div>
+    <div class="no-cover-big" id="tooltipNoCover" style="display:none;">Нет обложки</div>
 </div>
 
 <div class="modal-overlay" id="modalOverlay">
@@ -744,7 +744,7 @@
         .catch(err => {
             document.getElementById('catalogBody').innerHTML =
                 `<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--accent);">
-                    ❌ Ошибка загрузки каталога: ${err.message}
+                    Ошибка загрузки каталога: ${err.message}
                 </td></tr>`;
         });
 
@@ -858,9 +858,9 @@
                 if (coverUrl && coverUrl.trim() !== '') {
                     coverHtml = `<img src="${coverUrl}" alt="Обложка" loading="lazy" 
                                  style="width:100%;height:100%;object-fit:contain;"
-                                 onerror="this.parentElement.innerHTML = '<div class=\\'no-cover\\'>❌ Обложка не загрузилась</div>'" />`;
+                                 onerror="this.parentElement.innerHTML = '<div class=\\'no-cover\\'>Обложка не загрузилась</div>'" />`;
                 } else {
-                    coverHtml = `<div class="no-cover">❌ Нет обложки</div>`;
+                    coverHtml = `<div class="no-cover">Нет обложки</div>`;
                 }
                 
                 return `<div class="grid-item" onclick="openCard(${start + idx})">
@@ -986,14 +986,14 @@
                 this.style.display = 'none';
                 const msg = document.createElement('div');
                 msg.className = 'no-cover';
-                msg.textContent = '❌ Обложка не загрузилась';
+                msg.textContent = 'Обложка не загрузилась';
                 coverContainer.appendChild(msg);
             };
             coverContainer.appendChild(img);
         } else {
             const msg = document.createElement('div');
             msg.className = 'no-cover';
-            msg.textContent = '❌ Нет обложки';
+            msg.textContent = 'Нет обложки';
             coverContainer.appendChild(msg);
         }
     
