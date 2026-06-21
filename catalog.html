@@ -663,16 +663,37 @@
         }
     }
 
+    // Восстанавливаем тему при загрузке
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
     updateThemeUI(savedTheme);
+
+    // ===== ВИД ОТОБРАЖЕНИЯ =====
+    // Восстанавливаем сохраненный вид
+    const savedView = localStorage.getItem('view') || 'list';
+    let currentView = savedView;
+
+    function setView(view) {
+        currentView = view;
+        localStorage.setItem('view', view); // Сохраняем в localStorage
+        
+        // Обновляем UI
+        document.getElementById('viewList').className = view === 'list' ? 'active' : '';
+        document.getElementById('viewGrid').className = view === 'grid' ? 'active' : '';
+        document.getElementById('listContainer').className = view === 'list' ? '' : 'hidden';
+        document.getElementById('gridContainer').className = view === 'grid' ? '' : 'hidden';
+        
+        renderAll();
+    }
+
+    // Применяем сохраненный вид сразу после загрузки
+    // (это выполнится после того, как данные загрузятся и отрендерятся)
 
     // ===== ОСТАЛЬНОЙ КОД =====
     let allData = [];
     let filteredData = [];
     let currentPage = 1;
     const perPage = 25;
-    let currentView = 'list';
 
     const tooltip = document.getElementById('coverTooltip');
     const tooltipImg = document.getElementById('tooltipImage');
@@ -717,6 +738,8 @@
             allData = data;
             populateFilters(data);
             applyFilters();
+            // После загрузки данных применяем сохраненный вид
+            setView(currentView);
         })
         .catch(err => {
             document.getElementById('catalogBody').innerHTML =
@@ -774,15 +797,6 @@
         document.getElementById('languageFilter').value = '';
         document.getElementById('typeFilter').value = '';
         applyFilters();
-    }
-
-    function setView(view) {
-        currentView = view;
-        document.getElementById('viewList').className = view === 'list' ? 'active' : '';
-        document.getElementById('viewGrid').className = view === 'grid' ? 'active' : '';
-        document.getElementById('listContainer').className = view === 'list' ? '' : 'hidden';
-        document.getElementById('gridContainer').className = view === 'grid' ? '' : 'hidden';
-        renderAll();
     }
 
     function renderAll() {
