@@ -69,7 +69,6 @@
         .search-box .reset-btn { background: #e0dcd4; color: #1e1e1e; }
         .search-box .reset-btn:hover { background: #ccc; }
 
-        /* Переключатель вида */
         .view-toggle {
             display: flex;
             gap: 0.5rem;
@@ -111,7 +110,6 @@
             color: #fff;
         }
 
-        /* Таблица (список) */
         .table-wrapper { overflow-x: auto; }
         .table-wrapper table {
             width: 100%;
@@ -142,15 +140,17 @@
             display: inline-block;
             position: relative;
             cursor: pointer;
-        }
-        .col-cover img {
             width: 40px;
             height: 56px;
-            object-fit: contain;
+            overflow: hidden;
             border-radius: 4px;
             background: #f0ede8;
+        }
+        .col-cover .thumb-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
             display: block;
-            margin: 0 auto;
             transition: transform 0.2s;
         }
         .col-cover .thumb-wrap:hover img {
@@ -162,18 +162,13 @@
             display: block;
             text-align: center;
         }
-        /* Горизонтальная обложка в списке */
-        .col-cover img.cover-horizontal {
-            width: 56px;
-            height: 40px;
-        }
         .col-title { min-width: 180px; font-weight: 500; }
         .col-series { min-width: 120px; }
         .col-authors { min-width: 120px; }
         .col-language { min-width: 70px; }
         .col-year { min-width: 70px; }
 
-        /* Плитка (grid) */
+        /* Плитка — как Pinterest */
         .grid-view {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -187,6 +182,8 @@
             overflow: hidden;
             cursor: pointer;
             transition: 0.2s;
+            display: flex;
+            flex-direction: column;
         }
         .grid-view .grid-item:hover {
             transform: translateY(-4px);
@@ -195,42 +192,41 @@
         }
         .grid-view .grid-item .grid-cover {
             width: 100%;
-            aspect-ratio: 2/3;
             background: #f0ede8;
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
+            min-height: 100px;
+            flex-shrink: 0;
         }
-        .grid-view .grid-item .grid-cover img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-        /* Горизонтальная обложка в плитке */
-        .grid-view .grid-item .grid-cover img.cover-horizontal {
-            width: auto;
-            height: 100%;
-            object-fit: contain;
-        }
-        /* Вертикальная обложка в плитке */
+        /* Вертикальная обложка — занимает всю высоту */
         .grid-view .grid-item .grid-cover img.cover-vertical {
             width: 100%;
             height: auto;
+            display: block;
             object-fit: contain;
         }
+        /* Горизонтальная обложка — занимает всю ширину */
+        .grid-view .grid-item .grid-cover img.cover-horizontal {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: contain;
+        }
+        /* Если картинка не загрузилась */
         .grid-view .grid-item .grid-cover .no-cover {
             color: #ccc;
             font-size: 0.8rem;
             text-align: center;
-            padding: 1rem;
+            padding: 2rem 1rem;
         }
         .grid-view .grid-item .grid-info {
             padding: 0.8rem 1rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
         .grid-view .grid-item .grid-info .grid-title {
             font-weight: 600;
@@ -264,7 +260,6 @@
             border-radius: 4px;
         }
 
-        /* Тултип для обложки */
         .cover-tooltip {
             position: fixed;
             pointer-events: none;
@@ -320,7 +315,6 @@
 
         .counter { margin-top: 1rem; color: #4a5a6e; font-size: 0.9rem; text-align: center; }
 
-        /* Модальное окно */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -376,35 +370,6 @@
         }
         .modal .field-value { width: 60%; color: #1e1e1e; }
         .modal .field-value.empty { color: #aaa; font-style: italic; }
-        .modal .cover-wrapper {
-            text-align: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid #f0ede8;
-        }
-        .modal .cover-wrapper img {
-            max-width: 200px;
-            max-height: 300px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        .modal .cover-wrapper .no-cover {
-            color: #aaa;
-            font-style: italic;
-            padding: 0.5rem;
-        }
-        .modal .close-btn-bottom {
-            margin-top: 1.5rem;
-            padding: 0.6rem 2rem;
-            background: #c44536;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-        }
-        .modal .close-btn-bottom:hover { background: #a8352a; }
         .modal .card-layout {
             display: flex;
             gap: 2rem;
@@ -414,12 +379,19 @@
         .modal .card-cover {
             flex: 0 0 220px;
             max-width: 240px;
+            background: #f0ede8;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .modal .card-cover img {
             width: 100%;
             height: auto;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            max-height: 400px;
+            object-fit: contain;
+            display: block;
         }
         .modal .card-cover .no-cover {
             color: #aaa;
@@ -457,10 +429,6 @@
             color: #aaa;
             font-style: italic;
         }
-        .modal h2 {
-            margin-bottom: 0.8rem;
-            font-size: 1.4rem;
-        }
         .modal .close-btn-bottom {
             margin-top: 1rem;
             padding: 0.5rem 2rem;
@@ -472,9 +440,7 @@
             cursor: pointer;
             width: 100%;
         }
-        .modal .close-btn-bottom:hover {
-            background: #a8352a;
-        }
+        .modal .close-btn-bottom:hover { background: #a8352a; }
 
         .hidden { display: none !important; }
         
@@ -530,7 +496,6 @@
         <button class="reset-btn" onclick="resetFilters()">Сбросить</button>
     </div>
 
-    <!-- Переключатель вида -->
     <div class="view-toggle">
         <span class="label">Вид отображения:</span>
         <div class="buttons">
@@ -539,7 +504,6 @@
         </div>
     </div>
 
-    <!-- Контейнер для списка -->
     <div id="listContainer">
         <div class="table-wrapper">
             <table>
@@ -558,7 +522,6 @@
         </div>
     </div>
 
-    <!-- Контейнер для плитки -->
     <div id="gridContainer" class="hidden">
         <div class="grid-view" id="gridBody"></div>
     </div>
@@ -568,13 +531,11 @@
 
 </div>
 
-<!-- Тултип для большой обложки -->
 <div class="cover-tooltip" id="coverTooltip">
     <img id="tooltipImage" src="" alt="Обложка" />
     <div class="no-cover-big" id="tooltipNoCover" style="display:none;">❌ Нет обложки</div>
 </div>
 
-<!-- Модальное окно -->
 <div class="modal-overlay" id="modalOverlay">
     <div class="modal" id="modal">
         <button class="modal-close" onclick="closeModal()">✕</button>
@@ -594,7 +555,6 @@
     const perPage = 25;
     let currentView = 'list';
 
-    // Тултип
     const tooltip = document.getElementById('coverTooltip');
     const tooltipImg = document.getElementById('tooltipImage');
     const tooltipNoCover = document.getElementById('tooltipNoCover');
@@ -611,12 +571,14 @@
         { key: 'Авторы', label: 'Авторы' },
         { key: 'Издательство оригинал', label: 'Издательство (оригинал)' },
         { key: 'Издательство РФ', label: 'Издательство (РФ)' },
-        { key: 'Год издания', label: 'Год издания' },
-        { key: 'Год переиздания', label: 'Год переиздания' },
-        { key: 'Страна', label: 'Страна' },
-        { key: 'Язык', label: 'Язык' },
         { key: 'ISBN', label: 'ISBN' },
         { key: 'Тираж', label: 'Тираж' },
+        { key: 'Вселенная', label: 'Вселенная' },
+        { key: 'Серия', label: 'Серия' },
+        { key: 'Подсерия', label: 'Подсерия' },
+        { key: 'Выпуски (если есть)', label: 'Выпуски' },
+        { key: 'Номер в серии', label: 'Номер в серии' },
+        { key: 'Номер в подсерии', label: 'Номер в подсерии' },
         { key: 'Тип издания', label: 'Тип издания' },
         { key: 'Размеры', label: 'Размеры' },
         { key: 'Масса', label: 'Масса' },
@@ -718,24 +680,6 @@
             `Показано ${Math.min(filteredData.length, perPage)} из ${filteredData.length} записей`;
     }
 
-    // ==================== ОПРЕДЕЛЕНИЕ ОРИЕНТАЦИИ ОБЛОЖКИ ====================
-    function getCoverOrientation(coverUrl) {
-        return new Promise((resolve) => {
-            const img = new Image();
-            img.onload = function() {
-                if (img.width > img.height) {
-                    resolve('horizontal');
-                } else {
-                    resolve('vertical');
-                }
-            };
-            img.onerror = function() {
-                resolve('vertical'); // по умолчанию вертикальная
-            };
-            img.src = coverUrl;
-        });
-    }
-
     // ==================== СПИСОК ====================
     function renderTable() {
         const start = (currentPage - 1) * perPage;
@@ -749,15 +693,12 @@
                 const coverUrl = item['превью'] || '';
                 let coverHtml = '';
                 if (coverUrl && coverUrl.trim() !== '') {
-                    // Определяем ориентацию по расширению или просто вставляем картинку
-                    // Будем определять через загрузку
                     coverHtml = `<div class="thumb-wrap" 
                            data-cover="${coverUrl}"
                            onmouseenter="showTooltip(event, '${coverUrl}')"
                            onmouseleave="hideTooltip()"
                            onmousemove="moveTooltip(event)">
                         <img src="${coverUrl}" alt="Обложка" loading="lazy" 
-                             onload="this.className = this.naturalWidth > this.naturalHeight ? 'cover-horizontal' : ''"
                              onerror="this.style.display='none'" />
                       </div>`;
                 } else {
@@ -791,7 +732,7 @@
                 if (coverUrl && coverUrl.trim() !== '') {
                     coverHtml = `<img src="${coverUrl}" alt="Обложка" loading="lazy" 
                                  onload="this.className = this.naturalWidth > this.naturalHeight ? 'cover-horizontal' : 'cover-vertical'"
-                                 onerror="this.style.display='none'" />`;
+                                 onerror="this.parentElement.innerHTML = '<div class=\\'no-cover\\'>❌ Обложка не загрузилась</div>'" />`;
                 } else {
                     coverHtml = `<div class="no-cover">❌ Нет обложки</div>`;
                 }
@@ -812,7 +753,7 @@
         }
     }
 
-    // ==================== ТУЛТИП С БОЛЬШОЙ ОБЛОЖКОЙ ====================
+    // ==================== ТУЛТИП ====================
     function showTooltip(event, coverUrl) {
         clearTimeout(tooltipTimeout);
         tooltipImg.style.display = 'none';
@@ -900,7 +841,7 @@
         window.scrollTo({ top: document.querySelector('.view-toggle').offsetTop - 20, behavior: 'smooth' });
     }
 
-    // ==================== КАРТОЧКА ИЗДАНИЯ ====================
+    // ==================== КАРТОЧКА ====================
     function openCard(index) {
         const item = filteredData[index];
         if (!item) return;
@@ -915,9 +856,6 @@
             img.src = coverUrl;
             img.alt = 'Обложка';
             img.loading = 'lazy';
-            img.style.maxWidth = '100%';
-            img.style.maxHeight = '400px';
-            img.style.objectFit = 'contain';
             img.onerror = function() {
                 this.style.display = 'none';
                 const msg = document.createElement('div');
@@ -940,7 +878,10 @@
         grid.className = 'fields-grid';
     
         const fieldsToShow = cardFields.filter(f => f.key !== 'Превью' && f.key !== 'превью');
+        const seen = new Set();
         fieldsToShow.forEach(field => {
+            if (seen.has(field.key)) return;
+            seen.add(field.key);
             const value = item[field.key];
             const hasValue = value && String(value).trim() !== '';
             const div = document.createElement('div');
