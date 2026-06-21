@@ -146,7 +146,7 @@
         .col-cover img {
             width: 40px;
             height: 56px;
-            object-fit: cover;
+            object-fit: contain;
             border-radius: 4px;
             background: #f0ede8;
             display: block;
@@ -161,6 +161,11 @@
             font-size: 0.7rem;
             display: block;
             text-align: center;
+        }
+        /* Горизонтальная обложка в списке */
+        .col-cover img.cover-horizontal {
+            width: 56px;
+            height: 40px;
         }
         .col-title { min-width: 180px; font-weight: 500; }
         .col-series { min-width: 120px; }
@@ -196,11 +201,27 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
         }
         .grid-view .grid-item .grid-cover img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        /* Горизонтальная обложка в плитке */
+        .grid-view .grid-item .grid-cover img.cover-horizontal {
+            width: auto;
+            height: 100%;
+            object-fit: contain;
+        }
+        /* Вертикальная обложка в плитке */
+        .grid-view .grid-item .grid-cover img.cover-vertical {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
         }
         .grid-view .grid-item .grid-cover .no-cover {
             color: #ccc;
@@ -254,8 +275,8 @@
             padding: 8px;
             opacity: 0;
             transition: opacity 0.2s ease;
-            max-width: 300px;
-            max-height: 420px;
+            max-width: 400px;
+            max-height: 500px;
             display: none;
         }
         .cover-tooltip.visible {
@@ -265,7 +286,7 @@
         .cover-tooltip img {
             width: 100%;
             height: auto;
-            max-height: 400px;
+            max-height: 480px;
             object-fit: contain;
             border-radius: 8px;
             display: block;
@@ -571,7 +592,7 @@
     let filteredData = [];
     let currentPage = 1;
     const perPage = 25;
-    let currentView = 'list'; // 'list' или 'grid'
+    let currentView = 'list';
 
     // Тултип
     const tooltip = document.getElementById('coverTooltip');
@@ -604,7 +625,11 @@
         { key: 'Страницы', label: 'Страницы' },
         { key: 'Число издания', label: 'Число издания' },
         { key: 'Месяц издания', label: 'Месяц издания' },
-        { key: 'Вселенная', label: 'Вселенная' },
+        { key: 'Год издания', label: 'Год издания' },
+        { key: 'Год переиздания', label: 'Год переиздания' },
+        { key: 'Страна', label: 'Страна' },
+        { key: 'Язык', label: 'Язык' },
+        { key: 'Авторы', label: 'Авторы' },
         { key: 'Количество', label: 'Количество' }
     ];
 
@@ -693,6 +718,24 @@
             `Показано ${Math.min(filteredData.length, perPage)} из ${filteredData.length} записей`;
     }
 
+    // ==================== ОПРЕДЕЛЕНИЕ ОРИЕНТАЦИИ ОБЛОЖКИ ====================
+    function getCoverOrientation(coverUrl) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = function() {
+                if (img.width > img.height) {
+                    resolve('horizontal');
+                } else {
+                    resolve('vertical');
+                }
+            };
+            img.onerror = function() {
+                resolve('vertical'); // по умолчанию вертикальная
+            };
+            img.src = coverUrl;
+        });
+    }
+
     // ==================== СПИСОК ====================
     function renderTable() {
         const start = (currentPage - 1) * perPage;
@@ -704,15 +747,22 @@
         } else {
             tbody.innerHTML = pageData.map((item, idx) => {
                 const coverUrl = item['превью'] || '';
-                const coverHtml = coverUrl && coverUrl.trim() !== '' 
-                    ? `<div class="thumb-wrap" 
+                let coverHtml = '';
+                if (coverUrl && coverUrl.trim() !== '') {
+                    // Определяем ориентацию по расширению или просто вставляем картинку
+                    // Будем определять через загрузку
+                    coverHtml = `<div class="thumb-wrap" 
                            data-cover="${coverUrl}"
                            onmouseenter="showTooltip(event, '${coverUrl}')"
                            onmouseleave="hideTooltip()"
                            onmousemove="moveTooltip(event)">
-                        <img src="${coverUrl}" alt="Обложка" loading="lazy" onerror="this.style.display='none'" />
-                      </div>`
-                    : `<span class="no-cover">—</span>`;
+                        <img src="${coverUrl}" alt="Обложка" loading="lazy" 
+                             onload="this.className = this.naturalWidth > this.naturalHeight ? 'cover-horizontal' : ''"
+                             onerror="this.style.display='none'" />
+                      </div>`;
+                } else {
+                    coverHtml = `<span class="no-cover">—</span>`;
+                }
                 
                 return `<tr onclick="openCard(${start + idx})">
                     <td class="col-cover">${coverHtml}</td>
@@ -737,9 +787,14 @@
         } else {
             gridBody.innerHTML = pageData.map((item, idx) => {
                 const coverUrl = item['превью'] || '';
-                const coverHtml = coverUrl && coverUrl.trim() !== '' 
-                    ? `<img src="${coverUrl}" alt="Обложка" loading="lazy" onerror="this.style.display='none'" />`
-                    : `<div class="no-cover">❌ Нет обложки</div>`;
+                let coverHtml = '';
+                if (coverUrl && coverUrl.trim() !== '') {
+                    coverHtml = `<img src="${coverUrl}" alt="Обложка" loading="lazy" 
+                                 onload="this.className = this.naturalWidth > this.naturalHeight ? 'cover-horizontal' : 'cover-vertical'"
+                                 onerror="this.style.display='none'" />`;
+                } else {
+                    coverHtml = `<div class="no-cover">❌ Нет обложки</div>`;
+                }
                 
                 return `<div class="grid-item" onclick="openCard(${start + idx})">
                     <div class="grid-cover">${coverHtml}</div>
@@ -860,6 +915,9 @@
             img.src = coverUrl;
             img.alt = 'Обложка';
             img.loading = 'lazy';
+            img.style.maxWidth = '100%';
+            img.style.maxHeight = '400px';
+            img.style.objectFit = 'contain';
             img.onerror = function() {
                 this.style.display = 'none';
                 const msg = document.createElement('div');
