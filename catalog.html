@@ -114,6 +114,24 @@
         .theme-toggle .icon { font-size: 1.2rem; transition: transform 0.3s; }
         .theme-toggle .label { font-weight: 500; }
 
+        .lang-selector {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-right: 1rem;
+        }
+        .lang-selector select {
+            padding: 0.3rem 0.6rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: border-color 0.3s, background 0.3s, color 0.3s;
+        }
+        .lang-selector select:focus { outline: none; border-color: var(--accent); }
+
         .search-box {
             display: flex;
             gap: 0.5rem;
@@ -279,7 +297,6 @@
             box-shadow: 0 8px 30px var(--shadow-hover);
             border-color: var(--accent);
         }
-        /* Контейнер обложки с фиксированным aspect-ratio 2:3 */
         .grid-view .grid-item .grid-cover {
             width: 100%;
             aspect-ratio: 2 / 3;
@@ -291,7 +308,6 @@
             position: relative;
             flex-shrink: 0;
         }
-        /* Картинка заполняет контейнер, но не вылезает за края */
         .grid-view .grid-item .grid-cover img {
             width: 100%;
             height: 100%;
@@ -522,6 +538,11 @@
         .modal .close-btn-bottom:hover { background: var(--accent-hover); }
 
         .hidden { display: none !important; }
+
+        .language-flag {
+            display: inline-block;
+            margin-right: 0.3rem;
+        }
         
         @media (max-width: 600px) {
             .modal .card-layout {
@@ -541,6 +562,12 @@
                 gap: 1rem;
             }
             .theme-toggle-wrap {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .lang-selector {
+                margin-right: 0;
+                width: 100%;
                 justify-content: center;
             }
         }
@@ -566,15 +593,38 @@
 <div class="container">
 
     <div class="theme-toggle-wrap">
+        <div class="lang-selector">
+            <span>🌐</span>
+            <select id="langSelect" onchange="changeLanguage(this.value)">
+                <option value="am">Հայերեն</option>
+                <option value="be">Беларуская</option>
+                <option value="de">Deutsch</option>
+                <option value="en">English</option>
+                <option value="es">Español</option>
+                <option value="fi">Suomi</option>
+                <option value="fr">Français</option>
+                <option value="hr">Hrvatski</option>
+                <option value="hu">Magyar</option>
+                <option value="it">Italiano</option>
+                <option value="ja">日本語</option>
+                <option value="nl">Nederlands</option>
+                <option value="pl">Polski</option>
+                <option value="pt">Português</option>
+                <option value="ro">Română</option>
+                <option value="ru">Русский</option>
+                <option value="sr">Српски</option>
+                <option value="zh">中文</option>
+            </select>
+        </div>
         <div class="theme-toggle" onclick="toggleTheme()">
             <span class="icon" id="themeIcon">🌙</span>
             <span class="label" id="themeLabel">Тёмная</span>
         </div>
     </div>
 
-    <a href="/" class="back-link">← На главную</a>
-    <h1>Каталог коллекции</h1>
-    <div class="subhead">Все издания, которые есть в фонде XOVER</div>
+    <a href="/" class="back-link" id="backLink">← На главную</a>
+    <h1 id="pageHeading">Каталог коллекции</h1>
+    <div class="subhead" id="pageSubhead">Все издания, которые есть в фонде XOVER</div>
 
     <div class="search-box">
         <input type="text" id="searchInput" placeholder="Поиск по названию, автору, серии..." oninput="applyFilters()">
@@ -584,15 +634,15 @@
         <select id="typeFilter" onchange="applyFilters()">
             <option value="">Все типы</option>
         </select>
-        <button onclick="applyFilters()">Найти</button>
-        <button class="reset-btn" onclick="resetFilters()">Сбросить</button>
+        <button id="searchBtn" onclick="applyFilters()">Найти</button>
+        <button class="reset-btn" id="resetBtn" onclick="resetFilters()">Сбросить</button>
     </div>
 
     <div class="view-toggle">
-        <span class="label">Вид отображения:</span>
+        <span class="label" id="viewLabel">Вид отображения:</span>
         <div class="buttons">
-            <button id="viewList" class="active" onclick="setView('list')">Список</button>
-            <button id="viewGrid" onclick="setView('grid')">Плитка</button>
+            <button id="viewList" class="active" onclick="setView('list')">📋 Список</button>
+            <button id="viewGrid" onclick="setView('grid')">📐 Плитка</button>
         </div>
     </div>
 
@@ -601,12 +651,12 @@
             <table>
                 <thead>
                     <tr>
-                        <th class="col-cover">Обл.</th>
-                        <th class="col-title">Название</th>
-                        <th class="col-series">Серия</th>
-                        <th class="col-authors">Авторы</th>
-                        <th class="col-language">Язык</th>
-                        <th class="col-year">Год</th>
+                        <th class="col-cover" id="thCover">Обл.</th>
+                        <th class="col-title" id="thTitle">Название</th>
+                        <th class="col-series" id="thSeries">Серия</th>
+                        <th class="col-authors" id="thAuthors">Авторы</th>
+                        <th class="col-language" id="thLanguage">Язык</th>
+                        <th class="col-year" id="thYear">Год</th>
                     </tr>
                 </thead>
                 <tbody id="catalogBody"></tbody>
@@ -636,11 +686,109 @@
             <div class="card-cover" id="modalCover"></div>
             <div class="card-fields" id="modalFields"></div>
         </div>
-        <button class="close-btn-bottom" onclick="closeModal()">Закрыть</button>
+        <button class="close-btn-bottom" id="modalCloseBtn" onclick="closeModal()">Закрыть</button>
     </div>
 </div>
 
 <script>
+    // ===== ПЕРЕВОДЫ =====
+    let langData = {};
+    let currentLang = 'ru';
+
+    // Список поддерживаемых языков с их названиями
+    const languageNames = {
+        'am': 'Հայերեն',
+        'be': 'Беларуская',
+        'de': 'Deutsch',
+        'en': 'English',
+        'es': 'Español',
+        'fi': 'Suomi',
+        'fr': 'Français',
+        'hr': 'Hrvatski',
+        'hu': 'Magyar',
+        'it': 'Italiano',
+        'ja': '日本語',
+        'nl': 'Nederlands',
+        'pl': 'Polski',
+        'pt': 'Português',
+        'ro': 'Română',
+        'ru': 'Русский',
+        'sr': 'Српски',
+        'zh': '中文'
+    };
+
+    function detectLanguage() {
+        // Проверяем сохраненный язык
+        const savedLang = localStorage.getItem('catalog_lang');
+        if (savedLang && langData[savedLang]) {
+            return savedLang;
+        }
+        
+        // Проверяем URL параметр
+        const urlParams = new URLSearchParams(window.location.search);
+        const langParam = urlParams.get('lang');
+        if (langParam && langData[langParam]) {
+            return langParam;
+        }
+        
+        // Проверяем язык браузера
+        const browserLang = navigator.language.split('-')[0];
+        if (langData[browserLang]) {
+            return browserLang;
+        }
+        
+        return 'ru'; // язык по умолчанию
+    }
+
+    function t(key, params = {}) {
+        let text = langData[currentLang]?.[key] || langData['ru']?.[key] || key;
+        for (const [param, value] of Object.entries(params)) {
+            text = text.replace(`{${param}}`, value);
+        }
+        return text;
+    }
+
+    function applyTranslations() {
+        document.title = t('title');
+        document.getElementById('pageHeading').textContent = t('heading');
+        document.getElementById('pageSubhead').textContent = t('subhead');
+        document.getElementById('backLink').textContent = t('back_link');
+        document.getElementById('searchInput').placeholder = t('search_placeholder');
+        
+        const langFilter = document.getElementById('languageFilter');
+        langFilter.options[0].textContent = t('language_filter');
+        
+        const typeFilter = document.getElementById('typeFilter');
+        typeFilter.options[0].textContent = t('type_filter');
+        
+        document.getElementById('searchBtn').textContent = t('search_button');
+        document.getElementById('resetBtn').textContent = t('reset_button');
+        document.getElementById('viewLabel').textContent = t('view_label');
+        document.getElementById('viewList').textContent = t('view_list');
+        document.getElementById('viewGrid').textContent = t('view_grid');
+        document.getElementById('thCover').textContent = t('table_cover');
+        document.getElementById('thTitle').textContent = t('table_title');
+        document.getElementById('thSeries').textContent = t('table_series');
+        document.getElementById('thAuthors').textContent = t('table_authors');
+        document.getElementById('thLanguage').textContent = t('table_language');
+        document.getElementById('thYear').textContent = t('table_year');
+        document.getElementById('modalCloseBtn').textContent = t('modal_close');
+        
+        // Обновляем счетчик
+        updateCounter();
+    }
+
+    function changeLanguage(lang) {
+        if (langData[lang]) {
+            currentLang = lang;
+            localStorage.setItem('catalog_lang', lang);
+            document.documentElement.lang = lang;
+            document.getElementById('langSelect').value = lang;
+            applyTranslations();
+            renderAll();
+        }
+    }
+
     // ===== ТЕМА =====
     function toggleTheme() {
         const html = document.documentElement;
@@ -656,28 +804,25 @@
         const label = document.getElementById('themeLabel');
         if (theme === 'dark') {
             icon.textContent = '☀️';
-            label.textContent = 'Светлая';
+            label.textContent = t('light_theme');
         } else {
             icon.textContent = '🌙';
-            label.textContent = 'Тёмная';
+            label.textContent = t('dark_theme');
         }
     }
 
     // Восстанавливаем тему при загрузке
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
-    updateThemeUI(savedTheme);
 
     // ===== ВИД ОТОБРАЖЕНИЯ =====
-    // Восстанавливаем сохраненный вид
     const savedView = localStorage.getItem('view') || 'list';
     let currentView = savedView;
 
     function setView(view) {
         currentView = view;
-        localStorage.setItem('view', view); // Сохраняем в localStorage
+        localStorage.setItem('view', view);
         
-        // Обновляем UI
         document.getElementById('viewList').className = view === 'list' ? 'active' : '';
         document.getElementById('viewGrid').className = view === 'grid' ? 'active' : '';
         document.getElementById('listContainer').className = view === 'list' ? '' : 'hidden';
@@ -685,9 +830,6 @@
         
         renderAll();
     }
-
-    // Применяем сохраненный вид сразу после загрузки
-    // (это выполнится после того, как данные загрузятся и отрендерятся)
 
     // ===== ОСТАЛЬНОЙ КОД =====
     let allData = [];
@@ -729,23 +871,46 @@
         { key: 'Количество', label: 'Количество' }
     ];
 
-    fetch('catalog.json')
+    // ===== ЗАГРУЗКА ДАННЫХ =====
+    function loadCatalog() {
+        fetch('catalog.json')
+            .then(res => {
+                if (!res.ok) throw new Error('Не удалось загрузить каталог');
+                return res.json();
+            })
+            .then(data => {
+                allData = data;
+                populateFilters(data);
+                applyFilters();
+                setView(currentView);
+            })
+            .catch(err => {
+                document.getElementById('catalogBody').innerHTML =
+                    `<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--accent);">
+                        ❌ Ошибка загрузки каталога: ${err.message}
+                    </td></tr>`;
+            });
+    }
+
+    // Сначала загружаем переводы, потом каталог
+    fetch('catalog_languages.json')
         .then(res => {
-            if (!res.ok) throw new Error('Не удалось загрузить каталог');
+            if (!res.ok) throw new Error('Не удалось загрузить переводы');
             return res.json();
         })
         .then(data => {
-            allData = data;
-            populateFilters(data);
-            applyFilters();
-            // После загрузки данных применяем сохраненный вид
-            setView(currentView);
+            langData = data;
+            currentLang = detectLanguage();
+            document.getElementById('langSelect').value = currentLang;
+            document.documentElement.lang = currentLang;
+            applyTranslations();
+            updateThemeUI(savedTheme);
+            loadCatalog();
         })
         .catch(err => {
-            document.getElementById('catalogBody').innerHTML =
-                `<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--accent);">
-                    Ошибка загрузки каталога: ${err.message}
-                </td></tr>`;
+            console.error('Ошибка загрузки переводов:', err);
+            // Загружаем каталог даже без переводов
+            loadCatalog();
         });
 
     function populateFilters(data) {
@@ -757,6 +922,10 @@
         });
 
         const langSelect = document.getElementById('languageFilter');
+        // Сохраняем первый опции (Все языки)
+        const firstOption = langSelect.options[0];
+        langSelect.innerHTML = '';
+        langSelect.appendChild(firstOption);
         languages.forEach(l => {
             const opt = document.createElement('option');
             opt.value = l;
@@ -765,6 +934,9 @@
         });
 
         const typeSelect = document.getElementById('typeFilter');
+        const firstTypeOption = typeSelect.options[0];
+        typeSelect.innerHTML = '';
+        typeSelect.appendChild(firstTypeOption);
         types.forEach(t => {
             const opt = document.createElement('option');
             opt.value = t;
@@ -803,8 +975,12 @@
         renderTable();
         renderGrid();
         renderPagination();
-        document.getElementById('counter').textContent =
-            `Показано ${Math.min(filteredData.length, perPage)} из ${filteredData.length} записей`;
+        updateCounter();
+    }
+
+    function updateCounter() {
+        const shown = Math.min(filteredData.length, perPage);
+        document.getElementById('counter').textContent = t('counter', { shown: shown, total: filteredData.length });
     }
 
     function renderTable() {
@@ -813,7 +989,7 @@
         const tbody = document.getElementById('catalogBody');
 
         if (pageData.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--text-secondary);">Ничего не найдено</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--text-secondary);">${t('no_results')}</td></tr>`;
         } else {
             tbody.innerHTML = pageData.map((item, idx) => {
                 const coverUrl = item['превью'] || '';
@@ -829,7 +1005,7 @@
                              onerror="this.style.display='none'" />
                       </div>`;
                 } else {
-                    coverHtml = `<span class="no-cover">—</span>`;
+                    coverHtml = `<span class="no-cover">${t('no_cover')}</span>`;
                 }
                 
                 return `<tr onclick="openCard(${start + idx})">
@@ -850,7 +1026,7 @@
         const gridBody = document.getElementById('gridBody');
 
         if (pageData.length === 0) {
-            gridBody.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--text-secondary);">Ничего не найдено</div>`;
+            gridBody.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--text-secondary);">${t('no_results')}</div>`;
         } else {
             gridBody.innerHTML = pageData.map((item, idx) => {
                 const coverUrl = item['превью'] || '';
@@ -858,9 +1034,9 @@
                 if (coverUrl && coverUrl.trim() !== '') {
                     coverHtml = `<img src="${coverUrl}" alt="Обложка" loading="lazy" 
                                  style="width:100%;height:100%;object-fit:contain;"
-                                 onerror="this.parentElement.innerHTML = '<div class=\\'no-cover\\'>Обложка не загрузилась</div>'" />`;
+                                 onerror="this.parentElement.innerHTML = '<div class=\\'no-cover\\'>${t('no_cover_grid')}</div>'" />`;
                 } else {
-                    coverHtml = `<div class="no-cover">Нет обложки</div>`;
+                    coverHtml = `<div class="no-cover">${t('no_cover_grid')}</div>`;
                 }
                 
                 return `<div class="grid-item" onclick="openCard(${start + idx})">
@@ -945,7 +1121,7 @@
             return;
         }
 
-        let html = `<button onclick="goToPage(1)" ${currentPage === 1 ? 'disabled' : ''}>«</button>`;
+        let html = `<button onclick="goToPage(1)" ${currentPage === 1 ? 'disabled' : ''}>${t('pagination_first')}</button>`;
         for (let i = 1; i <= totalPages; i++) {
             if (i === 1 || i === totalPages || Math.abs(i - currentPage) <= 2) {
                 html += `<button onclick="goToPage(${i})" class="${i === currentPage ? 'active' : ''}">${i}</button>`;
@@ -953,7 +1129,7 @@
                 html += `<button disabled>…</button>`;
             }
         }
-        html += `<button onclick="goToPage(${totalPages})" ${currentPage === totalPages ? 'disabled' : ''}>»</button>`;
+        html += `<button onclick="goToPage(${totalPages})" ${currentPage === totalPages ? 'disabled' : ''}>${t('pagination_last')}</button>`;
         pagination.innerHTML = html;
     }
 
@@ -986,14 +1162,14 @@
                 this.style.display = 'none';
                 const msg = document.createElement('div');
                 msg.className = 'no-cover';
-                msg.textContent = 'Обложка не загрузилась';
+                msg.textContent = t('no_cover_modal');
                 coverContainer.appendChild(msg);
             };
             coverContainer.appendChild(img);
         } else {
             const msg = document.createElement('div');
             msg.className = 'no-cover';
-            msg.textContent = 'Нет обложки';
+            msg.textContent = t('no_cover_modal');
             coverContainer.appendChild(msg);
         }
     
