@@ -91,7 +91,6 @@
         }
         .back-link:hover { border-bottom-color: var(--accent); }
 
-        /* === Переключатель темы === */
         .theme-toggle-wrap {
             display: flex;
             justify-content: flex-end;
@@ -111,16 +110,9 @@
             color: var(--text-secondary);
             user-select: none;
         }
-        .theme-toggle:hover {
-            border-color: var(--accent);
-        }
-        .theme-toggle .icon {
-            font-size: 1.2rem;
-            transition: transform 0.3s;
-        }
-        .theme-toggle .label {
-            font-weight: 500;
-        }
+        .theme-toggle:hover { border-color: var(--accent); }
+        .theme-toggle .icon { font-size: 1.2rem; transition: transform 0.3s; }
+        .theme-toggle .label { font-weight: 500; }
 
         .search-box {
             display: flex;
@@ -247,10 +239,11 @@
             overflow: hidden;
             border-radius: 4px;
             background: var(--bg-cover-placeholder);
+            flex-shrink: 0;
         }
         .col-cover .thumb-wrap img {
-            width: 100%;
-            height: 100%;
+            width: 40px;
+            height: 56px;
             object-fit: contain;
             display: block;
             transition: transform 0.2s;
@@ -263,6 +256,7 @@
         .col-language { min-width: 70px; }
         .col-year { min-width: 70px; }
 
+        /* ===== ПЛИТКА — фиксированный размер ячеек ===== */
         .grid-view {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -285,28 +279,24 @@
             box-shadow: 0 8px 30px var(--shadow-hover);
             border-color: var(--accent);
         }
+        /* Контейнер обложки с фиксированным aspect-ratio 2:3 */
         .grid-view .grid-item .grid-cover {
             width: 100%;
+            aspect-ratio: 2 / 3;
             background: var(--bg-cover-placeholder);
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
-            min-height: 100px;
             flex-shrink: 0;
         }
-        .grid-view .grid-item .grid-cover img.cover-vertical {
+        /* Картинка заполняет контейнер, но не вылезает за края */
+        .grid-view .grid-item .grid-cover img {
             width: 100%;
-            height: auto;
-            display: block;
+            height: 100%;
             object-fit: contain;
-        }
-        .grid-view .grid-item .grid-cover img.cover-horizontal {
-            width: 100%;
-            height: auto;
             display: block;
-            object-fit: contain;
         }
         .grid-view .grid-item .grid-cover .no-cover {
             color: var(--text-light);
@@ -477,11 +467,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            aspect-ratio: 2/3;
         }
         .modal .card-cover img {
             width: 100%;
-            height: auto;
-            max-height: 400px;
+            height: 100%;
             object-fit: contain;
             display: block;
         }
@@ -541,6 +531,7 @@
             .modal .card-cover {
                 flex: 0 0 auto;
                 max-width: 150px;
+                aspect-ratio: 2/3;
             }
             .modal .fields-grid {
                 grid-template-columns: 1fr;
@@ -574,7 +565,6 @@
 <body>
 <div class="container">
 
-    <!-- Переключатель темы -->
     <div class="theme-toggle-wrap">
         <div class="theme-toggle" onclick="toggleTheme()">
             <span class="icon" id="themeIcon">🌙</span>
@@ -673,7 +663,6 @@
         }
     }
 
-    // Загрузка сохранённой темы
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
     updateThemeUI(savedTheme);
@@ -704,11 +693,6 @@
         { key: 'ISBN', label: 'ISBN' },
         { key: 'Тираж', label: 'Тираж' },
         { key: 'Вселенная', label: 'Вселенная' },
-        { key: 'Серия', label: 'Серия' },
-        { key: 'Подсерия', label: 'Подсерия' },
-        { key: 'Выпуски (если есть)', label: 'Выпуски' },
-        { key: 'Номер в серии', label: 'Номер в серии' },
-        { key: 'Номер в подсерии', label: 'Номер в подсерии' },
         { key: 'Тип издания', label: 'Тип издания' },
         { key: 'Размеры', label: 'Размеры' },
         { key: 'Масса', label: 'Масса' },
@@ -721,7 +705,6 @@
         { key: 'Год переиздания', label: 'Год переиздания' },
         { key: 'Страна', label: 'Страна' },
         { key: 'Язык', label: 'Язык' },
-        { key: 'Авторы', label: 'Авторы' },
         { key: 'Количество', label: 'Количество' }
     ];
 
@@ -828,6 +811,7 @@
                            onmouseleave="hideTooltip()"
                            onmousemove="moveTooltip(event)">
                         <img src="${coverUrl}" alt="Обложка" loading="lazy" 
+                             width="40" height="56"
                              onerror="this.style.display='none'" />
                       </div>`;
                 } else {
@@ -859,7 +843,7 @@
                 let coverHtml = '';
                 if (coverUrl && coverUrl.trim() !== '') {
                     coverHtml = `<img src="${coverUrl}" alt="Обложка" loading="lazy" 
-                                 onload="this.className = this.naturalWidth > this.naturalHeight ? 'cover-horizontal' : 'cover-vertical'"
+                                 style="width:100%;height:100%;object-fit:contain;"
                                  onerror="this.parentElement.innerHTML = '<div class=\\'no-cover\\'>❌ Обложка не загрузилась</div>'" />`;
                 } else {
                     coverHtml = `<div class="no-cover">❌ Нет обложки</div>`;
@@ -981,6 +965,9 @@
             img.src = coverUrl;
             img.alt = 'Обложка';
             img.loading = 'lazy';
+            img.style.width = '100%';
+            img.style.height = '100%';
+            img.style.objectFit = 'contain';
             img.onerror = function() {
                 this.style.display = 'none';
                 const msg = document.createElement('div');
