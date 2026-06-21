@@ -86,6 +86,22 @@
             cursor: pointer;
         }
         tr:hover td { background: #f8f6f2; }
+        .col-cover { width: 60px; text-align: center; }
+        .col-cover img {
+            width: 40px;
+            height: 56px;
+            object-fit: cover;
+            border-radius: 4px;
+            background: #f0ede8;
+            display: block;
+            margin: 0 auto;
+        }
+        .col-cover .no-cover {
+            color: #ccc;
+            font-size: 0.7rem;
+            display: block;
+            text-align: center;
+        }
         .col-title { min-width: 180px; font-weight: 500; }
         .col-series { min-width: 120px; }
         .col-authors { min-width: 120px; }
@@ -131,7 +147,7 @@
         .modal-overlay.open { display: flex; }
         .modal {
             background: #fff;
-            max-width: 800px;   /* ← было 600px, стало 800px */
+            max-width: 800px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
@@ -199,7 +215,6 @@
             width: 100%;
         }
         .modal .close-btn-bottom:hover { background: #a8352a; }
-        /* Новая карточка — обложка слева, текст справа */
         .modal .card-layout {
             display: flex;
             gap: 2rem;
@@ -207,7 +222,7 @@
             max-height: 70vh;
         }
         .modal .card-cover {
-            flex: 0 0 220px;    /* ← было 200px, стало 220px */
+            flex: 0 0 220px;
             max-width: 240px;
         }
         .modal .card-cover img {
@@ -284,17 +299,6 @@
                 grid-template-columns: 1fr;
             }
         }
-        
-        @media (max-width: 600px) {
-            .modal .card-layout {
-                flex-direction: column;
-                align-items: center;
-            }
-            .modal .card-cover {
-                flex: 0 0 auto;
-                max-width: 120px;
-            }
-        }
 
         @media (max-width: 768px) {
             .container { padding: 1rem; }
@@ -334,6 +338,7 @@
         <table>
             <thead>
                 <tr>
+                    <th class="col-cover">Обл.</th>
                     <th class="col-title">Название</th>
                     <th class="col-series">Серия</th>
                     <th class="col-authors">Авторы</th>
@@ -356,9 +361,7 @@
         <button class="modal-close" onclick="closeModal()">✕</button>
         <h2 id="modalTitle">Название</h2>
         <div class="card-layout" id="modalBody">
-            <!-- Слева: обложка -->
             <div class="card-cover" id="modalCover"></div>
-            <!-- Справа: текст -->
             <div class="card-fields" id="modalFields"></div>
         </div>
         <button class="close-btn-bottom" onclick="closeModal()">Закрыть</button>
@@ -371,7 +374,6 @@
     let currentPage = 1;
     const perPage = 25;
 
-    // Поля для карточки (все, кроме "Превью")
     const cardFields = [
         { key: 'Название', label: 'Название' },
         { key: 'Тип литературы', label: 'Тип литературы' },
@@ -401,7 +403,6 @@
         { key: 'Количество', label: 'Количество' }
     ];
 
-    // Загружаем данные
     fetch('catalog.json')
         .then(res => {
             if (!res.ok) throw new Error('Не удалось загрузить каталог');
@@ -414,7 +415,7 @@
         })
         .catch(err => {
             document.getElementById('catalogBody').innerHTML =
-                `<tr><td colspan="5" style="text-align:center;padding:2rem;color:#c44536;">
+                `<tr><td colspan="6" style="text-align:center;padding:2rem;color:#c44536;">
                     ❌ Ошибка загрузки каталога: ${err.message}
                 </td></tr>`;
         });
@@ -476,17 +477,23 @@
         const tbody = document.getElementById('catalogBody');
 
         if (pageData.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:2rem;color:#4a5a6e;">Ничего не найдено</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:2rem;color:#4a5a6e;">Ничего не найдено</td></tr>`;
         } else {
-            tbody.innerHTML = pageData.map((item, idx) => `
-                <tr onclick="openCard(${start + idx})">
+            tbody.innerHTML = pageData.map((item, idx) => {
+                const coverUrl = item['превью'] || '';
+                const coverHtml = coverUrl && coverUrl.trim() !== '' 
+                    ? `<img src="${coverUrl}" alt="Обложка" loading="lazy" onerror="this.style.display='none'" />`
+                    : `<span class="no-cover">—</span>`;
+                
+                return `<tr onclick="openCard(${start + idx})">
+                    <td class="col-cover">${coverHtml}</td>
                     <td class="col-title">${item['Название'] || ''}</td>
                     <td class="col-series">${item['Серия'] || ''}</td>
                     <td class="col-authors">${item['Авторы'] || ''}</td>
                     <td class="col-language">${item['Язык'] || ''}</td>
                     <td class="col-year">${item['Год издания'] || ''}</td>
-                </tr>
-            `).join('');
+                </tr>`;
+            }).join('');
         }
 
         renderPagination();
@@ -523,16 +530,14 @@
     }
 
     // ============================================================
-    // КАРТОЧКА ИЗДАНИЯ — ПРОСТАЯ И НАДЁЖНАЯ
+    // КАРТОЧКА ИЗДАНИЯ
     // ============================================================
     function openCard(index) {
         const item = filteredData[index];
         if (!item) return;
     
-        // Заголовок
         document.getElementById('modalTitle').textContent = item['Название'] || 'Без названия';
     
-        // === ОБЛОЖКА (слева) ===
         const coverContainer = document.getElementById('modalCover');
         coverContainer.innerHTML = '';
         const coverUrl = item['превью'] || '';
@@ -556,7 +561,6 @@
             coverContainer.appendChild(msg);
         }
     
-        // === ДАННЫЕ (справа, в две колонки) ===
         const fieldsContainer = document.getElementById('modalFields');
         fieldsContainer.innerHTML = '';
     
@@ -578,7 +582,6 @@
     
         fieldsContainer.appendChild(grid);
     
-        // Показываем модальное окно
         document.getElementById('modalOverlay').classList.add('open');
         document.body.style.overflow = 'hidden';
     }
@@ -588,16 +591,13 @@
         document.body.style.overflow = '';
     }
 
-    // Закрытие по клику вне модалки
     document.getElementById('modalOverlay').addEventListener('click', function(e) {
         if (e.target === this) closeModal();
     });
 
-    // Закрытие по ESC
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') closeModal();
     });
 </script>
-
 </body>
 </html>
