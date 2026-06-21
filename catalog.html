@@ -69,9 +69,56 @@
         .search-box .reset-btn { background: #e0dcd4; color: #1e1e1e; }
         .search-box .reset-btn:hover { background: #ccc; }
 
+        /* Переключатель вида */
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 0.5rem 1rem;
+            background: #f8f6f2;
+            border-radius: 12px;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .view-toggle .label {
+            font-size: 0.9rem;
+            color: #4a5a6e;
+            font-weight: 500;
+        }
+        .view-toggle .buttons {
+            display: flex;
+            gap: 0.3rem;
+        }
+        .view-toggle .buttons button {
+            padding: 0.4rem 1rem;
+            border: 2px solid #e0dcd4;
+            background: #fff;
+            color: #4a5a6e;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.2s;
+            font-size: 0.9rem;
+        }
+        .view-toggle .buttons button:hover {
+            border-color: #c44536;
+            color: #c44536;
+        }
+        .view-toggle .buttons button.active {
+            background: #c44536;
+            border-color: #c44536;
+            color: #fff;
+        }
+
+        /* Таблица (список) */
         .table-wrapper { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-        th {
+        .table-wrapper table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        .table-wrapper th {
             background: #0b1a2e;
             color: #fff;
             padding: 0.6rem 0.8rem;
@@ -80,12 +127,12 @@
             top: 0;
             z-index: 10;
         }
-        td {
+        .table-wrapper td {
             padding: 0.5rem 0.8rem;
             border-bottom: 1px solid #e0dcd4;
             cursor: pointer;
         }
-        tr:hover td { background: #f8f6f2; }
+        .table-wrapper tr:hover td { background: #f8f6f2; }
         .col-cover {
             width: 60px;
             text-align: center;
@@ -115,7 +162,88 @@
             display: block;
             text-align: center;
         }
-        /* Тултип с большой обложкой */
+        .col-title { min-width: 180px; font-weight: 500; }
+        .col-series { min-width: 120px; }
+        .col-authors { min-width: 120px; }
+        .col-language { min-width: 70px; }
+        .col-year { min-width: 70px; }
+
+        /* Плитка (grid) */
+        .grid-view {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            padding: 0.5rem 0;
+        }
+        .grid-view .grid-item {
+            background: #fff;
+            border: 1px solid #e0dcd4;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .grid-view .grid-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            border-color: #c44536;
+        }
+        .grid-view .grid-item .grid-cover {
+            width: 100%;
+            aspect-ratio: 2/3;
+            background: #f0ede8;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .grid-view .grid-item .grid-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .grid-view .grid-item .grid-cover .no-cover {
+            color: #ccc;
+            font-size: 0.8rem;
+            text-align: center;
+            padding: 1rem;
+        }
+        .grid-view .grid-item .grid-info {
+            padding: 0.8rem 1rem;
+        }
+        .grid-view .grid-item .grid-info .grid-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #0b1a2e;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 0.3rem;
+        }
+        .grid-view .grid-item .grid-info .grid-authors {
+            font-size: 0.8rem;
+            color: #4a5a6e;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .grid-view .grid-item .grid-info .grid-meta {
+            font-size: 0.75rem;
+            color: #999;
+            margin-top: 0.3rem;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .grid-view .grid-item .grid-info .grid-meta span {
+            background: #f8f6f2;
+            padding: 0.1rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        /* Тултип для обложки */
         .cover-tooltip {
             position: fixed;
             pointer-events: none;
@@ -148,12 +276,6 @@
             text-align: center;
             font-style: italic;
         }
-
-        .col-title { min-width: 180px; font-weight: 500; }
-        .col-series { min-width: 120px; }
-        .col-authors { min-width: 120px; }
-        .col-language { min-width: 70px; }
-        .col-year { min-width: 70px; }
 
         .pagination {
             display: flex;
@@ -332,6 +454,8 @@
         .modal .close-btn-bottom:hover {
             background: #a8352a;
         }
+
+        .hidden { display: none !important; }
         
         @media (max-width: 600px) {
             .modal .card-layout {
@@ -344,6 +468,10 @@
             }
             .modal .fields-grid {
                 grid-template-columns: 1fr;
+            }
+            .grid-view {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 1rem;
             }
         }
 
@@ -381,20 +509,37 @@
         <button class="reset-btn" onclick="resetFilters()">Сбросить</button>
     </div>
 
-    <div class="table-wrapper">
-        <table>
-            <thead>
-                <tr>
-                    <th class="col-cover">Обл.</th>
-                    <th class="col-title">Название</th>
-                    <th class="col-series">Серия</th>
-                    <th class="col-authors">Авторы</th>
-                    <th class="col-language">Язык</th>
-                    <th class="col-year">Год</th>
-                </tr>
-            </thead>
-            <tbody id="catalogBody"></tbody>
-        </table>
+    <!-- Переключатель вида -->
+    <div class="view-toggle">
+        <span class="label">Вид отображения:</span>
+        <div class="buttons">
+            <button id="viewList" class="active" onclick="setView('list')">📋 Список</button>
+            <button id="viewGrid" onclick="setView('grid')">📐 Плитка</button>
+        </div>
+    </div>
+
+    <!-- Контейнер для списка -->
+    <div id="listContainer">
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="col-cover">Обл.</th>
+                        <th class="col-title">Название</th>
+                        <th class="col-series">Серия</th>
+                        <th class="col-authors">Авторы</th>
+                        <th class="col-language">Язык</th>
+                        <th class="col-year">Год</th>
+                    </tr>
+                </thead>
+                <tbody id="catalogBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Контейнер для плитки -->
+    <div id="gridContainer" class="hidden">
+        <div class="grid-view" id="gridBody"></div>
     </div>
 
     <div class="pagination" id="pagination"></div>
@@ -426,6 +571,7 @@
     let filteredData = [];
     let currentPage = 1;
     const perPage = 25;
+    let currentView = 'list'; // 'list' или 'grid'
 
     // Тултип
     const tooltip = document.getElementById('coverTooltip');
@@ -520,7 +666,7 @@
         });
 
         currentPage = 1;
-        renderTable();
+        renderAll();
     }
 
     function resetFilters() {
@@ -530,6 +676,24 @@
         applyFilters();
     }
 
+    function setView(view) {
+        currentView = view;
+        document.getElementById('viewList').className = view === 'list' ? 'active' : '';
+        document.getElementById('viewGrid').className = view === 'grid' ? 'active' : '';
+        document.getElementById('listContainer').className = view === 'list' ? '' : 'hidden';
+        document.getElementById('gridContainer').className = view === 'grid' ? '' : 'hidden';
+        renderAll();
+    }
+
+    function renderAll() {
+        renderTable();
+        renderGrid();
+        renderPagination();
+        document.getElementById('counter').textContent =
+            `Показано ${Math.min(filteredData.length, perPage)} из ${filteredData.length} записей`;
+    }
+
+    // ==================== СПИСОК ====================
     function renderTable() {
         const start = (currentPage - 1) * perPage;
         const pageData = filteredData.slice(start, start + perPage);
@@ -560,10 +724,37 @@
                 </tr>`;
             }).join('');
         }
+    }
 
-        renderPagination();
-        document.getElementById('counter').textContent =
-            `Показано ${pageData.length} из ${filteredData.length} записей`;
+    // ==================== ПЛИТКА ====================
+    function renderGrid() {
+        const start = (currentPage - 1) * perPage;
+        const pageData = filteredData.slice(start, start + perPage);
+        const gridBody = document.getElementById('gridBody');
+
+        if (pageData.length === 0) {
+            gridBody.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:2rem;color:#4a5a6e;">Ничего не найдено</div>`;
+        } else {
+            gridBody.innerHTML = pageData.map((item, idx) => {
+                const coverUrl = item['превью'] || '';
+                const coverHtml = coverUrl && coverUrl.trim() !== '' 
+                    ? `<img src="${coverUrl}" alt="Обложка" loading="lazy" onerror="this.style.display='none'" />`
+                    : `<div class="no-cover">❌ Нет обложки</div>`;
+                
+                return `<div class="grid-item" onclick="openCard(${start + idx})">
+                    <div class="grid-cover">${coverHtml}</div>
+                    <div class="grid-info">
+                        <div class="grid-title">${item['Название'] || 'Без названия'}</div>
+                        <div class="grid-authors">${item['Авторы'] || ''}</div>
+                        <div class="grid-meta">
+                            ${item['Серия'] ? `<span>${item['Серия']}</span>` : ''}
+                            ${item['Год издания'] ? `<span>${item['Год издания']}</span>` : ''}
+                            ${item['Язык'] ? `<span>${item['Язык']}</span>` : ''}
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
     }
 
     // ==================== ТУЛТИП С БОЛЬШОЙ ОБЛОЖКОЙ ====================
@@ -572,7 +763,6 @@
         tooltipImg.style.display = 'none';
         tooltipNoCover.style.display = 'none';
         
-        // Загружаем изображение
         const img = new Image();
         img.onload = function() {
             tooltipImg.src = coverUrl;
@@ -597,12 +787,8 @@
     }
 
     function positionTooltip(event) {
-        const x = event.clientX + 15;
-        const y = event.clientY + 15;
-        
-        // Проверяем, чтобы тултип не выходил за экран
-        let left = x;
-        let top = y;
+        let left = event.clientX + 15;
+        let top = event.clientY + 15;
         
         const tooltipWidth = 300;
         const tooltipHeight = 420;
@@ -627,9 +813,9 @@
         }, 300);
     }
 
-    // Скрываем тултип при скролле
     document.addEventListener('scroll', hideTooltip);
 
+    // ==================== ПАГИНАЦИЯ ====================
     function renderPagination() {
         const totalPages = Math.ceil(filteredData.length / perPage);
         const pagination = document.getElementById('pagination');
@@ -655,12 +841,11 @@
         const totalPages = Math.ceil(filteredData.length / perPage);
         if (page < 1 || page > totalPages) return;
         currentPage = page;
-        renderTable();
+        renderAll();
+        window.scrollTo({ top: document.querySelector('.view-toggle').offsetTop - 20, behavior: 'smooth' });
     }
 
-    // ============================================================
-    // КАРТОЧКА ИЗДАНИЯ
-    // ============================================================
+    // ==================== КАРТОЧКА ИЗДАНИЯ ====================
     function openCard(index) {
         const item = filteredData[index];
         if (!item) return;
