@@ -86,7 +86,16 @@
             cursor: pointer;
         }
         tr:hover td { background: #f8f6f2; }
-        .col-cover { width: 60px; text-align: center; }
+        .col-cover {
+            width: 60px;
+            text-align: center;
+            position: relative;
+        }
+        .col-cover .thumb-wrap {
+            display: inline-block;
+            position: relative;
+            cursor: pointer;
+        }
         .col-cover img {
             width: 40px;
             height: 56px;
@@ -95,6 +104,10 @@
             background: #f0ede8;
             display: block;
             margin: 0 auto;
+            transition: transform 0.2s;
+        }
+        .col-cover .thumb-wrap:hover img {
+            transform: scale(1.05);
         }
         .col-cover .no-cover {
             color: #ccc;
@@ -102,6 +115,40 @@
             display: block;
             text-align: center;
         }
+        /* Тултип с большой обложкой */
+        .cover-tooltip {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 8px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            max-width: 300px;
+            max-height: 420px;
+            display: none;
+        }
+        .cover-tooltip.visible {
+            opacity: 1;
+            display: block;
+        }
+        .cover-tooltip img {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: contain;
+            border-radius: 8px;
+            display: block;
+        }
+        .cover-tooltip .no-cover-big {
+            padding: 2rem;
+            color: #aaa;
+            text-align: center;
+            font-style: italic;
+        }
+
         .col-title { min-width: 180px; font-weight: 500; }
         .col-series { min-width: 120px; }
         .col-authors { min-width: 120px; }
@@ -355,6 +402,12 @@
 
 </div>
 
+<!-- Тултип для большой обложки -->
+<div class="cover-tooltip" id="coverTooltip">
+    <img id="tooltipImage" src="" alt="Обложка" />
+    <div class="no-cover-big" id="tooltipNoCover" style="display:none;">❌ Нет обложки</div>
+</div>
+
 <!-- Модальное окно -->
 <div class="modal-overlay" id="modalOverlay">
     <div class="modal" id="modal">
@@ -373,6 +426,12 @@
     let filteredData = [];
     let currentPage = 1;
     const perPage = 25;
+
+    // Тултип
+    const tooltip = document.getElementById('coverTooltip');
+    const tooltipImg = document.getElementById('tooltipImage');
+    const tooltipNoCover = document.getElementById('tooltipNoCover');
+    let tooltipTimeout = null;
 
     const cardFields = [
         { key: 'Название', label: 'Название' },
@@ -482,7 +541,13 @@
             tbody.innerHTML = pageData.map((item, idx) => {
                 const coverUrl = item['превью'] || '';
                 const coverHtml = coverUrl && coverUrl.trim() !== '' 
-                    ? `<img src="${coverUrl}" alt="Обложка" loading="lazy" onerror="this.style.display='none'" />`
+                    ? `<div class="thumb-wrap" 
+                           data-cover="${coverUrl}"
+                           onmouseenter="showTooltip(event, '${coverUrl}')"
+                           onmouseleave="hideTooltip()"
+                           onmousemove="moveTooltip(event)">
+                        <img src="${coverUrl}" alt="Обложка" loading="lazy" onerror="this.style.display='none'" />
+                      </div>`
                     : `<span class="no-cover">—</span>`;
                 
                 return `<tr onclick="openCard(${start + idx})">
@@ -500,6 +565,70 @@
         document.getElementById('counter').textContent =
             `Показано ${pageData.length} из ${filteredData.length} записей`;
     }
+
+    // ==================== ТУЛТИП С БОЛЬШОЙ ОБЛОЖКОЙ ====================
+    function showTooltip(event, coverUrl) {
+        clearTimeout(tooltipTimeout);
+        tooltipImg.style.display = 'none';
+        tooltipNoCover.style.display = 'none';
+        
+        // Загружаем изображение
+        const img = new Image();
+        img.onload = function() {
+            tooltipImg.src = coverUrl;
+            tooltipImg.style.display = 'block';
+            tooltipNoCover.style.display = 'none';
+            tooltip.classList.add('visible');
+            positionTooltip(event);
+        };
+        img.onerror = function() {
+            tooltipImg.style.display = 'none';
+            tooltipNoCover.style.display = 'block';
+            tooltip.classList.add('visible');
+            positionTooltip(event);
+        };
+        img.src = coverUrl;
+    }
+
+    function moveTooltip(event) {
+        if (tooltip.classList.contains('visible')) {
+            positionTooltip(event);
+        }
+    }
+
+    function positionTooltip(event) {
+        const x = event.clientX + 15;
+        const y = event.clientY + 15;
+        
+        // Проверяем, чтобы тултип не выходил за экран
+        let left = x;
+        let top = y;
+        
+        const tooltipWidth = 300;
+        const tooltipHeight = 420;
+        
+        if (left + tooltipWidth > window.innerWidth) {
+            left = event.clientX - tooltipWidth - 15;
+        }
+        if (top + tooltipHeight > window.innerHeight) {
+            top = window.innerHeight - tooltipHeight - 10;
+        }
+        if (top < 10) top = 10;
+        if (left < 10) left = 10;
+        
+        tooltip.style.left = left + 'px';
+        tooltip.style.top = top + 'px';
+    }
+
+    function hideTooltip() {
+        clearTimeout(tooltipTimeout);
+        tooltipTimeout = setTimeout(() => {
+            tooltip.classList.remove('visible');
+        }, 300);
+    }
+
+    // Скрываем тултип при скролле
+    document.addEventListener('scroll', hideTooltip);
 
     function renderPagination() {
         const totalPages = Math.ceil(filteredData.length / perPage);
