@@ -1179,21 +1179,45 @@
         const grid = document.createElement('div');
         grid.className = 'fields-grid';
     
-        const fieldsToShow = cardFields.filter(f => f.key !== 'Превью' && f.key !== 'превью');
-        const seen = new Set();
-        fieldsToShow.forEach(field => {
-            if (seen.has(field.key)) return;
-            seen.add(field.key);
-            const value = item[field.key];
+        // Список полей, которые должны отображаться (все возможные)
+        const allFieldKeys = [
+            'Название', 'Тип литературы', 'Серия', 'Подсерия', 
+            'Номер в серии', 'Номер в подсерии', 'Выпуски (если есть)',
+            'Авторы', 'Издательство оригинал', 'Издательство РФ',
+            'ISBN', 'Тираж', 'Вселенная', 'Тип издания', 
+            'Размеры', 'Масса', 'Бумага', 'Издание',
+            'Страницы', 'Число издания', 'Месяц издания',
+            'Год издания', 'Год переиздания', 'Страна', 'Язык', 'Количество'
+        ];
+    
+        // Проходим по всем полям и показываем только те, у которых есть значение
+        allFieldKeys.forEach(fieldKey => {
+            const value = item[fieldKey];
             const hasValue = value && String(value).trim() !== '';
+            
+            // Показываем только если поле не пустое
+            if (hasValue) {
+                const div = document.createElement('div');
+                div.className = 'field';
+                div.innerHTML = `
+                    <div class="field-label">${fieldKey}</div>
+                    <div class="field-value">${value}</div>
+                `;
+                grid.appendChild(div);
+            }
+        });
+    
+        // Если после фильтрации не осталось ни одного поля, показываем сообщение
+        if (grid.children.length === 0) {
             const div = document.createElement('div');
             div.className = 'field';
-            div.innerHTML = `
-                <div class="field-label">${field.label}</div>
-                <div class="field-value ${hasValue ? '' : 'empty'}">${hasValue ? value : '—'}</div>
-            `;
+            div.style.gridColumn = '1 / -1';
+            div.style.textAlign = 'center';
+            div.style.padding = '1rem';
+            div.style.color = 'var(--text-muted)';
+            div.textContent = 'Нет дополнительных данных';
             grid.appendChild(div);
-        });
+        }
     
         fieldsContainer.appendChild(grid);
     
