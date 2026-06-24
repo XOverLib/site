@@ -253,10 +253,10 @@
 
         <h2 class="section-title" id="gcd_title"></h2>
         <div class="gcd-stats">
-            <div class="stat"><div class="stat-number">1427</div><div class="stat-label" id="gcd_imp"></div></div>
-            <div class="stat"><div class="stat-number">#591</div><div class="stat-label" id="gcd_world"></div></div>
-            <div class="stat"><div class="stat-number">#3</div><div class="stat-label" id="gcd_russia"></div></div>
-            <div class="stat"><div class="stat-number">1127</div><div class="stat-label" id="gcd_gap"></div></div>
+            <div class="stat"><div class="stat-number" id="stat_imp"></div><div class="stat-label" id="gcd_imp"></div></div>
+            <div class="stat"><div class="stat-number" id="stat_world"></div><div class="stat-label" id="gcd_world"></div></div>
+            <div class="stat"><div class="stat-number" id="stat_russia"></div><div class="stat-label" id="gcd_russia"></div></div>
+            <div class="stat"><div class="stat-number" id="stat_gap"></div><div class="stat-label" id="gcd_gap"></div></div>
         </div>
         <p style="margin-top:-0.2rem;">
             <a href="https://www.comics.org/accounts/profile/38733/" target="_blank" style="color:#c44536;" id="profile_link"></a>
@@ -291,49 +291,79 @@
 
     <script>
         let translations = {};
+        let stats = {};
 
+        // ===== ЗАГРУЗКА ДАННЫХ =====
         async function loadTranslations() {
             const response = await fetch('languages.json');
             translations = await response.json();
             return translations;
         }
 
+        async function loadStats() {
+            const response = await fetch('stats.json');
+            stats = await response.json();
+            return stats;
+        }
+
+        // ===== ПОДСТАНОВКА ЧИСЕЛ =====
+        function replacePlaceholders(text) {
+            if (!text) return text;
+            for (const [key, value] of Object.entries(stats)) {
+                text = text.replace(new RegExp(`\\{${key}\\}`, 'g'), value);
+            }
+            return text;
+        }
+
+        // ===== УСТАНОВКА ЯЗЫКА =====
         function setLanguage(lang) {
             if (!translations[lang]) return;
 
             const t = translations[lang];
 
-            document.getElementById('subhead').textContent = t.subhead;
-            document.getElementById('badge1').textContent = t.badge1;
-            document.getElementById('badge1_desc').textContent = t.badge1_desc;
-            document.getElementById('badge2').textContent = t.badge2;
-            document.getElementById('badge2_desc').textContent = t.badge2_desc;
-            document.getElementById('badge3').textContent = t.badge3;
-            document.getElementById('badge3_desc').textContent = t.badge3_desc;
-            document.getElementById('badge4').textContent = t.badge4;
-            document.getElementById('badge4_desc').textContent = t.badge4_desc;
-            document.getElementById('desc').textContent = t.desc;
-            document.getElementById('gcd_title').textContent = t.gcd_title;
-            document.getElementById('gcd_imp').textContent = t.gcd_imp;
-            document.getElementById('gcd_world').textContent = t.gcd_world;
-            document.getElementById('gcd_russia').textContent = t.gcd_russia;
-            document.getElementById('gcd_gap').textContent = t.gcd_gap;
-            document.getElementById('profile_link').textContent = t.profile_link;
-            document.getElementById('about_title').textContent = t.about_title;
-            document.getElementById('about_text').textContent = t.about_text;
-            document.getElementById('about_mission').textContent = t.about_mission;
-            document.getElementById('publish_title').textContent = t.publish_title;
-            document.getElementById('publish_1').textContent = t.publish_1;
-            document.getElementById('publish_2').textContent = t.publish_2;
-            document.getElementById('publish_3').textContent = t.publish_3;
-            document.getElementById('recent_title').textContent = t.recent_title;
-            document.getElementById('nav_title').textContent = t.nav_title;
-            document.getElementById('nav_vk').textContent = t.nav_vk;
-            document.getElementById('nav_tg').textContent = t.nav_tg;
-            document.getElementById('nav_gcd').textContent = t.nav_gcd;
-            document.getElementById('nav_arrow').textContent = t.nav_arrow;
-            document.getElementById('footer').innerHTML = t.footer;
+            function tr(key) {
+                const text = t[key] || key;
+                return replacePlaceholders(text);
+            }
 
+            document.getElementById('subhead').textContent = tr('subhead');
+            document.getElementById('badge1').textContent = tr('badge1');
+            document.getElementById('badge1_desc').textContent = tr('badge1_desc');
+            document.getElementById('badge2').textContent = tr('badge2');
+            document.getElementById('badge2_desc').textContent = tr('badge2_desc');
+            document.getElementById('badge3').textContent = tr('badge3');
+            document.getElementById('badge3_desc').textContent = tr('badge3_desc');
+            document.getElementById('badge4').textContent = tr('badge4');
+            document.getElementById('badge4_desc').textContent = tr('badge4_desc');
+            document.getElementById('desc').textContent = tr('desc');
+            document.getElementById('gcd_title').textContent = tr('gcd_title');
+            document.getElementById('gcd_imp').textContent = tr('gcd_imp');
+            document.getElementById('gcd_world').textContent = tr('gcd_world');
+            document.getElementById('gcd_russia').textContent = tr('gcd_russia');
+            document.getElementById('gcd_gap').textContent = tr('gcd_gap');
+            document.getElementById('profile_link').textContent = tr('profile_link');
+            document.getElementById('about_title').textContent = tr('about_title');
+            document.getElementById('about_text').textContent = tr('about_text');
+            document.getElementById('about_mission').textContent = tr('about_mission');
+            document.getElementById('publish_title').textContent = tr('publish_title');
+            document.getElementById('publish_1').textContent = tr('publish_1');
+            document.getElementById('publish_2').textContent = tr('publish_2');
+            document.getElementById('publish_3').textContent = tr('publish_3');
+            document.getElementById('recent_title').textContent = tr('recent_title');
+            document.getElementById('nav_title').textContent = tr('nav_title');
+            document.getElementById('nav_vk').textContent = tr('nav_vk');
+            document.getElementById('nav_tg').textContent = tr('nav_tg');
+            document.getElementById('nav_gcd').textContent = tr('nav_gcd');
+            document.getElementById('nav_arrow').textContent = tr('nav_arrow');
+            document.getElementById('footer').innerHTML = tr('footer');
+
+            // ===== ЧИСЛА В GCD СТАТИСТИКЕ (берутся напрямую из stats) =====
+            document.getElementById('stat_imp').textContent = stats.imp || '';
+            document.getElementById('stat_world').textContent = stats.world_rank_number || '';
+            document.getElementById('stat_russia').textContent = stats.russia_rank_number || '';
+            document.getElementById('stat_gap').textContent = stats.gap || '';
+
+            // ===== КАРТИНКИ =====
             const grid = document.getElementById('recent-grid');
             grid.innerHTML = '';
             if (t.recent_items && t.recent_items.length > 0) {
@@ -341,13 +371,14 @@
                     const div = document.createElement('div');
                     div.className = 'recent-item';
                     div.innerHTML = `
-                            <img src="${item.img}" alt="${item.caption}">
-                            <div class="caption">${item.caption}</div>
-                        `;
+                        <img src="${item.img}" alt="${item.caption}">
+                        <div class="caption">${item.caption}</div>
+                    `;
                     grid.appendChild(div);
                 });
             }
 
+            // ===== АКТИВНАЯ КНОПКА ЯЗЫКА =====
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.lang === lang);
             });
@@ -355,9 +386,14 @@
             document.documentElement.lang = lang;
         }
 
+        // ===== ЗАПУСК =====
         document.addEventListener('DOMContentLoaded', async () => {
-            await loadTranslations();
-            setLanguage('en');
+            try {
+                await Promise.all([loadTranslations(), loadStats()]);
+                setLanguage('en');
+            } catch (error) {
+                console.error('Ошибка загрузки данных:', error);
+            }
 
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
