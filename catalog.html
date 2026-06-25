@@ -274,7 +274,6 @@
         .col-language { min-width: 70px; }
         .col-year { min-width: 70px; }
 
-        /* ===== ПЛИТКА — фиксированный размер ячеек ===== */
         .grid-view {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -828,35 +827,6 @@
     const tooltipNoCover = document.getElementById('tooltipNoCover');
     let tooltipTimeout = null;
 
-    const cardFields = [
-        { key: 'Название', label: 'Название' },
-        { key: 'Тип литературы', label: 'Тип литературы' },
-        { key: 'Серия', label: 'Серия' },
-        { key: 'Подсерия', label: 'Подсерия' },
-        { key: 'Номер в серии', label: 'Номер в серии' },
-        { key: 'Номер в подсерии', label: 'Номер в подсерии' },
-        { key: 'Выпуски (если есть)', label: 'Выпуски' },
-        { key: 'Авторы', label: 'Авторы' },
-        { key: 'Издательство оригинал', label: 'Издательство (оригинал)' },
-        { key: 'Издательство РФ', label: 'Издательство (РФ)' },
-        { key: 'ISBN', label: 'ISBN' },
-        { key: 'Тираж', label: 'Тираж' },
-        { key: 'Вселенная', label: 'Вселенная' },
-        { key: 'Тип издания', label: 'Тип издания' },
-        { key: 'Размеры', label: 'Размеры' },
-        { key: 'Масса', label: 'Масса' },
-        { key: 'Бумага', label: 'Бумага' },
-        { key: 'Издание', label: 'Издание' },
-        { key: 'Страницы', label: 'Страницы' },
-        { key: 'Число издания', label: 'Число издания' },
-        { key: 'Месяц издания', label: 'Месяц издания' },
-        { key: 'Год издания', label: 'Год издания' },
-        { key: 'Год переиздания', label: 'Год переиздания' },
-        { key: 'Страна', label: 'Страна' },
-        { key: 'Язык', label: 'Язык' },
-        { key: 'Количество', label: 'Количество' }
-    ];
-
     // ===== ЗАГРУЗКА ДАННЫХ =====
     function loadCatalog() {
         fetch('catalog.json')
@@ -987,14 +957,7 @@
                 }
                 return `<tr onclick="openCard(${start + idx})">
                     <td class="col-cover">${coverHtml}</td>
-                    <td class="col-title">
-                        ${item['Название'] || ''}
-                        <button class="reserve-small" 
-                                onclick="event.stopPropagation(); openReservation(${JSON.stringify(item).replace(/"/g, '&quot;')})"
-                                style="margin-left:0.5rem;background:#c44536;color:white;border:none;border-radius:4px;padding:0.1rem 0.5rem;font-size:0.7rem;cursor:pointer;">
-                            📚
-                        </button>
-                    </td>
+                    <td class="col-title">${item['Название'] || ''}</td>
                     <td class="col-series">${item['Серия'] || ''}</td>
                     <td class="col-authors">${item['Авторы'] || ''}</td>
                     <td class="col-language">${item['Язык'] || ''}</td>
@@ -1030,11 +993,6 @@
                             ${item['Серия'] ? `<span>${item['Серия']}</span>` : ''}
                             ${item['Год издания'] ? `<span>${item['Год издания']}</span>` : ''}
                             ${item['Язык'] ? `<span>${item['Язык']}</span>` : ''}
-                            <button class="reserve-small" 
-                                    onclick="event.stopPropagation(); openReservation(${JSON.stringify(item).replace(/"/g, '&quot;')})"
-                                    style="background:#c44536;color:white;border:none;border-radius:4px;padding:0.1rem 0.5rem;font-size:0.7rem;cursor:pointer;margin-left:auto;">
-                                📚
-                            </button>
                         </div>
                     </div>
                 </div>`;
@@ -1154,7 +1112,7 @@
             msg.textContent = t('no_cover_modal');
             coverContainer.appendChild(msg);
         }
-    
+
         // === ОДНА КНОПКА БРОНИРОВАНИЯ ===
         const reserveBtn = document.createElement('button');
         reserveBtn.textContent = '📚 Забронировать';
@@ -1228,6 +1186,7 @@
         document.getElementById('modalOverlay').classList.add('open');
         document.body.style.overflow = 'hidden';
     }
+
     function closeModal() {
         document.getElementById('modalOverlay').classList.remove('open');
         document.body.style.overflow = '';
