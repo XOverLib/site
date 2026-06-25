@@ -1374,21 +1374,23 @@
     }
     
     async function sendReservation(bookTitle, qrData) {
-        // Извлекаем имя клиента из QR-строки
-        let clientName = '';
-        if (qrData) {
-            const parts = qrData.split('|');
-            if (parts.length >= 3) {
-                clientName = parts[2] || ''; // третье поле — имя
-            }
-        }
+        // Разбираем строку QR-кода
+        const parts = qrData.split('|');
+        const abonementId = parts[0] || '';
+        const clientId = parts[1] || '';
+        const clientName = parts[2] || '';
+        const abonementType = parts[3] || '';
+        const issueDate = parts[4] || '';
     
         const url = SCRIPT_URL;
         
         const data = {
             book: bookTitle,
-            qr: qrData,
-            client: clientName,
+            abonement_id: abonementId,
+            client_id: clientId,
+            client_name: clientName,
+            abonement_type: abonementType,
+            issue_date: issueDate,
             date: new Date().toLocaleString()
         };
         
