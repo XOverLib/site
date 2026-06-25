@@ -1089,6 +1089,8 @@
     
         const coverContainer = document.getElementById('modalCover');
         coverContainer.innerHTML = '';
+    
+        // ===== ОБЛОЖКА =====
         const coverUrl = item['превью'] || '';
         if (coverUrl && coverUrl.trim() !== '') {
             const img = document.createElement('img');
@@ -1113,7 +1115,7 @@
             coverContainer.appendChild(msg);
         }
     
-        // ===== КНОПКА БРОНИРОВАНИЯ (ПОД ОБЛОЖКОЙ) =====
+        // ===== ОДНА КНОПКА БРОНИРОВАНИЯ ПОД ОБЛОЖКОЙ =====
         const reserveBtn = document.createElement('button');
         reserveBtn.textContent = '📚 Забронировать';
         reserveBtn.style.cssText = `
@@ -1139,11 +1141,9 @@
                 reserveBook(item['Название'] || 'Без названия', clientId);
             }
         };
-        
-        // Вставляем кнопку ПОСЛЕ обложки (в тот же контейнер)
         coverContainer.appendChild(reserveBtn);
     
-        // ===== ПОЛЯ =====
+        // ===== ПОЛЯ СПРАВА =====
         const fieldsContainer = document.getElementById('modalFields');
         fieldsContainer.innerHTML = '';
     
