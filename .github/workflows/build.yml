@@ -7,8 +7,6 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 jobs:
   deploy:
@@ -23,17 +21,12 @@ jobs:
           echo "// Auto-generated config" > config.js
           echo "const GITHUB_TOKEN = '${{ secrets.NEW_TOKEN }}';" >> config.js
           echo "const GITHUB_REPO = '${{ github.repository }}';" >> config.js
-          echo "console.log('✅ config.js created');" >> config.js
           cat config.js
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          github_token: ${{ secrets.NEW_TOKEN }}
-          publish_dir: ./
-          publish_branch: gh-pages
-          allow_empty_commit: true
-          force_orphan: true
-          keep_files: false
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
+          folder: .
+          branch: gh-pages
+          token: ${{ secrets.NEW_TOKEN }}
+          clean: true
