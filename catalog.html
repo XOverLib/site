@@ -1374,23 +1374,10 @@
     }
     
     async function sendReservation(bookTitle, qrData) {
-        // Разбираем строку QR-кода
-        const parts = qrData.split('|');
-        const abonementId = parts[0] || '';
-        const clientId = parts[1] || '';
-        const clientName = parts[2] || '';
-        const abonementType = parts[3] || '';
-        const issueDate = parts[4] || '';
-    
         const url = SCRIPT_URL;
-        
         const data = {
             book: bookTitle,
-            abonement_id: abonementId,
-            client_id: clientId,
-            client_name: clientName,
-            abonement_type: abonementType,
-            issue_date: issueDate,
+            qr: qrData,
             date: new Date().toLocaleString()
         };
         
@@ -1401,10 +1388,10 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
-            alert(`✅ Книга забронирована!\nКлиент: ${clientName || 'не указан'}`);
+            alert('✅ Книга забронирована!');
         } catch (error) {
             console.error('Ошибка:', error);
-            alert('❌ Ошибка бронирования. Попробуйте позже.');
+            alert('❌ Ошибка бронирования.');
         }
     }
 </script>
