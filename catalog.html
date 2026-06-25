@@ -1349,16 +1349,11 @@
                 { facingMode: 'environment' },
                 config,
                 (decodedText) => {
-                    // Успешное сканирование
                     cleanup();
                     document.removeEventListener('keydown', escHandler);
                     sendReservation(bookTitle, decodedText);
                 },
-                (errorMessage) => {
-                    // Игнорируем ошибки (кадр не распознан)
-                    // Можно вывести в консоль для отладки:
-                    // console.debug(errorMessage);
-                }
+                (errorMessage) => {}
             );
     
             statusMsg.textContent = '✅ Камера работает, наведите на QR-код';
