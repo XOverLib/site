@@ -1365,7 +1365,7 @@
             document.removeEventListener('keydown', escHandler);
             const qrData = prompt('Не удалось открыть камеру. Введите строку из QR-кода:');
             if (qrData) {
-                sendReservation(bookTitle, qrData);
+                sendReservation(bookTitle, decodedText);;
             }
         }
     }
