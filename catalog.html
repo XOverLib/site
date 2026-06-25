@@ -1374,8 +1374,8 @@
         const url = SCRIPT_URL;
         const data = {
             book: bookTitle,
-            qr: qrData,
-            date: new Date().toLocaleString()
+            qr: qrData,                     // ← сюда приходит строка из QR-кода
+            date: new Date().toLocaleString() // ← текущая дата
         };
         
         try {
