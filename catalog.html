@@ -1087,8 +1087,18 @@
     
         document.getElementById('modalTitle').textContent = item['Название'] || 'Без названия';
     
+        // ===== ЛЕВЫЙ КОНТЕЙНЕР (обложка + кнопка под ней) =====
         const coverContainer = document.getElementById('modalCover');
         coverContainer.innerHTML = '';
+    
+        // Создаём вертикальный блок для обложки и кнопки
+        const coverWrapper = document.createElement('div');
+        coverWrapper.style.cssText = `
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        `;
     
         // ===== ОБЛОЖКА =====
         const coverUrl = item['превью'] || '';
@@ -1097,25 +1107,29 @@
             img.src = coverUrl;
             img.alt = 'Обложка';
             img.loading = 'lazy';
-            img.style.width = '100%';
-            img.style.height = '100%';
-            img.style.objectFit = 'contain';
+            img.style.cssText = `
+                width: 100%;
+                height: auto;
+                max-height: 300px;
+                object-fit: contain;
+                border-radius: 4px;
+            `;
             img.onerror = function() {
                 this.style.display = 'none';
                 const msg = document.createElement('div');
                 msg.className = 'no-cover';
                 msg.textContent = 'Нет обложки';
-                coverContainer.appendChild(msg);
+                coverWrapper.appendChild(msg);
             };
-            coverContainer.appendChild(img);
+            coverWrapper.appendChild(img);
         } else {
             const msg = document.createElement('div');
             msg.className = 'no-cover';
             msg.textContent = 'Нет обложки';
-            coverContainer.appendChild(msg);
+            coverWrapper.appendChild(msg);
         }
     
-        // ===== ОДНА КНОПКА БРОНИРОВАНИЯ ПОД ОБЛОЖКОЙ =====
+        // ===== КНОПКА БРОНИРОВАНИЯ (ПОД ОБЛОЖКОЙ) =====
         const reserveBtn = document.createElement('button');
         reserveBtn.textContent = '📚 Забронировать';
         reserveBtn.style.cssText = `
@@ -1141,7 +1155,10 @@
                 reserveBook(item['Название'] || 'Без названия', clientId);
             }
         };
-        coverContainer.appendChild(reserveBtn);
+        coverWrapper.appendChild(reserveBtn);
+    
+        // Вставляем вертикальный блок в левый контейнер
+        coverContainer.appendChild(coverWrapper);
     
         // ===== ПОЛЯ СПРАВА =====
         const fieldsContainer = document.getElementById('modalFields');
