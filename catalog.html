@@ -1010,7 +1010,14 @@
                 
                 return `<tr onclick="openCard(${start + idx})">
                     <td class="col-cover">${coverHtml}</td>
-                    <td class="col-title">${item['Название'] || ''}</td>
+                    <td class="col-title">
+                        ${item['Название'] || ''}
+                        <button class="reserve-small" 
+                                onclick="event.stopPropagation(); openReservation(${JSON.stringify(item).replace(/"/g, '&quot;')})"
+                                style="margin-left:0.5rem;background:#c44536;color:white;border:none;border-radius:4px;padding:0.1rem 0.5rem;font-size:0.7rem;cursor:pointer;">
+                            📚
+                        </button>
+                    </td>
                     <td class="col-series">${item['Серия'] || ''}</td>
                     <td class="col-authors">${item['Авторы'] || ''}</td>
                     <td class="col-language">${item['Язык'] || ''}</td>
@@ -1048,6 +1055,11 @@
                             ${item['Серия'] ? `<span>${item['Серия']}</span>` : ''}
                             ${item['Год издания'] ? `<span>${item['Год издания']}</span>` : ''}
                             ${item['Язык'] ? `<span>${item['Язык']}</span>` : ''}
+                            <button class="reserve-small" 
+                                    onclick="event.stopPropagation(); openReservation(${JSON.stringify(item).replace(/"/g, '&quot;')})"
+                                    style="background:#c44536;color:white;border:none;border-radius:4px;padding:0.1rem 0.5rem;font-size:0.7rem;cursor:pointer;margin-left:auto;">
+                                📚
+                            </button>
                         </div>
                     </div>
                 </div>`;
@@ -1172,6 +1184,31 @@
             msg.textContent = t('no_cover_modal');
             coverContainer.appendChild(msg);
         }
+
+        // === Кнопка бронирования ===
+        const reserveBtn = document.createElement('button');
+        reserveBtn.className = 'reserve-btn';
+        reserveBtn.textContent = t('reserve_button') || '📚 Забронировать';
+        reserveBtn.style.cssText = `
+            display: block;
+            margin: 1rem auto 0.5rem;
+            padding: 0.6rem 2rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+        `;
+        reserveBtn.onmouseover = () => reserveBtn.style.background = 'var(--accent-hover)';
+        reserveBtn.onmouseout = () => reserveBtn.style.background = 'var(--accent)';
+        reserveBtn.onclick = () => openReservation(item);
+        
+        // Вставляем после обложки
+        coverContainer.parentNode.insertBefore(reserveBtn, coverContainer.nextSibling);
     
         const fieldsContainer = document.getElementById('modalFields');
         fieldsContainer.innerHTML = '';
@@ -1251,5 +1288,59 @@
         </script>
         <noscript><div><img src="https://mc.yandex.ru/watch/110064832" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     <!-- /Yandex.Metrika counter -->
+    // ===== БРОНИРОВАНИЕ ЧЕРЕЗ GITHUB ISSUES =====
+    // Токен для GitHub API (создай свой с правами repo:public_repo)
+    // Храни токен в отдельном файле или переменной окружения
+    const GITHUB_TOKEN = 'ghp_ваш_токен'; // ЗАМЕНИ НА РЕАЛЬНЫЙ ТОКЕН
+    const GITHUB_REPO = 'ваш-аккаунт/XOver'; // ЗАМЕНИ НА СВОЙ РЕПОЗИТОРИЙ
+    
+    async function openReservation(item) {
+        const bookTitle = item['Название'] || 'Без названия';
+        const bookId = item['ID'] || item['Название'] || 'unknown';
+        
+        // Спрашиваем QR-код или ID клиента
+        const clientInput = prompt('Введите ID клиента или отсканируйте QR-код:');
+        if (!clientInput) return;
+        
+        // Парсим клиента (если QR-код в формате "ID|имя|...")
+        let clientId = clientInput;
+        if (clientInput.includes('|')) {
+            const parts = clientInput.split('|');
+            clientId = parts[0] || clientInput;
+        }
+        
+        // Создаём заявку в GitHub Issues
+        try {
+            const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/issues`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `token ${GITHUB_TOKEN}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    title: `📚 Бронирование: ${bookTitle}`,
+                    body: `## Заявка на бронирование\n\n` +
+                          `**Книга:** ${bookTitle}\n` +
+                          `**Клиент ID:** ${clientId}\n` +
+                          `**Дата:** ${new Date().toLocaleString()}\n\n` +
+                          `---\n` +
+                          `_Для обработки заявки откройте админ-панель._`,
+                    labels: ['reservation', 'pending']
+                })
+            });
+            
+            if (response.ok) {
+                const issue = await response.json();
+                alert(`✅ Книга забронирована!\nНомер заявки: #${issue.number}\nАдминистратор скоро её обработает.`);
+            } else {
+                const error = await response.json();
+                console.error('GitHub API error:', error);
+                alert('❌ Ошибка бронирования. Попробуйте позже.');
+            }
+        } catch (error) {
+            console.error('Network error:', error);
+            alert('❌ Ошибка соединения. Проверьте интернет.');
+        }
+    }
 </body>
 </html>
