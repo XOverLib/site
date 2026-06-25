@@ -1,0 +1,52 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          # Если есть какие-то зависимости для сборки
+          # pip install -r requirements.txt
+
+      - name: Generate config with token
+        run: |
+          # Создаём файл config.js с токеном из секретов
+          echo "// Автоматически сгенерированный файл" > config.js
+          echo "const GITHUB_TOKEN = '${{ secrets.GITHUB_TOKEN }}';" >> config.js
+          echo "const GITHUB_REPO = '${{ github.repository }}';" >> config.js
+          echo "// Не редактируйте вручную" >> config.js
+          cat config.js
+
+      - name: Build site (if needed)
+        run: |
+          # Если есть скрипт сборки — запускаем
+          # python build.py
+          echo "Сайт собран"
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
+          publish_branch: gh-pages
+          allow_empty_commit: true
