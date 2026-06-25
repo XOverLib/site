@@ -1102,33 +1102,33 @@
                 this.style.display = 'none';
                 const msg = document.createElement('div');
                 msg.className = 'no-cover';
-                msg.textContent = t('no_cover_modal');
+                msg.textContent = 'Нет обложки';
                 coverContainer.appendChild(msg);
             };
             coverContainer.appendChild(img);
         } else {
             const msg = document.createElement('div');
             msg.className = 'no-cover';
-            msg.textContent = t('no_cover_modal');
+            msg.textContent = 'Нет обложки';
             coverContainer.appendChild(msg);
         }
-
-        // === ОДНА КНОПКА БРОНИРОВАНИЯ ===
+    
+        // ===== ОДНА КНОПКА БРОНИРОВАНИЯ (под обложкой) =====
         const reserveBtn = document.createElement('button');
         reserveBtn.textContent = '📚 Забронировать';
         reserveBtn.style.cssText = `
             display: block;
-            margin: 1rem auto 0.5rem;
-            padding: 0.6rem 2rem;
+            margin: 0.5rem auto;
+            padding: 0.4rem 1.5rem;
             background: var(--accent);
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 0.85rem;
             cursor: pointer;
             width: 100%;
-            transition: background 0.3s;
+            transition: background 0.2s;
         `;
         reserveBtn.onmouseover = () => reserveBtn.style.background = 'var(--accent-hover)';
         reserveBtn.onmouseout = () => reserveBtn.style.background = 'var(--accent)';
@@ -1140,6 +1140,7 @@
         };
         coverContainer.parentNode.insertBefore(reserveBtn, coverContainer.nextSibling);
     
+        // ===== ПОЛЯ =====
         const fieldsContainer = document.getElementById('modalFields');
         fieldsContainer.innerHTML = '';
     
