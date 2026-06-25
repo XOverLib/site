@@ -588,7 +588,7 @@
             .view-toggle .buttons { justify-content: center; }
         }
     </style>
-    <script src="https://unpkg.com/@zxing/library@0.21.0/umd/index.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 </head>
 <body>
 <div class="container">
@@ -1238,22 +1238,17 @@
             padding: 1rem;
         `;
     
-        const videoContainer = document.createElement('div');
-        videoContainer.style.cssText = `
+        const container = document.createElement('div');
+        container.id = 'qr-reader';
+        container.style.cssText = `
             width: 90%;
-            max-width: 500px;
+            max-width: 400px;
             background: #000;
             border-radius: 12px;
             overflow: hidden;
-            position: relative;
-            aspect-ratio: 4/3;
+            aspect-ratio: 1/1;
         `;
-    
-        const video = document.createElement('video');
-        video.style.cssText = `width: 100%; height: 100%; display: block; object-fit: cover;`;
-        video.setAttribute('autoplay', '');
-        video.setAttribute('playsinline', '');
-        videoContainer.appendChild(video);
+        overlay.appendChild(container);
     
         const statusMsg = document.createElement('p');
         statusMsg.textContent = '⏳ Наведите камеру на QR-код...';
@@ -1263,6 +1258,7 @@
             margin-top: 0.5rem;
             font-family: sans-serif;
         `;
+        overlay.appendChild(statusMsg);
     
         const controls = document.createElement('div');
         controls.style.cssText = `
@@ -1299,23 +1295,17 @@
     
         controls.appendChild(manualBtn);
         controls.appendChild(cancelBtn);
-    
-        overlay.appendChild(videoContainer);
-        overlay.appendChild(statusMsg);
         overlay.appendChild(controls);
         document.body.appendChild(overlay);
     
-        let stream = null;
-        let intervalId = null;
+        let html5QrCode = null;
     
         function cleanup() {
-            if (intervalId) {
-                clearInterval(intervalId);
-                intervalId = null;
-            }
-            if (stream) {
-                stream.getTracks().forEach(t => t.stop());
-                stream = null;
+            if (html5QrCode) {
+                try {
+                    html5QrCode.stop().catch(() => {});
+                } catch (e) {}
+                html5QrCode = null;
             }
             if (document.body.contains(overlay)) {
                 document.body.removeChild(overlay);
@@ -1341,56 +1331,36 @@
         document.addEventListener('keydown', escHandler);
     
         try {
-            stream = await navigator.mediaDevices.getUserMedia({
-                video: {
-                    facingMode: 'environment',
-                    width: { ideal: 640 },
-                    height: { ideal: 480 }
-                }
-            });
-            video.srcObject = stream;
-            await video.play();
-    
-            statusMsg.textContent = '⏳ Сканирование...';
-    
-            const { BrowserQRCodeReader } = window.ZXing;
-            if (!BrowserQRCodeReader) {
-                throw new Error('ZXing не загружен');
+            const Html5Qrcode = window.Html5Qrcode;
+            if (!Html5Qrcode) {
+                throw new Error('Библиотека html5-qrcode не загружена');
             }
     
-            const reader = new BrowserQRCodeReader();
+            html5QrCode = new Html5Qrcode('qr-reader');
     
-            // Запускаем сканирование с интервалом (каждые 300 мс)
-            let isDecoding = false;
-    
-            const decodeLoop = async () => {
-                if (isDecoding) return;
-                isDecoding = true;
-    
-                try {
-                    const result = await reader.decodeFromVideoElement(video);
-                    if (result && result.text) {
-                        cleanup();
-                        document.removeEventListener('keydown', escHandler);
-                        sendReservation(bookTitle, result.text);
-                        return;
-                    }
-                } catch (err) {
-                    // Игнорируем ошибки (кадр не распознан)
-                } finally {
-                    isDecoding = false;
-                }
+            const config = {
+                fps: 15,
+                qrbox: { width: 250, height: 250 },
+                aspectRatio: 1.0
             };
     
-            intervalId = setInterval(decodeLoop, 300);
-    
-            // Также пробуем распознать по кнопке "Сканировать"
-            setTimeout(() => {
-                if (document.body.contains(overlay)) {
-                    decodeLoop();
+            await html5QrCode.start(
+                { facingMode: 'environment' },
+                config,
+                (decodedText) => {
+                    // Успешное сканирование
+                    cleanup();
+                    document.removeEventListener('keydown', escHandler);
+                    sendReservation(bookTitle, decodedText);
+                },
+                (errorMessage) => {
+                    // Игнорируем ошибки (кадр не распознан)
+                    // Можно вывести в консоль для отладки:
+                    // console.debug(errorMessage);
                 }
-            }, 1000);
+            );
     
+            statusMsg.textContent = '✅ Камера работает, наведите на QR-код';
         } catch (err) {
             console.warn('Ошибка:', err);
             cleanup();
