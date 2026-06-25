@@ -1180,7 +1180,6 @@
                 reserveBook(item['Название'] || 'Без названия', clientId);
             }
         };
-        // Вставляем кнопку ПОСЛЕ обложки, но ДО полей
         coverContainer.parentNode.insertBefore(reserveBtn, coverContainer.nextSibling);
     
         const fieldsContainer = document.getElementById('modalFields');
