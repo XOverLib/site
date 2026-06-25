@@ -1223,6 +1223,7 @@
 
     // ===== БРОНИРОВАНИЕ В GOOGLE SHEETS =====
     async function reserveBook(bookTitle) {
+        alert('🔍 reserveBook вызван, книга: ' + bookTitle);
         const overlay = document.createElement('div');
         overlay.style.cssText = `
             position: fixed;
