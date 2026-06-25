@@ -1373,9 +1373,9 @@
     async function sendReservation(bookTitle, qrData) {
         const url = SCRIPT_URL;
         const data = {
-            book: bookTitle,
-            qr: qrData,                     // ← сюда приходит строка из QR-кода
-            date: new Date().toLocaleString() // ← текущая дата
+            book: bookTitle,                // ← название книги
+            qr: qrData,                    // ← строка из QR-кода
+            date: new Date().toLocaleString() // ← дата бронирования
         };
         
         try {
