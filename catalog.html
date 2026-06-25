@@ -480,9 +480,10 @@
             border-radius: 8px;
             overflow: hidden;
             display: flex;
+            flex-direction: column;   /* ← ЭТО ГЛАВНОЕ: вертикальное расположение */
             align-items: center;
-            justify-content: center;
-            aspect-ratio: 2/3;
+            justify-content: flex-start;
+            aspect-ratio: auto;
         }
         .modal .card-cover img {
             width: 100%;
