@@ -1358,6 +1358,7 @@
             );
     
             statusMsg.textContent = '✅ Камера работает, наведите на QR-код';
+            alert('✅ QR распознан: ' + decodedText);
         } catch (err) {
             console.warn('Ошибка:', err);
             cleanup();
@@ -1366,6 +1367,7 @@
             if (qrData) {
                 sendReservation(bookTitle, qrData); // ← исправлено
             }
+            alert('⌨ Ручной ввод: ' + qrData);
         }
     }
     
