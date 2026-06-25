@@ -1186,29 +1186,7 @@
         }
 
         // === Кнопка бронирования ===
-        const reserveBtn = document.createElement('button');
-        reserveBtn.className = 'reserve-btn';
-        reserveBtn.textContent = t('reserve_button') || '📚 Забронировать';
-        reserveBtn.style.cssText = `
-            display: block;
-            margin: 1rem auto 0.5rem;
-            padding: 0.6rem 2rem;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            width: 100%;
-            transition: background 0.3s;
-        `;
-        reserveBtn.onmouseover = () => reserveBtn.style.background = 'var(--accent-hover)';
-        reserveBtn.onmouseout = () => reserveBtn.style.background = 'var(--accent)';
-        reserveBtn.onclick = () => openReservation(item);
-        
-        // Вставляем после обложки
-        coverContainer.parentNode.insertBefore(reserveBtn, coverContainer.nextSibling);
+        <button onclick="reserveBook('Название книги', prompt('Введите ID клиента:'))">Забронировать</button>
     
         const fieldsContainer = document.getElementById('modalFields');
         fieldsContainer.innerHTML = '';
@@ -1274,6 +1252,32 @@
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') closeModal();
     });
+
+    async function reserveBook(bookTitle, clientId) {
+        const url = 'https://script.google.com/macros/s/AKfycbwYOQcNz7AJgUtkcS1H_Y0DVRAWjwLWgwnoNZyCAXsRwhVCqal3_CIdeEqlaei7HHp3/exec';
+        
+        const data = {
+            book: bookTitle,
+            client: clientId
+        };
+        
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            
+            alert('✅ Книга забронирована! Администратор увидит заявку в таблице.');
+        } catch (error) {
+            console.error('Ошибка:', error);
+            alert('❌ Ошибка бронирования. Попробуйте позже.');
+        }
+    }
+    
 </script>
 <!-- Yandex.Metrika counter -->
         <script type="text/javascript">
