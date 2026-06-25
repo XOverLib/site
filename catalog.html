@@ -1151,10 +1151,7 @@
         reserveBtn.onmouseover = () => reserveBtn.style.background = 'var(--accent-hover)';
         reserveBtn.onmouseout = () => reserveBtn.style.background = 'var(--accent)';
         reserveBtn.onclick = () => {
-            const clientId = prompt('Введите ID клиента:');
-            if (clientId) {
-                reserveBook(item['Название'] || 'Без названия', clientId);
-            }
+            reserveBook(item['Название'] || 'Без названия');
         };
         coverWrapper.appendChild(reserveBtn);
     
@@ -1223,12 +1220,17 @@
     });
 
     // ===== БРОНИРОВАНИЕ В GOOGLE SHEETS =====
-    async function reserveBook(bookTitle, clientId) {
+    async function reserveBook(bookTitle) {
+        // Спрашиваем QR-код или вводим вручную
+        const qrData = prompt('Отсканируйте QR-код абонемента или введите его вручную:');
+        if (!qrData) return;
+    
         const url = 'https://script.google.com/macros/s/AKfycbwYOQcNz7AJgUtkcS1H_Y0DVRAWjwLWgwnoNZyCAXsRwhVCqal3_CIdeEqlaei7HHp3/exec';
         
         const data = {
             book: bookTitle,
-            client: clientId
+            qr: qrData,
+            date: new Date().toLocaleString()
         };
         
         try {
