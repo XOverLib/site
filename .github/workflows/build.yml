@@ -1,0 +1,22 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create config.js from secret
+        run: |
+          echo "const SCRIPT_URL = '${{ secrets.SECRET_TABLE }}';" > config.js
+
+      - name: Upload config.js as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: config
+          path: config.js
