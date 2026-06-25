@@ -32,7 +32,7 @@ jobs:
         run: |
           # Создаём файл config.js с токеном из секретов
           echo "// Автоматически сгенерированный файл" > config.js
-          echo "const GITHUB_TOKEN = '${{ secrets.GITHUB_TOKEN }}';" >> config.js
+          echo "const NEW_TOKEN = '${{ secrets.NEW_TOKEN }}';" >> config.js
           echo "const GITHUB_REPO = '${{ github.repository }}';" >> config.js
           echo "// Не редактируйте вручную" >> config.js
           cat config.js
