@@ -1,0 +1,4 @@
+- name: Create config.js
+  run: |
+    echo "// Auto-generated config" > config.js
+    echo "const SCRIPT_URL = '${{ secrets.SCRIPT_URL }}';" >> config.js
