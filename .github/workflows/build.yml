@@ -1,4 +1,33 @@
-- name: Create config.js
-  run: |
-    echo "// Auto-generated config" > config.js
-    echo "const SCRIPT_URL = '${{ secrets.SCRIPT_URL }}';" >> config.js
+name: Build and Deploy
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create config.js with secret
+        run: |
+          echo "// Auto-generated config" > config.js
+          echo "const SCRIPT_URL = '${{ secrets.SCRIPT_URL }}';" >> config.js
+          echo "console.log('✅ config.js created');" >> config.js
+          cat config.js
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
+          publish_branch: gh-pages
+          allow_empty_commit: true
+          force_orphan: true
+          keep_files: false
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
