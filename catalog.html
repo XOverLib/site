@@ -1373,11 +1373,21 @@
     }
     
     async function sendReservation(bookTitle, qrData) {
+        // Извлекаем имя клиента из QR-строки
+        let clientName = '';
+        if (qrData) {
+            const parts = qrData.split('|');
+            if (parts.length >= 3) {
+                clientName = parts[2] || ''; // третье поле — имя
+            }
+        }
+    
         const url = 'https://script.google.com/macros/s/AKfycbwYOQcNz7AJgUtkcS1H_Y0DVRAWjwLWgwnoNZyCAXsRwhVCqal3_CIdeEqlaei7HHp3/exec';
         
         const data = {
             book: bookTitle,
             qr: qrData,
+            client: clientName,
             date: new Date().toLocaleString()
         };
         
@@ -1388,7 +1398,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
-            alert('✅ Книга забронирована! Администратор увидит заявку в таблице.');
+            alert(`✅ Книга забронирована!\nКлиент: ${clientName || 'не указан'}`);
         } catch (error) {
             console.error('Ошибка:', error);
             alert('❌ Ошибка бронирования. Попробуйте позже.');
