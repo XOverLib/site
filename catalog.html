@@ -1154,8 +1154,8 @@
             msg.textContent = t('no_cover_modal');
             coverContainer.appendChild(msg);
         }
-
-        // === Кнопка бронирования ===
+    
+        // === ОДНА КНОПКА БРОНИРОВАНИЯ ===
         const reserveBtn = document.createElement('button');
         reserveBtn.textContent = '📚 Забронировать';
         reserveBtn.style.cssText = `
@@ -1180,6 +1180,7 @@
                 reserveBook(item['Название'] || 'Без названия', clientId);
             }
         };
+        // Вставляем кнопку ПОСЛЕ обложки, но ДО полей
         coverContainer.parentNode.insertBefore(reserveBtn, coverContainer.nextSibling);
     
         const fieldsContainer = document.getElementById('modalFields');
@@ -1228,7 +1229,6 @@
         document.getElementById('modalOverlay').classList.add('open');
         document.body.style.overflow = 'hidden';
     }
-
     function closeModal() {
         document.getElementById('modalOverlay').classList.remove('open');
         document.body.style.overflow = '';
