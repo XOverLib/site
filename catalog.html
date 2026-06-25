@@ -1113,13 +1113,14 @@
             coverContainer.appendChild(msg);
         }
     
-        // ===== ОДНА КНОПКА БРОНИРОВАНИЯ (под обложкой) =====
+        // ===== КНОПКА БРОНИРОВАНИЯ (ПОД ОБЛОЖКОЙ) =====
         const reserveBtn = document.createElement('button');
         reserveBtn.textContent = '📚 Забронировать';
         reserveBtn.style.cssText = `
             display: block;
-            margin: 0.5rem auto;
-            padding: 0.4rem 1.5rem;
+            width: 100%;
+            margin-top: 0.6rem;
+            padding: 0.4rem 0;
             background: var(--accent);
             color: white;
             border: none;
@@ -1127,8 +1128,8 @@
             font-weight: 600;
             font-size: 0.85rem;
             cursor: pointer;
-            width: 100%;
             transition: background 0.2s;
+            text-align: center;
         `;
         reserveBtn.onmouseover = () => reserveBtn.style.background = 'var(--accent-hover)';
         reserveBtn.onmouseout = () => reserveBtn.style.background = 'var(--accent)';
@@ -1138,7 +1139,9 @@
                 reserveBook(item['Название'] || 'Без названия', clientId);
             }
         };
-        coverContainer.parentNode.insertBefore(reserveBtn, coverContainer.nextSibling);
+        
+        // Вставляем кнопку ПОСЛЕ обложки (в тот же контейнер)
+        coverContainer.appendChild(reserveBtn);
     
         // ===== ПОЛЯ =====
         const fieldsContainer = document.getElementById('modalFields');
