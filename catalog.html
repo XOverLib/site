@@ -1396,24 +1396,32 @@
     }
     
     async function sendReservation(bookTitle, qrData) {
+        alert('📦 1. sendReservation вызвана');
+        alert('📦 2. bookTitle: ' + bookTitle);
+        alert('📦 3. qrData: ' + qrData);
+    
         const url = SCRIPT_URL;
+        alert('📦 4. URL: ' + url);
+    
         const data = {
             book: bookTitle,
             qr: qrData,
             date: new Date().toLocaleString()
         };
-        
+        alert('📦 5. Данные: ' + JSON.stringify(data));
+    
         try {
+            alert('⏳ 6. Отправка fetch...');
             await fetch(url, {
                 method: 'POST',
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
-            alert('✅ Книга забронирована!');
+            alert('✅ 7. Книга забронирована!');
         } catch (error) {
+            alert('❌ 8. Ошибка: ' + error.message);
             console.error('Ошибка:', error);
-            alert('❌ Ошибка бронирования.');
         }
     }
 </script>
