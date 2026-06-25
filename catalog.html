@@ -1223,7 +1223,6 @@
 
     // ===== БРОНИРОВАНИЕ В GOOGLE SHEETS =====
     async function reserveBook(bookTitle) {
-        // Создаём оверлей
         const overlay = document.createElement('div');
         overlay.style.cssText = `
             position: fixed;
@@ -1240,7 +1239,6 @@
             padding: 1rem;
         `;
     
-        // Контейнер для камеры
         const container = document.createElement('div');
         container.id = 'qr-reader';
         container.style.cssText = `
@@ -1365,7 +1363,7 @@
             document.removeEventListener('keydown', escHandler);
             const qrData = prompt('Не удалось открыть камеру. Введите строку из QR-кода:');
             if (qrData) {
-                sendReservation(bookTitle, decodedText);;
+                sendReservation(bookTitle, qrData); // ← исправлено
             }
         }
     }
