@@ -1223,148 +1223,28 @@
 
     // ===== БРОНИРОВАНИЕ В GOOGLE SHEETS =====
     async function reserveBook(bookTitle) {
-        const overlay = document.createElement('div');
-        overlay.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.85);
-            z-index: 10001;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-        `;
+        const qrData = prompt('Отсканируйте QR-код на абонементе или введите его вручную:');
+        if (!qrData) return;
     
-        const container = document.createElement('div');
-        container.id = 'qr-reader';
-        container.style.cssText = `
-            width: 90%;
-            max-width: 400px;
-            background: #000;
-            border-radius: 12px;
-            overflow: hidden;
-            aspect-ratio: 1/1;
-        `;
-        overlay.appendChild(container);
-    
-        const statusMsg = document.createElement('p');
-        statusMsg.textContent = '⏳ Наведите камеру на QR-код...';
-        statusMsg.style.cssText = `
-            color: white;
-            font-size: 1rem;
-            margin-top: 0.5rem;
-            font-family: sans-serif;
-        `;
-        overlay.appendChild(statusMsg);
-    
-        const controls = document.createElement('div');
-        controls.style.cssText = `
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-            flex-wrap: wrap;
-            justify-content: center;
-        `;
-    
-        const manualBtn = document.createElement('button');
-        manualBtn.textContent = '⌨ Ввести вручную';
-        manualBtn.style.cssText = `
-            padding: 0.6rem 1.5rem;
-            background: var(--accent, #c44536);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            cursor: pointer;
-        `;
-    
-        const cancelBtn = document.createElement('button');
-        cancelBtn.textContent = '❌ Отмена';
-        cancelBtn.style.cssText = `
-            padding: 0.6rem 1.5rem;
-            background: #666;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            cursor: pointer;
-        `;
-    
-        controls.appendChild(manualBtn);
-        controls.appendChild(cancelBtn);
-        overlay.appendChild(controls);
-        document.body.appendChild(overlay);
-    
-        let html5QrCode = null;
-    
-        function cleanup() {
-            if (html5QrCode) {
-                try {
-                    html5QrCode.stop().catch(() => {});
-                } catch (e) {}
-                html5QrCode = null;
-            }
-            if (document.body.contains(overlay)) {
-                document.body.removeChild(overlay);
-            }
-        }
-    
-        manualBtn.onclick = () => {
-            cleanup();
-            const qrData = prompt('Введите строку из QR-кода:');
-            if (qrData) {
-                sendReservation(bookTitle, qrData);
-            }
+        const url = SCRIPT_URL;
+        
+        const data = {
+            book: bookTitle,
+            qr: qrData,
+            date: new Date().toLocaleString()
         };
-    
-        cancelBtn.onclick = cleanup;
-    
-        const escHandler = (e) => {
-            if (e.key === 'Escape') {
-                cleanup();
-                document.removeEventListener('keydown', escHandler);
-            }
-        };
-        document.addEventListener('keydown', escHandler);
-    
+        
         try {
-            const Html5Qrcode = window.Html5Qrcode;
-            if (!Html5Qrcode) {
-                throw new Error('Библиотека html5-qrcode не загружена');
-            }
-    
-            html5QrCode = new Html5Qrcode('qr-reader');
-    
-            const config = {
-                fps: 15,
-                qrbox: { width: 250, height: 250 },
-                aspectRatio: 1.0
-            };
-    
-            await html5QrCode.start(
-                { facingMode: 'environment' },
-                config,
-                (decodedText) => {
-                    cleanup();
-                    document.removeEventListener('keydown', escHandler);
-                    sendReservation(bookTitle, decodedText);
-                },
-                (errorMessage) => {}
-            );
-    
-            statusMsg.textContent = '✅ Камера работает, наведите на QR-код';
-        } catch (err) {
-            console.warn('Ошибка:', err);
-            cleanup();
-            document.removeEventListener('keydown', escHandler);
-            const qrData = prompt('Не удалось открыть камеру. Введите строку из QR-кода:');
-            if (qrData) {
-                sendReservation(bookTitle, qrData);
-            }
+            await fetch(url, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            alert('✅ Книга забронирована! Администратор увидит заявку в таблице.');
+        } catch (error) {
+            console.error('Ошибка:', error);
+            alert('❌ Ошибка бронирования. Попробуйте позже.');
         }
     }
     
