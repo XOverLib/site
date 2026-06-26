@@ -1223,7 +1223,6 @@
 
     // ===== БРОНИРОВАНИЕ В GOOGLE SHEETS =====
     async function reserveBook(bookTitle) {
-    
         // Создаём оверлей
         const overlay = document.createElement('div');
         overlay.style.cssText = `
@@ -1317,24 +1316,19 @@
         }
     
         manualBtn.onclick = () => {
-            alert('⌨ Ручной ввод');
             cleanup();
             const qrData = prompt('Введите строку из QR-кода:');
             if (qrData) {
                 sendReservation(bookTitle, qrData);
-            } else {
-                alert('❌ Ручной ввод отменён');
             }
         };
     
         cancelBtn.onclick = () => {
-            alert('❌ Отмена');
             cleanup();
         };
     
         const escHandler = (e) => {
             if (e.key === 'Escape') {
-                alert('❌ ESC');
                 cleanup();
                 document.removeEventListener('keydown', escHandler);
             }
@@ -1344,7 +1338,6 @@
         try {
             const Html5Qrcode = window.Html5Qrcode;
             if (!Html5Qrcode) {
-                alert('❌ Ошибка: библиотека html5-qrcode не загружена');
                 throw new Error('Библиотека html5-qrcode не загружена');
             }
     
@@ -1364,23 +1357,16 @@
                     document.removeEventListener('keydown', escHandler);
                     sendReservation(bookTitle, decodedText);
                 },
-                (errorMessage) => {
-                    // Игнорируем ошибки кадров
-                    // console.debug(errorMessage);
-                }
+                (errorMessage) => {}
             );
             statusMsg.textContent = '✅ Камера работает, наведите на QR-код';
         } catch (err) {
-            alert('❌ 9. Ошибка при запуске камеры: ' + err.message);
             console.warn('Ошибка:', err);
             cleanup();
             document.removeEventListener('keydown', escHandler);
             const qrData = prompt('Не удалось открыть камеру. Введите строку из QR-кода:');
             if (qrData) {
-                alert('📦 Ручной ввод после ошибки: ' + qrData);
                 sendReservation(bookTitle, qrData);
-            } else {
-                alert('❌ Ручной ввод отменён');
             }
         }
     }
@@ -1388,17 +1374,10 @@
     async function sendReservation(bookTitle, qrData) {
         const url = SCRIPT_URL;
     
-        alert('📦 1. sendReservation вызвана');
-        alert('📦 2. bookTitle: ' + bookTitle);
-        alert('📦 3. qrData: ' + qrData);
-        alert('📦 4. URL: ' + url);
-    
         const now = new Date();
         const date = now.toLocaleDateString('ru-RU');
         const time = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
         const fullDate = date + ', ' + time;
-    
-        alert('📦 5. Дата: ' + fullDate);
     
         const data = {
             book: bookTitle,
@@ -1406,20 +1385,17 @@
             date: fullDate
         };
     
-        alert('📦 6. Данные: ' + JSON.stringify(data));
-    
         try {
-            alert('⏳ 7. Отправка fetch...');
             await fetch(url, {
                 method: 'POST',
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
-            alert('✅ 8. Книга забронирована!');
+            alert('✅ Книга забронирована!');
         } catch (error) {
-            alert('❌ 9. Ошибка: ' + error.message);
             console.error('Ошибка:', error);
+            alert('❌ Ошибка бронирования.');
         }
     }
 </script>
