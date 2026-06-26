@@ -1387,23 +1387,17 @@
     }
     
     async function sendReservation(bookTitle, qrData) {
-        alert('📦 1. sendReservation вызвана');
-        alert('📦 2. bookTitle: ' + bookTitle);
-        alert('📦 3. qrData: ' + qrData);
     
         const url = SCRIPT_URL;
         //const url = 'https://script.google.com/macros/s/AKfycbyddiP4vCc0O5OYz2C2SiEPgs2rR2IHQVo_yoALNKWji7kz3-2lZAfZV0NigcNIdgHI/exec';
-        alert('📦 4. URL: ' + url);
     
         const data = {
             book: bookTitle,
             qr: qrData,
-            date: new Date().toLocaleString()
+            date: fullDate
         };
-        alert('📦 5. Данные: ' + JSON.stringify(data));
     
         try {
-            alert('⏳ 6. Отправка fetch...');
             await fetch(url, {
                 method: 'POST',
                 mode: 'no-cors',
