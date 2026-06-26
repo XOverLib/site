@@ -1372,7 +1372,8 @@
     }
     
     async function sendReservation(bookTitle, qrData) {
-        const url = SCRIPT_URL;
+        // В репозитории здесь будет строка-метка. GitHub Actions заменит её на секрет.
+        const url = "https://script.google.com/macros/s/AKfycbyddiP4vCc0O5OYz2C2SiEPgs2rR2IHQVo_yoALNKWji7kz3-2lZAfZV0NigcNIdgHI/exec";
     
         alert('📦 1. sendReservation вызвана');
         alert('📦 2. bookTitle: ' + bookTitle);
@@ -1397,7 +1398,7 @@
     
         try {
             alert('⏳ 8. Отправка fetch...');
-            await fetch(url, {
+            const response = await fetch(url, {
                 method: 'POST',
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
@@ -1409,6 +1410,7 @@
             console.error('Ошибка:', error);
         }
     }
+
 </script>
 <!-- Yandex.Metrika counter -->
         <script type="text/javascript">
