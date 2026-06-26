@@ -1374,17 +1374,17 @@
     async function sendReservation(bookTitle, qrData) {
         const url = SCRIPT_URL;
     
-        alert('📦 1. sendReservation вызвана');
-        alert('📦 2. bookTitle: ' + bookTitle);
-        alert('📦 3. qrData: ' + qrData);
-        alert('📦 4. URL: ' + url);
+        //alert('📦 1. sendReservation вызвана');
+        //alert('📦 2. bookTitle: ' + bookTitle);
+        //alert('📦 3. qrData: ' + qrData);
+        //alert('📦 4. URL: ' + url);
     
         const now = new Date();
         const var_date = now.toLocaleDateString('ru-RU');
         const var_time = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
     
-        alert('📦 5. Дата: ' + var_date);
-        alert('📦 6. Время: ' + var_time);
+        //alert('📦 5. Дата: ' + var_date);
+        //alert('📦 6. Время: ' + var_time);
     
         const data = {
             book: bookTitle,
@@ -1393,7 +1393,7 @@
             time: var_time
         };
     
-        alert('📦 7. Данные: ' + JSON.stringify(data));
+        //alert('📦 7. Данные: ' + JSON.stringify(data));
     
         try {
             alert('⏳ 8. Отправка fetch...');
