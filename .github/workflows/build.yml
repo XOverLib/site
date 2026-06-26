@@ -8,15 +8,22 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
     steps:
       - uses: actions/checkout@v4
 
       - name: Create config.js from secret
+        env:
+          WEBAPP_URL: ${{ secrets.SECRET_TABLE }}
         run: |
-          echo "const SCRIPT_URL = '${{ secrets.SECRET_TABLE }}';" > config.js
+          echo "const SCRIPT_URL = '$WEBAPP_URL';" > config.js
 
-      - name: Upload config.js as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: config
-          path: config.js
+      - name: Commit and push config.js
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add config.js
+          git commit -m "Update config.js from secret" || echo "No changes to commit"
+          git push
