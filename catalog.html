@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Каталог — XOVER</title>
+    <style>
+        /* ===== CSS переменные для тем ===== */
+        :root {
+            --bg-body: #f8f6f2;
+            --bg-container: #ffffff;
+            --bg-search: #ffffff;
+            --bg-toggle: #f8f6f2;
+            --bg-table-header: #0b1a2e;
+            --bg-table-row-hover: #f8f6f2;
+            --bg-grid-item: #ffffff;
+            --bg-meta: #f8f6f2;
+            --bg-modal: #ffffff;
+            --bg-cover-placeholder: #f0ede8;
+            --bg-input: #ffffff;
+            --bg-tooltip: #ffffff;
+            --text-primary: #1e1e1e;
+            --text-secondary: #4a5a6e;
+            --text-muted: #999;
+            --text-light: #ccc;
+            --text-white: #fff;
+            --text-dark: #0b1a2e;
+            --border-color: #e0dcd4;
+            --shadow-color: rgba(0,0,0,0.06);
+            --shadow-modal: rgba(0,0,0,0.3);
+            --shadow-hover: rgba(0,0,0,0.1);
+            --accent: #c44536;
+            --accent-hover: #a8352a;
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #1a1a2e;
+            --bg-container: #16213e;
+            --bg-search: #1a1a2e;
+            --bg-toggle: #0f3460;
+            --bg-table-header: #0f3460;
+            --bg-table-row-hover: #1a1a2e;
+            --bg-grid-item: #1a1a2e;
+            --bg-meta: #0f3460;
+            --bg-modal: #16213e;
+            --bg-cover-placeholder: #0f3460;
+            --bg-input: #1a1a2e;
+            --bg-tooltip: #16213e;
+            --text-primary: #e8e8e8;
+            --text-secondary: #b0b0b0;
+            --text-muted: #888;
+            --text-light: #666;
+            --text-white: #fff;
+            --text-dark: #e8e8e8;
+            --border-color: #2a3a5e;
+            --shadow-color: rgba(0,0,0,0.3);
+            --shadow-modal: rgba(0,0,0,0.6);
+            --shadow-hover: rgba(0,0,0,0.4);
+            --accent: #c44536;
+            --accent-hover: #a8352a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            background: var(--bg-body);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+            transition: background 0.3s, color 0.3s;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--bg-container);
+            padding: 2rem;
+            border-radius: 24px;
+            box-shadow: 0 8px 30px var(--shadow-color);
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+        h1 { font-size: 2.5rem; font-weight: 700; color: var(--text-dark); transition: color 0.3s; }
+        .subhead { color: var(--accent); font-size: 1.1rem; margin-bottom: 1.5rem; }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s;
+        }
+        .back-link:hover { border-bottom-color: var(--accent); }
+
+        .theme-toggle-wrap {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 0.5rem;
+        }
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.3rem 0.8rem;
+            background: var(--bg-toggle);
+            border-radius: 20px;
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            user-select: none;
+        }
+        .theme-toggle:hover { border-color: var(--accent); }
+        .theme-toggle .icon { font-size: 1.2rem; transition: transform 0.3s; }
+        .theme-toggle .label { font-weight: 500; }
+
+        .lang-selector {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-right: 1rem;
+        }
+        .lang-selector select {
+            padding: 0.3rem 0.6rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: border-color 0.3s, background 0.3s, color 0.3s;
+        }
+        .lang-selector select:focus { outline: none; border-color: var(--accent); }
+
+        .search-box {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .search-box input {
+            flex: 1;
+            padding: 0.6rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            min-width: 200px;
+            background: var(--bg-input);
+            color: var(--text-primary);
+            transition: border-color 0.3s, background 0.3s, color 0.3s;
+        }
+        .search-box input:focus { outline: none; border-color: var(--accent); }
+        .search-box input::placeholder { color: var(--text-muted); }
+        .search-box select {
+            padding: 0.6rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: var(--bg-input);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: border-color 0.3s, background 0.3s, color 0.3s;
+        }
+        .search-box select:focus { outline: none; border-color: var(--accent); }
+        .search-box button {
+            padding: 0.6rem 1.5rem;
+            background: var(--accent);
+            color: var(--text-white);
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .search-box button:hover { background: var(--accent-hover); }
+        .search-box .reset-btn {
+            background: var(--border-color);
+            color: var(--text-primary);
+        }
+        .search-box .reset-btn:hover { background: var(--text-muted); }
+
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-toggle);
+            border-radius: 12px;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            transition: background 0.3s;
+        }
+        .view-toggle .label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        .view-toggle .buttons {
+            display: flex;
+            gap: 0.3rem;
+        }
+        .view-toggle .buttons button {
+            padding: 0.4rem 1rem;
+            border: 2px solid var(--border-color);
+            background: var(--bg-container);
+            color: var(--text-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.2s;
+            font-size: 0.9rem;
+        }
+        .view-toggle .buttons button:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .view-toggle .buttons button.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: var(--text-white);
+        }
+
+        .table-wrapper { overflow-x: auto; }
+        .table-wrapper table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        .table-wrapper th {
+            background: var(--bg-table-header);
+            color: var(--text-white);
+            padding: 0.6rem 0.8rem;
+            text-align: left;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .table-wrapper td {
+            padding: 0.5rem 0.8rem;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            color: var(--text-primary);
+        }
+        .table-wrapper tr:hover td { background: var(--bg-table-row-hover); }
+        .col-cover {
+            width: 60px;
+            text-align: center;
+            position: relative;
+        }
+        .col-cover .thumb-wrap {
+            display: inline-block;
+            position: relative;
+            cursor: pointer;
+            width: 40px;
+            height: 56px;
+            overflow: hidden;
+            border-radius: 4px;
+            background: var(--bg-cover-placeholder);
+            flex-shrink: 0;
+        }
+        .col-cover .thumb-wrap img {
+            width: 40px;
+            height: 56px;
+            object-fit: contain;
+            display: block;
+            transition: transform 0.2s;
+        }
+        .col-cover .thumb-wrap:hover img { transform: scale(1.05); }
+        .col-cover .no-cover { color: var(--text-light); font-size: 0.7rem; display: block; text-align: center; }
+        .col-title { min-width: 180px; font-weight: 500; }
+        .col-series { min-width: 120px; }
+        .col-authors { min-width: 120px; }
+        .col-language { min-width: 70px; }
+        .col-year { min-width: 70px; }
+
+        .grid-view {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            padding: 0.5rem 0;
+        }
+        .grid-view .grid-item {
+            background: var(--bg-grid-item);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            flex-direction: column;
+            color: var(--text-primary);
+        }
+        .grid-view .grid-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px var(--shadow-hover);
+            border-color: var(--accent);
+        }
+        .grid-view .grid-item .grid-cover {
+            width: 100%;
+            aspect-ratio: 2 / 3;
+            background: var(--bg-cover-placeholder);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            flex-shrink: 0;
+        }
+        .grid-view .grid-item .grid-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+        .grid-view .grid-item .grid-cover .no-cover {
+            color: var(--text-light);
+            font-size: 0.8rem;
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+        .grid-view .grid-item .grid-info {
+            padding: 0.8rem 1rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .grid-view .grid-item .grid-info .grid-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 0.3rem;
+        }
+        .grid-view .grid-item .grid-info .grid-authors {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .grid-view .grid-item .grid-info .grid-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .grid-view .grid-item .grid-info .grid-meta span {
+            background: var(--bg-meta);
+            padding: 0.1rem 0.5rem;
+            border-radius: 4px;
+            color: var(--text-secondary);
+        }
+
+        .cover-tooltip {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            background: var(--bg-tooltip);
+            border-radius: 12px;
+            box-shadow: 0 20px 60px var(--shadow-modal);
+            padding: 8px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            max-width: 400px;
+            max-height: 500px;
+            display: none;
+        }
+        .cover-tooltip.visible { opacity: 1; display: block; }
+        .cover-tooltip img {
+            width: 100%;
+            height: auto;
+            max-height: 480px;
+            object-fit: contain;
+            border-radius: 8px;
+            display: block;
+        }
+        .cover-tooltip .no-cover-big {
+            padding: 2rem;
+            color: var(--text-muted);
+            text-align: center;
+            font-style: italic;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .pagination button {
+            padding: 0.4rem 1rem;
+            border: 2px solid var(--accent);
+            background: var(--bg-container);
+            color: var(--accent);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .pagination button:hover,
+        .pagination button.active { background: var(--accent); color: var(--text-white); }
+        .pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .counter { margin-top: 1rem; color: var(--text-secondary); font-size: 0.9rem; text-align: center; }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal {
+            background: var(--bg-modal);
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2rem;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px var(--shadow-modal);
+            position: relative;
+            color: var(--text-primary);
+        }
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            background: none;
+            border: none;
+        }
+        .modal-close:hover { color: var(--accent); }
+        .modal h2 {
+            color: var(--text-dark);
+            margin-bottom: 1.2rem;
+            padding-right: 2rem;
+            font-size: 1.5rem;
+        }
+        .modal .field {
+            display: flex;
+            padding: 0.4rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .modal .field-label {
+            font-weight: 600;
+            color: var(--text-dark);
+            width: 40%;
+            flex-shrink: 0;
+        }
+        .modal .field-value { width: 60%; color: var(--text-primary); }
+        .modal .field-value.empty { color: var(--text-muted); font-style: italic; }
+        .modal .card-layout {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+            max-height: 70vh;
+        }
+        .modal .card-cover {
+            flex: 0 0 220px;
+            max-width: 240px;
+            background: var(--bg-cover-placeholder);
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;   /* ← ЭТО ГЛАВНОЕ: вертикальное расположение */
+            align-items: center;
+            justify-content: flex-start;
+            aspect-ratio: auto;
+        }
+        .modal .card-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+        .modal .card-cover .no-cover {
+            color: var(--text-muted);
+            font-style: italic;
+            text-align: center;
+            padding: 1rem 0;
+        }
+        .modal .card-fields {
+            flex: 1;
+            min-width: 0;
+        }
+        .modal .fields-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.2rem 1.5rem;
+        }
+        .modal .fields-grid .field {
+            display: flex;
+            padding: 0.2rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .modal .fields-grid .field-label {
+            font-weight: 600;
+            color: var(--text-dark);
+            width: 40%;
+            flex-shrink: 0;
+            font-size: 0.85rem;
+        }
+        .modal .fields-grid .field-value {
+            width: 60%;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+        }
+        .modal .fields-grid .field-value.empty { color: var(--text-muted); font-style: italic; }
+        .modal .close-btn-bottom {
+            margin-top: 1rem;
+            padding: 0.5rem 2rem;
+            background: var(--accent);
+            color: var(--text-white);
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+        }
+        .modal .close-btn-bottom:hover { background: var(--accent-hover); }
+
+        .hidden { display: none !important; }
+
+        .language-flag {
+            display: inline-block;
+            margin-right: 0.3rem;
+        }
+        
+        @media (max-width: 600px) {
+            .modal .card-layout {
+                flex-direction: column;
+                align-items: center;
+            }
+            .modal .card-cover {
+                flex: 0 0 auto;
+                max-width: 150px;
+                aspect-ratio: 2/3;
+            }
+            .modal .fields-grid {
+                grid-template-columns: 1fr;
+            }
+            .grid-view {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 1rem;
+            }
+            .theme-toggle-wrap {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .lang-selector {
+                margin-right: 0;
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            h1 { font-size: 1.8rem; }
+            .search-box { flex-direction: column; }
+            .search-box input,
+            .search-box select,
+            .search-box button { width: 100%; }
+            th, td { padding: 0.4rem 0.5rem; font-size: 0.8rem; }
+            .modal { padding: 1.2rem; }
+            .modal .field { flex-direction: column; padding: 0.6rem 0; }
+            .modal .field-label { width: 100%; }
+            .modal .field-value { width: 100%; }
+            .view-toggle { flex-direction: column; align-items: stretch; }
+            .view-toggle .buttons { justify-content: center; }
+        }
+    </style>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="config.js"></script>
+</head>
+<body>
+<div class="container">
+
+    <div class="theme-toggle-wrap">
+        <div class="lang-selector">
+            <span>🌐</span>
+            <select id="langSelect" onchange="changeLanguage(this.value)">
+                <option value="am">Հայերեն</option>
+                <option value="be">Беларуская</option>
+                <option value="de">Deutsch</option>
+                <option value="en">English</option>
+                <option value="es">Español</option>
+                <option value="fi">Suomi</option>
+                <option value="fr">Français</option>
+                <option value="hr">Hrvatski</option>
+                <option value="hu">Magyar</option>
+                <option value="it">Italiano</option>
+                <option value="ja">日本語</option>
+                <option value="nl">Nederlands</option>
+                <option value="pl">Polski</option>
+                <option value="pt">Português</option>
+                <option value="ro">Română</option>
+                <option value="ru">Русский</option>
+                <option value="sr">Српски</option>
+                <option value="zh">中文</option>
+            </select>
+        </div>
+        <div class="theme-toggle" onclick="toggleTheme()">
+            <span class="icon" id="themeIcon">🌙</span>
+            <span class="label" id="themeLabel">Тёмная</span>
+        </div>
+    </div>
+
+    <a href="/" class="back-link" id="backLink">← На главную</a>
+    <h1 id="pageHeading">Каталог коллекции</h1>
+    <div class="subhead" id="pageSubhead">Все издания, которые есть в фонде XOVER</div>
+
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Поиск по названию, автору, серии..." oninput="applyFilters()">
+        <select id="languageFilter" onchange="applyFilters()">
+            <option value="">Все языки</option>
+        </select>
+        <select id="typeFilter" onchange="applyFilters()">
+            <option value="">Все типы</option>
+        </select>
+        <button id="searchBtn" onclick="applyFilters()">Найти</button>
+        <button class="reset-btn" id="resetBtn" onclick="resetFilters()">Сбросить</button>
+    </div>
+
+    <div class="view-toggle">
+        <span class="label" id="viewLabel">Вид отображения:</span>
+        <div class="buttons">
+            <button id="viewList" class="active" onclick="setView('list')">📋 Список</button>
+            <button id="viewGrid" onclick="setView('grid')">📐 Плитка</button>
+        </div>
+    </div>
+
+    <div id="listContainer">
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="col-cover" id="thCover">Обл.</th>
+                        <th class="col-title" id="thTitle">Название</th>
+                        <th class="col-series" id="thSeries">Серия</th>
+                        <th class="col-authors" id="thAuthors">Авторы</th>
+                        <th class="col-language" id="thLanguage">Язык</th>
+                        <th class="col-year" id="thYear">Год</th>
+                    </tr>
+                </thead>
+                <tbody id="catalogBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="gridContainer" class="hidden">
+        <div class="grid-view" id="gridBody"></div>
+    </div>
+
+    <div class="pagination" id="pagination"></div>
+    <div class="counter" id="counter"></div>
+
+</div>
+
+<div class="cover-tooltip" id="coverTooltip">
+    <img id="tooltipImage" src="" alt="Обложка" />
+    <div class="no-cover-big" id="tooltipNoCover" style="display:none;">Нет обложки</div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="modal">
+        <button class="modal-close" onclick="closeModal()">✕</button>
+        <h2 id="modalTitle">Название</h2>
+        <div class="card-layout" id="modalBody">
+            <div class="card-cover" id="modalCover"></div>
+            <div class="card-fields" id="modalFields"></div>
+        </div>
+        <button class="close-btn-bottom" id="modalCloseBtn" onclick="closeModal()">Закрыть</button>
+    </div>
+</div>
+
+<script>
+    // ===== ПЕРЕВОДЫ =====
+    let langData = {};
+    let currentLang = 'ru';
+
+    // Список поддерживаемых языков с их названиями
+    const languageNames = {
+        'am': 'Հայերեն',
+        'be': 'Беларуская',
+        'de': 'Deutsch',
+        'en': 'English',
+        'es': 'Español',
+        'fi': 'Suomi',
+        'fr': 'Français',
+        'hr': 'Hrvatski',
+        'hu': 'Magyar',
+        'it': 'Italiano',
+        'ja': '日本語',
+        'nl': 'Nederlands',
+        'pl': 'Polski',
+        'pt': 'Português',
+        'ro': 'Română',
+        'ru': 'Русский',
+        'sr': 'Српски',
+        'zh': '中文'
+    };
+
+    function detectLanguage() {
+        const savedLang = localStorage.getItem('catalog_lang');
+        if (savedLang && langData[savedLang]) {
+            return savedLang;
+        }
+        const urlParams = new URLSearchParams(window.location.search);
+        const langParam = urlParams.get('lang');
+        if (langParam && langData[langParam]) {
+            return langParam;
+        }
+        const browserLang = navigator.language.split('-')[0];
+        if (langData[browserLang]) {
+            return browserLang;
+        }
+        return 'ru';
+    }
+
+    function t(key, params = {}) {
+        let text = langData[currentLang]?.[key] || langData['ru']?.[key] || key;
+        for (const [param, value] of Object.entries(params)) {
+            text = text.replace(`{${param}}`, value);
+        }
+        return text;
+    }
+
+    function applyTranslations() {
+        document.title = t('title');
+        document.getElementById('pageHeading').textContent = t('heading');
+        document.getElementById('pageSubhead').textContent = t('subhead');
+        document.getElementById('backLink').textContent = t('back_link');
+        document.getElementById('searchInput').placeholder = t('search_placeholder');
+        const langFilter = document.getElementById('languageFilter');
+        langFilter.options[0].textContent = t('language_filter');
+        const typeFilter = document.getElementById('typeFilter');
+        typeFilter.options[0].textContent = t('type_filter');
+        document.getElementById('searchBtn').textContent = t('search_button');
+        document.getElementById('resetBtn').textContent = t('reset_button');
+        document.getElementById('viewLabel').textContent = t('view_label');
+        document.getElementById('viewList').textContent = t('view_list');
+        document.getElementById('viewGrid').textContent = t('view_grid');
+        document.getElementById('thCover').textContent = t('table_cover');
+        document.getElementById('thTitle').textContent = t('table_title');
+        document.getElementById('thSeries').textContent = t('table_series');
+        document.getElementById('thAuthors').textContent = t('table_authors');
+        document.getElementById('thLanguage').textContent = t('table_language');
+        document.getElementById('thYear').textContent = t('table_year');
+        document.getElementById('modalCloseBtn').textContent = t('modal_close');
+        updateCounter();
+    }
+
+    function changeLanguage(lang) {
+        if (langData[lang]) {
+            currentLang = lang;
+            localStorage.setItem('catalog_lang', lang);
+            document.documentElement.lang = lang;
+            document.getElementById('langSelect').value = lang;
+            applyTranslations();
+            renderAll();
+        }
+    }
+
+    // ===== ТЕМА =====
+    function toggleTheme() {
+        const html = document.documentElement;
+        const currentTheme = html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateThemeUI(newTheme);
+    }
+
+    function updateThemeUI(theme) {
+        const icon = document.getElementById('themeIcon');
+        const label = document.getElementById('themeLabel');
+        if (theme === 'dark') {
+            icon.textContent = '☀️';
+            label.textContent = t('light_theme');
+        } else {
+            icon.textContent = '🌙';
+            label.textContent = t('dark_theme');
+        }
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+    // ===== ВИД ОТОБРАЖЕНИЯ =====
+    const savedView = localStorage.getItem('view') || 'list';
+    let currentView = savedView;
+
+    function setView(view) {
+        currentView = view;
+        localStorage.setItem('view', view);
+        document.getElementById('viewList').className = view === 'list' ? 'active' : '';
+        document.getElementById('viewGrid').className = view === 'grid' ? 'active' : '';
+        document.getElementById('listContainer').className = view === 'list' ? '' : 'hidden';
+        document.getElementById('gridContainer').className = view === 'grid' ? '' : 'hidden';
+        renderAll();
+    }
+
+    // ===== ОСТАЛЬНОЙ КОД =====
+    let allData = [];
+    let filteredData = [];
+    let currentPage = 1;
+    const perPage = 25;
+
+    const tooltip = document.getElementById('coverTooltip');
+    const tooltipImg = document.getElementById('tooltipImage');
+    const tooltipNoCover = document.getElementById('tooltipNoCover');
+    let tooltipTimeout = null;
+
+    // ===== ЗАГРУЗКА ДАННЫХ =====
+    function loadCatalog() {
+        fetch('catalog.json')
+            .then(res => {
+                if (!res.ok) throw new Error('Не удалось загрузить каталог');
+                return res.json();
+            })
+            .then(data => {
+                allData = data;
+                populateFilters(data);
+                applyFilters();
+                setView(currentView);
+            })
+            .catch(err => {
+                document.getElementById('catalogBody').innerHTML =
+                    `<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--accent);">
+                        ❌ Ошибка загрузки каталога: ${err.message}
+                    </td></tr>`;
+            });
+    }
+
+    fetch('catalog_languages.json')
+        .then(res => {
+            if (!res.ok) throw new Error('Не удалось загрузить переводы');
+            return res.json();
+        })
+        .then(data => {
+            langData = data;
+            currentLang = detectLanguage();
+            document.getElementById('langSelect').value = currentLang;
+            document.documentElement.lang = currentLang;
+            applyTranslations();
+            updateThemeUI(savedTheme);
+            loadCatalog();
+        })
+        .catch(err => {
+            console.error('Ошибка загрузки переводов:', err);
+            loadCatalog();
+        });
+
+    function populateFilters(data) {
+        const languages = new Set();
+        const types = new Set();
+        data.forEach(item => {
+            if (item['Язык']) languages.add(item['Язык']);
+            if (item['Тип литературы']) types.add(item['Тип литературы']);
+        });
+        const langSelect = document.getElementById('languageFilter');
+        const firstOption = langSelect.options[0];
+        langSelect.innerHTML = '';
+        langSelect.appendChild(firstOption);
+        languages.forEach(l => {
+            const opt = document.createElement('option');
+            opt.value = l;
+            opt.textContent = l;
+            langSelect.appendChild(opt);
+        });
+        const typeSelect = document.getElementById('typeFilter');
+        const firstTypeOption = typeSelect.options[0];
+        typeSelect.innerHTML = '';
+        typeSelect.appendChild(firstTypeOption);
+        types.forEach(t => {
+            const opt = document.createElement('option');
+            opt.value = t;
+            opt.textContent = t;
+            typeSelect.appendChild(opt);
+        });
+    }
+
+    function applyFilters() {
+        const search = document.getElementById('searchInput').value.toLowerCase().trim();
+        const lang = document.getElementById('languageFilter').value;
+        const type = document.getElementById('typeFilter').value;
+        filteredData = allData.filter(item => {
+            const title = (item['Название'] || '').toLowerCase();
+            const authors = (item['Авторы'] || '').toLowerCase();
+            const series = (item['Серия'] || '').toLowerCase();
+            const matchSearch = !search || title.includes(search) || authors.includes(search) || series.includes(search);
+            const matchLang = !lang || item['Язык'] === lang;
+            const matchType = !type || item['Тип литературы'] === type;
+            return matchSearch && matchLang && matchType;
+        });
+        currentPage = 1;
+        renderAll();
+    }
+
+    function resetFilters() {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('languageFilter').value = '';
+        document.getElementById('typeFilter').value = '';
+        applyFilters();
+    }
+
+    function renderAll() {
+        renderTable();
+        renderGrid();
+        renderPagination();
+        updateCounter();
+    }
+
+    function updateCounter() {
+        const shown = Math.min(filteredData.length, perPage);
+        document.getElementById('counter').textContent = t('counter', { shown: shown, total: filteredData.length });
+    }
+
+    function renderTable() {
+        const start = (currentPage - 1) * perPage;
+        const pageData = filteredData.slice(start, start + perPage);
+        const tbody = document.getElementById('catalogBody');
+        if (pageData.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--text-secondary);">${t('no_results')}</td></tr>`;
+        } else {
+            tbody.innerHTML = pageData.map((item, idx) => {
+                const coverUrl = item['превью'] || '';
+                let coverHtml = '';
+                if (coverUrl && coverUrl.trim() !== '') {
+                    coverHtml = `<div class="thumb-wrap" 
+                           data-cover="${coverUrl}"
+                           onmouseenter="showTooltip(event, '${coverUrl}')"
+                           onmouseleave="hideTooltip()"
+                           onmousemove="moveTooltip(event)">
+                        <img src="${coverUrl}" alt="Обложка" loading="lazy" 
+                             width="40" height="56"
+                             onerror="this.style.display='none'" />
+                      </div>`;
+                } else {
+                    coverHtml = `<span class="no-cover">${t('no_cover')}</span>`;
+                }
+                return `<tr onclick="openCard(${start + idx})">
+                    <td class="col-cover">${coverHtml}</td>
+                    <td class="col-title">${item['Название'] || ''}</td>
+                    <td class="col-series">${item['Серия'] || ''}</td>
+                    <td class="col-authors">${item['Авторы'] || ''}</td>
+                    <td class="col-language">${item['Язык'] || ''}</td>
+                    <td class="col-year">${item['Год издания'] || ''}</td>
+                </tr>`;
+            }).join('');
+        }
+    }
+
+    function renderGrid() {
+        const start = (currentPage - 1) * perPage;
+        const pageData = filteredData.slice(start, start + perPage);
+        const gridBody = document.getElementById('gridBody');
+        if (pageData.length === 0) {
+            gridBody.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--text-secondary);">${t('no_results')}</div>`;
+        } else {
+            gridBody.innerHTML = pageData.map((item, idx) => {
+                const coverUrl = item['превью'] || '';
+                let coverHtml = '';
+                if (coverUrl && coverUrl.trim() !== '') {
+                    coverHtml = `<img src="${coverUrl}" alt="Обложка" loading="lazy" 
+                                 style="width:100%;height:100%;object-fit:contain;"
+                                 onerror="this.parentElement.innerHTML = '<div class=\\'no-cover\\'>${t('no_cover_grid')}</div>'" />`;
+                } else {
+                    coverHtml = `<div class="no-cover">${t('no_cover_grid')}</div>`;
+                }
+                return `<div class="grid-item" onclick="openCard(${start + idx})">
+                    <div class="grid-cover">${coverHtml}</div>
+                    <div class="grid-info">
+                        <div class="grid-title">${item['Название'] || 'Без названия'}</div>
+                        <div class="grid-authors">${item['Авторы'] || ''}</div>
+                        <div class="grid-meta">
+                            ${item['Серия'] ? `<span>${item['Серия']}</span>` : ''}
+                            ${item['Год издания'] ? `<span>${item['Год издания']}</span>` : ''}
+                            ${item['Язык'] ? `<span>${item['Язык']}</span>` : ''}
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+    }
+
+    function showTooltip(event, coverUrl) {
+        clearTimeout(tooltipTimeout);
+        tooltipImg.style.display = 'none';
+        tooltipNoCover.style.display = 'none';
+        const img = new Image();
+        img.onload = function() {
+            tooltipImg.src = coverUrl;
+            tooltipImg.style.display = 'block';
+            tooltipNoCover.style.display = 'none';
+            tooltip.classList.add('visible');
+            positionTooltip(event);
+        };
+        img.onerror = function() {
+            tooltipImg.style.display = 'none';
+            tooltipNoCover.style.display = 'block';
+            tooltip.classList.add('visible');
+            positionTooltip(event);
+        };
+        img.src = coverUrl;
+    }
+
+    function moveTooltip(event) {
+        if (tooltip.classList.contains('visible')) {
+            positionTooltip(event);
+        }
+    }
+
+    function positionTooltip(event) {
+        let left = event.clientX + 15;
+        let top = event.clientY + 15;
+        const tooltipWidth = 300;
+        const tooltipHeight = 420;
+        if (left + tooltipWidth > window.innerWidth) {
+            left = event.clientX - tooltipWidth - 15;
+        }
+        if (top + tooltipHeight > window.innerHeight) {
+            top = window.innerHeight - tooltipHeight - 10;
+        }
+        if (top < 10) top = 10;
+        if (left < 10) left = 10;
+        tooltip.style.left = left + 'px';
+        tooltip.style.top = top + 'px';
+    }
+
+    function hideTooltip() {
+        clearTimeout(tooltipTimeout);
+        tooltipTimeout = setTimeout(() => {
+            tooltip.classList.remove('visible');
+        }, 300);
+    }
+
+    document.addEventListener('scroll', hideTooltip);
+
+    function renderPagination() {
+        const totalPages = Math.ceil(filteredData.length / perPage);
+        const pagination = document.getElementById('pagination');
+        if (totalPages <= 1) {
+            pagination.innerHTML = '';
+            return;
+        }
+        let html = `<button onclick="goToPage(1)" ${currentPage === 1 ? 'disabled' : ''}>${t('pagination_first')}</button>`;
+        for (let i = 1; i <= totalPages; i++) {
+            if (i === 1 || i === totalPages || Math.abs(i - currentPage) <= 2) {
+                html += `<button onclick="goToPage(${i})" class="${i === currentPage ? 'active' : ''}">${i}</button>`;
+            } else if (i === currentPage - 3 || i === currentPage + 3) {
+                html += `<button disabled>…</button>`;
+            }
+        }
+        html += `<button onclick="goToPage(${totalPages})" ${currentPage === totalPages ? 'disabled' : ''}>${t('pagination_last')}</button>`;
+        pagination.innerHTML = html;
+    }
+
+    function goToPage(page) {
+        const totalPages = Math.ceil(filteredData.length / perPage);
+        if (page < 1 || page > totalPages) return;
+        currentPage = page;
+        renderAll();
+        window.scrollTo({ top: document.querySelector('.view-toggle').offsetTop - 20, behavior: 'smooth' });
+    }
+
+    // ===== КАРТОЧКА С КНОПКОЙ БРОНИРОВАНИЯ =====
+    function openCard(index) {
+        const item = filteredData[index];
+        if (!item) return;
+    
+        document.getElementById('modalTitle').textContent = item['Название'] || 'Без названия';
+    
+        // ===== ЛЕВЫЙ КОНТЕЙНЕР (обложка + кнопка под ней) =====
+        const coverContainer = document.getElementById('modalCover');
+        coverContainer.innerHTML = '';
+    
+        // Создаём вертикальный блок для обложки и кнопки
+        const coverWrapper = document.createElement('div');
+        coverWrapper.style.cssText = `
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        `;
+    
+        // ===== ОБЛОЖКА =====
+        const coverUrl = item['превью'] || '';
+        if (coverUrl && coverUrl.trim() !== '') {
+            const img = document.createElement('img');
+            img.src = coverUrl;
+            img.alt = 'Обложка';
+            img.loading = 'lazy';
+            img.style.cssText = `
+                width: 100%;
+                height: auto;
+                max-height: 300px;
+                object-fit: contain;
+                border-radius: 4px;
+            `;
+            img.onerror = function() {
+                this.style.display = 'none';
+                const msg = document.createElement('div');
+                msg.className = 'no-cover';
+                msg.textContent = 'Нет обложки';
+                coverWrapper.appendChild(msg);
+            };
+            coverWrapper.appendChild(img);
+        } else {
+            const msg = document.createElement('div');
+            msg.className = 'no-cover';
+            msg.textContent = 'Нет обложки';
+            coverWrapper.appendChild(msg);
+        }
+    
+        // ===== КНОПКА БРОНИРОВАНИЯ (ПОД ОБЛОЖКОЙ) =====
+        const reserveBtn = document.createElement('button');
+        reserveBtn.textContent = '📚 Забронировать';
+        reserveBtn.style.cssText = `
+            display: block;
+            width: 100%;
+            margin-top: 0.6rem;
+            padding: 0.4rem 0;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-align: center;
+        `;
+        reserveBtn.onmouseover = () => reserveBtn.style.background = 'var(--accent-hover)';
+        reserveBtn.onmouseout = () => reserveBtn.style.background = 'var(--accent)';
+        reserveBtn.onclick = () => {
+            reserveBook(item['Название'] || 'Без названия');
+        };
+        coverWrapper.appendChild(reserveBtn);
+    
+        // Вставляем вертикальный блок в левый контейнер
+        coverContainer.appendChild(coverWrapper);
+    
+        // ===== ПОЛЯ СПРАВА =====
+        const fieldsContainer = document.getElementById('modalFields');
+        fieldsContainer.innerHTML = '';
+    
+        const grid = document.createElement('div');
+        grid.className = 'fields-grid';
+    
+        const allFieldKeys = [
+            'Название', 'Тип литературы', 'Серия', 'Подсерия', 
+            'Номер в серии', 'Номер в подсерии', 'Выпуски (если есть)',
+            'Авторы', 'Издательство оригинал', 'Издательство РФ',
+            'ISBN', 'Тираж', 'Вселенная', 'Тип издания', 
+            'Размеры', 'Масса', 'Бумага', 'Издание',
+            'Страницы', 'Число издания', 'Месяц издания',
+            'Год издания', 'Год переиздания', 'Страна', 'Язык', 'Количество'
+        ];
+    
+        allFieldKeys.forEach(fieldKey => {
+            const value = item[fieldKey];
+            const hasValue = value && String(value).trim() !== '';
+            if (hasValue) {
+                const div = document.createElement('div');
+                div.className = 'field';
+                div.innerHTML = `
+                    <div class="field-label">${fieldKey}</div>
+                    <div class="field-value">${value}</div>
+                `;
+                grid.appendChild(div);
+            }
+        });
+    
+        if (grid.children.length === 0) {
+            const div = document.createElement('div');
+            div.className = 'field';
+            div.style.gridColumn = '1 / -1';
+            div.style.textAlign = 'center';
+            div.style.padding = '1rem';
+            div.style.color = 'var(--text-muted)';
+            div.textContent = 'Нет дополнительных данных';
+            grid.appendChild(div);
+        }
+    
+        fieldsContainer.appendChild(grid);
+    
+        document.getElementById('modalOverlay').classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        document.getElementById('modalOverlay').classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    document.getElementById('modalOverlay').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeModal();
+    });
+
+    // ===== БРОНИРОВАНИЕ В GOOGLE SHEETS =====
+    async function reserveBook(bookTitle) {
+        // Создаём оверлей
+        const overlay = document.createElement('div');
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 10001;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        `;
+    
+        // Контейнер для камеры
+        const container = document.createElement('div');
+        container.id = 'qr-reader';
+        container.style.cssText = `
+            width: 90%;
+            max-width: 400px;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            aspect-ratio: 1/1;
+        `;
+        overlay.appendChild(container);
+    
+        const statusMsg = document.createElement('p');
+        statusMsg.textContent = '⏳ Наведите камеру на QR-код...';
+        statusMsg.style.cssText = `
+            color: white;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+            font-family: sans-serif;
+        `;
+        overlay.appendChild(statusMsg);
+    
+        const controls = document.createElement('div');
+        controls.style.cssText = `
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        `;
+    
+        const manualBtn = document.createElement('button');
+        manualBtn.textContent = '⌨ Ввести вручную';
+        manualBtn.style.cssText = `
+            padding: 0.6rem 1.5rem;
+            background: var(--accent, #c44536);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            cursor: pointer;
+        `;
+    
+        const cancelBtn = document.createElement('button');
+        cancelBtn.textContent = '❌ Отмена';
+        cancelBtn.style.cssText = `
+            padding: 0.6rem 1.5rem;
+            background: #666;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            cursor: pointer;
+        `;
+    
+        controls.appendChild(manualBtn);
+        controls.appendChild(cancelBtn);
+        overlay.appendChild(controls);
+        document.body.appendChild(overlay);
+    
+        let html5QrCode = null;
+    
+        function cleanup() {
+            if (html5QrCode) {
+                try {
+                    html5QrCode.stop().catch(() => {});
+                } catch (e) {}
+                html5QrCode = null;
+            }
+            if (document.body.contains(overlay)) {
+                document.body.removeChild(overlay);
+            }
+        }
+    
+        manualBtn.onclick = () => {
+            cleanup();
+            const qrData = prompt('Введите строку из QR-кода:');
+            if (qrData) {
+                sendReservation(bookTitle, qrData);
+            }
+        };
+    
+        cancelBtn.onclick = () => {
+            cleanup();
+        };
+    
+        const escHandler = (e) => {
+            if (e.key === 'Escape') {
+                cleanup();
+                document.removeEventListener('keydown', escHandler);
+            }
+        };
+        document.addEventListener('keydown', escHandler);
+    
+        try {
+            const Html5Qrcode = window.Html5Qrcode;
+            if (!Html5Qrcode) {
+                throw new Error('Библиотека html5-qrcode не загружена');
+            }
+    
+            html5QrCode = new Html5Qrcode('qr-reader');
+    
+            const config = {
+                fps: 15,
+                qrbox: { width: 250, height: 250 },
+                aspectRatio: 1.0
+            };
+    
+            await html5QrCode.start(
+                { facingMode: 'environment' },
+                config,
+                (decodedText) => {
+                    cleanup();
+                    document.removeEventListener('keydown', escHandler);
+                    sendReservation(bookTitle, decodedText);
+                },
+                (errorMessage) => {}
+            );
+            statusMsg.textContent = '✅ Камера работает, наведите на QR-код';
+        } catch (err) {
+            console.warn('Ошибка:', err);
+            cleanup();
+            document.removeEventListener('keydown', escHandler);
+            const qrData = prompt('Не удалось открыть камеру. Введите строку из QR-кода:');
+            if (qrData) {
+                sendReservation(bookTitle, qrData);
+            }
+        }
+    }
+    
+    async function sendReservation(bookTitle, qrData) {
+        const url = SCRIPT_URL;
+    
+        alert('📦 1. sendReservation вызвана');
+        alert('📦 2. bookTitle: ' + bookTitle);
+        alert('📦 3. qrData: ' + qrData);
+        alert('📦 4. URL: ' + url);
+    
+        const now = new Date();
+        const var_date = now.toLocaleDateString('ru-RU');
+        const var_time = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+    
+        alert('📦 5. Дата: ' + var_date);
+        alert('📦 6. Время: ' + var_time);
+    
+        const data = {
+            book: bookTitle,
+            qr: qrData,
+            date: var_date,
+            time: var_time
+        };
+    
+        alert('📦 7. Данные: ' + JSON.stringify(data));
+    
+        try {
+            alert('⏳ 8. Отправка fetch...');
+            await fetch(url, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            alert('✅ 9. Книга забронирована!');
+        } catch (error) {
+            alert('❌ 10. Ошибка: ' + error.message);
+            console.error('Ошибка:', error);
+        }
+    }
+</script>
+<!-- Yandex.Metrika counter -->
+        <script type="text/javascript">
+            (function(m,e,t,r,i,k,a){
+                m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+                m[i].l=1*new Date();
+                for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+                k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+            })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=110064832', 'ym');
+        
+            ym(110064832, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+        </script>
+        <noscript><div><img src="https://mc.yandex.ru/watch/110064832" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+</body>
+</html>

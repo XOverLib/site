@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XOVER — International Center for Graphic Literature</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            background: #ffffff;
+            color: #1e1e1e;
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 2.5rem 2rem;
+            border-radius: 24px;
+        }
+        .lang-switch {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 0.3rem;
+            margin-bottom: 1.5rem;
+        }
+        .lang-btn {
+            background: none;
+            border: 2px solid #c44536;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            color: #c44536;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+        .lang-btn.active {
+            background: #c44536;
+            color: #fff;
+        }
+        .lang-btn:hover {
+            background: #c44536;
+            color: #fff;
+        }
+        .lang-btn svg {
+            height: 1.2em;
+            vertical-align: middle;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .logo-area img {
+            height: 60px;
+            width: auto;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #0b1a2e;
+        }
+        .subhead {
+            font-size: 1.4rem;
+            font-weight: 400;
+            color: #c44536;
+            margin-top: 0.25rem;
+            border-left: 5px solid #c44536;
+            padding-left: 1.25rem;
+        }
+        .badge-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem 2.5rem;
+            margin: 2rem 0 2.5rem;
+            background: #f8f6f2;
+            padding: 1.25rem 1.75rem;
+            border-radius: 40px;
+        }
+        .badge-item {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #0b1a2e;
+        }
+        .badge-item span {
+            font-weight: 300;
+            color: #c44536;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-top: 2.8rem;
+            margin-bottom: 1.2rem;
+            border-bottom: 3px solid #c44536;
+            padding-bottom: 0.5rem;
+            color: #0b1a2e;
+        }
+        .gcd-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            background: #f8f6f2;
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin: 1.2rem 0 1.8rem;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #0b1a2e;
+        }
+        .stat-label {
+            font-size: 0.9rem;
+            color: #c44536;
+        }
+
+        ul {
+            padding-left: 1.5rem;
+            margin: 0.8rem 0 1.5rem;
+        }
+        li {
+            margin-bottom: 0.4rem;
+        }
+        .link-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem 2rem;
+            margin: 1.5rem 0 0.5rem;
+        }
+        .link-list a {
+            color: #c44536;
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px solid transparent;
+            transition: 0.2s;
+        }
+        .link-list a:hover {
+            border-bottom-color: #c44536;
+        }
+        .footer {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #c44536;
+            font-size: 0.95rem;
+            color: #0b1a2e;
+            text-align: center;
+        }
+        .recent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .recent-item {
+            text-align: center;
+            background: #f8f6f2;
+            border-radius: 12px;
+            padding: 0.75rem;
+        }
+        .recent-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        }
+        .recent-item .caption {
+            margin-top: 0.4rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #0b1a2e;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            .subhead {
+                font-size: 1.1rem;
+            }
+            .badge-grid {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            .logo-area img {
+                height: 40px;
+            }
+            .lang-btn {
+                font-size: 0.7rem;
+                padding: 0.1rem 0.4rem;
+            }
+        }
+    </style>
+    <link rel="icon" type="image/png" href="favicon.png">
+</head>
+<body>
+    <div class="container">
+
+        <!-- Кнопки-флаги -->
+        <div class="lang-switch">
+            <button class="lang-btn" data-lang="ru">🇷🇺</button>
+            <button class="lang-btn" data-lang="am">🇦🇲</button>
+            <button class="lang-btn" data-lang="be">🇧🇾</button>
+            <button class="lang-btn" data-lang="zh">🇨🇳</button>
+            <button class="lang-btn" data-lang="de">🇩🇪</button>
+            <button class="lang-btn" data-lang="es">🇪🇸</button>
+            <button class="lang-btn" data-lang="fi">🇫🇮</button>
+            <button class="lang-btn" data-lang="fr">🇫🇷</button>
+            <button class="lang-btn active" data-lang="en">🇬🇧</button>
+            <button class="lang-btn" data-lang="hr">🇭🇷</button>
+            <button class="lang-btn" data-lang="hu">🇭🇺</button>
+            <button class="lang-btn" data-lang="it">🇮🇹</button>
+            <button class="lang-btn" data-lang="ja">🇯🇵</button>
+            <button class="lang-btn" data-lang="nl">🇳🇱</button>
+            <button class="lang-btn" data-lang="pl">🇵🇱</button>
+            <button class="lang-btn" data-lang="pt">🇵🇹</button>
+            <button class="lang-btn" data-lang="ro">🇷🇴</button>
+            <button class="lang-btn" data-lang="sr">🇷🇸</button>
+        </div>
+
+        <!-- Логотип -->
+        <div class="logo-area">
+            <img src="logo.png" alt="XOVER logo" />
+        </div>
+
+        <!-- ===== КОНТЕЙНЕРЫ ДЛЯ ТЕКСТА ===== -->
+        <div class="subhead" id="subhead"></div>
+
+        <div class="badge-grid">
+            <div class="badge-item"><span id="badge1"></span> <span id="badge1_desc"></span></div>
+            <div class="badge-item"><span id="badge2"></span> <span id="badge2_desc"></span></div>
+            <div class="badge-item"><span id="badge3"></span> <span id="badge3_desc"></span></div>
+            <div class="badge-item"><span id="badge4"></span> <span id="badge4_desc"></span></div>
+        </div>
+
+        <p style="font-size:1.2rem; margin-bottom:1.8rem; color:#0b1a2e;" id="desc"></p>
+
+        <h2 class="section-title" id="gcd_title"></h2>
+        <div class="gcd-stats">
+            <div class="stat"><div class="stat-number" id="stat_imp"></div><div class="stat-label" id="gcd_imp"></div></div>
+            <div class="stat"><div class="stat-number" id="stat_world"></div><div class="stat-label" id="gcd_world"></div></div>
+            <div class="stat"><div class="stat-number" id="stat_russia"></div><div class="stat-label" id="gcd_russia"></div></div>
+            <div class="stat"><div class="stat-number" id="stat_gap"></div><div class="stat-label" id="gcd_gap"></div></div>
+        </div>
+        <p style="margin-top:-0.2rem;">
+            <a href="https://www.comics.org/accounts/profile/38733/" target="_blank" style="color:#c44536;" id="profile_link"></a>
+        </p>
+
+        <h2 class="section-title" id="about_title"></h2>
+        <p style="color:#0b1a2e;" id="about_text"></p>
+        <p style="margin-top:0.6rem; color:#0b1a2e;" id="about_mission"></p>
+
+        <h2 class="section-title" id="publish_title"></h2>
+        <ul style="color:#0b1a2e;">
+            <li id="publish_1"></li>
+            <li id="publish_2"></li>
+            <li id="publish_3"></li>
+        </ul>
+
+        <h2 class="section-title" id="recent_title"></h2>
+        <div id="recent-grid" class="recent-grid"></div>
+
+        <h2 class="section-title" id="nav_title"></h2>
+        <div class="link-list">
+            <a href="https://vk.ru/graphic.literature" target="_blank" id="nav_vk"></a>
+            <a href="https://t.me/graphicliterature" target="_blank" id="nav_tg"></a>
+            <a href="https://www.comics.org/accounts/profile/38733/" target="_blank" id="nav_gcd"></a>
+            <a href="https://fantlab.ru/edition451026" target="_blank" id="nav_arrow"></a>
+            <a href="/catalog_closed.html" target="_blank" id="nav_catalog"></a>
+        </div>
+
+        <div class="footer" id="footer"></div>
+
+    </div>
+
+    <script>
+        let translations = {};
+        let stats = {};
+
+        // ===== ЗАГРУЗКА ДАННЫХ =====
+        async function loadTranslations() {
+            const response = await fetch('languages.json');
+            translations = await response.json();
+            return translations;
+        }
+
+        async function loadStats() {
+            const response = await fetch('stats.json');
+            stats = await response.json();
+            return stats;
+        }
+
+        // ===== ПОДСТАНОВКА ЧИСЕЛ =====
+        function replacePlaceholders(text) {
+            if (!text) return text;
+            for (const [key, value] of Object.entries(stats)) {
+                text = text.replace(new RegExp(`\\{${key}\\}`, 'g'), value);
+            }
+            return text;
+        }
+
+        // ===== УСТАНОВКА ЯЗЫКА =====
+        function setLanguage(lang) {
+            if (!translations[lang]) return;
+
+            const t = translations[lang];
+
+            function tr(key) {
+                const text = t[key] || key;
+                return replacePlaceholders(text);
+            }
+
+            document.getElementById('subhead').textContent = tr('subhead');
+            document.getElementById('badge1').textContent = tr('badge1');
+            document.getElementById('badge1_desc').textContent = tr('badge1_desc');
+            document.getElementById('badge2').textContent = tr('badge2');
+            document.getElementById('badge2_desc').textContent = tr('badge2_desc');
+            document.getElementById('badge3').textContent = tr('badge3');
+            document.getElementById('badge3_desc').textContent = tr('badge3_desc');
+            document.getElementById('badge4').textContent = tr('badge4');
+            document.getElementById('badge4_desc').textContent = tr('badge4_desc');
+            document.getElementById('desc').textContent = tr('desc');
+            document.getElementById('gcd_title').textContent = tr('gcd_title');
+            document.getElementById('gcd_imp').textContent = tr('gcd_imp');
+            document.getElementById('gcd_world').textContent = tr('gcd_world');
+            document.getElementById('gcd_russia').textContent = tr('gcd_russia');
+            document.getElementById('gcd_gap').textContent = tr('gcd_gap');
+            document.getElementById('profile_link').textContent = tr('profile_link');
+            document.getElementById('about_title').textContent = tr('about_title');
+            document.getElementById('about_text').textContent = tr('about_text');
+            document.getElementById('about_mission').textContent = tr('about_mission');
+            document.getElementById('publish_title').textContent = tr('publish_title');
+            document.getElementById('publish_1').textContent = tr('publish_1');
+            document.getElementById('publish_2').textContent = tr('publish_2');
+            document.getElementById('publish_3').textContent = tr('publish_3');
+            document.getElementById('recent_title').textContent = tr('recent_title');
+            document.getElementById('nav_title').textContent = tr('nav_title');
+            document.getElementById('nav_vk').textContent = tr('nav_vk');
+            document.getElementById('nav_tg').textContent = tr('nav_tg');
+            document.getElementById('nav_gcd').textContent = tr('nav_gcd');
+            document.getElementById('nav_arrow').textContent = tr('nav_arrow');
+            document.getElementById('footer').innerHTML = tr('footer');
+
+            // ===== ЧИСЛА В GCD СТАТИСТИКЕ (берутся напрямую из stats) =====
+            document.getElementById('stat_imp').textContent = stats.imp || '';
+            document.getElementById('stat_world').textContent = stats.world_rank_number || '';
+            document.getElementById('stat_russia').textContent = stats.russia_rank_number || '';
+            document.getElementById('stat_gap').textContent = stats.gap || '';
+
+            // ===== КАРТИНКИ =====
+            const grid = document.getElementById('recent-grid');
+            grid.innerHTML = '';
+            if (t.recent_items && t.recent_items.length > 0) {
+                t.recent_items.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'recent-item';
+                    div.innerHTML = `
+                        <img src="${item.img}" alt="${item.caption}">
+                        <div class="caption">${item.caption}</div>
+                    `;
+                    grid.appendChild(div);
+                });
+            }
+
+            // ===== АКТИВНАЯ КНОПКА ЯЗЫКА =====
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+
+            document.documentElement.lang = lang;
+        }
+
+        // ===== ЗАПУСК =====
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                await Promise.all([loadTranslations(), loadStats()]);
+                setLanguage('en');
+            } catch (error) {
+                console.error('Ошибка загрузки данных:', error);
+            }
+
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    setLanguage(btn.dataset.lang);
+                });
+            });
+        });
+    </script>
+    <!-- Yandex.Metrika counter -->
+        <script type="text/javascript">
+            (function(m,e,t,r,i,k,a){
+                m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+                m[i].l=1*new Date();
+                for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+                k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+            })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=110064832', 'ym');
+        
+            ym(110064832, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+        </script>
+        <noscript><div><img src="https://mc.yandex.ru/watch/110064832" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+</body>
+</html>
