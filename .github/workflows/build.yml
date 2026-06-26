@@ -16,7 +16,7 @@ jobs:
 
       - name: Create config.js from secret
         env:
-          WEBAPP_URL: ${{ secrets.GOOGLE_SCRIPT_URL }}
+          WEBAPP_URL: ${{ secrets.SECRET_TABLE }}
         run: |
           echo "const SCRIPT_URL = '$WEBAPP_URL';" > config.js
           echo "✅ config.js created"
