@@ -1,34 +1,17 @@
-name: Build
+name: Example Workflow
 
-on:
-  push:
-    branches: [ main ]
-  workflow_dispatch:
+on: [push]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pages: write
-      id-token: write
-
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Create config.js from secret
+      - name: Run script using secret URL
         env:
-          WEBAPP_URL: ${{ secrets.SECRET_TABLE }}
+          TARGET_URL: ${{ secrets.SECRET_TABLE }}
         run: |
-          echo "const SCRIPT_URL = '$WEBAPP_URL';" > config.js
-          echo "✅ config.js created"
-
-      - name: Deploy config.js to gh-pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./
-          publish_branch: gh-pages
-          allow_empty_commit: true
-          force_orphan: true
-          keep_files: false
+          # Скрипт использует переменную окружения, не видя сам секрет в коде
+          curl -X GET "$TARGET_URL" 
