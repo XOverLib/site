@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pages: write
+      id-token: write
 
     steps:
       - uses: actions/checkout@v4
@@ -21,10 +23,12 @@ jobs:
           echo "const SCRIPT_URL = '$WEBAPP_URL';" > config.js
           echo "✅ config.js created"
 
-      - name: Commit and push config.js
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add config.js -f    # принудительно добавить
-          git commit -m "Update config.js from secret" || echo "No changes to commit"
-          git push
+      - name: Deploy config.js to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
+          publish_branch: gh-pages
+          allow_empty_commit: true
+          force_orphan: true
+          keep_files: false
