@@ -1391,13 +1391,14 @@
         alert('📦 1. sendReservation вызвана');
         alert('📦 2. bookTitle: ' + bookTitle);
         alert('📦 3. qrData: ' + qrData);
+        alert('📦 4. URL: ' + url);
     
         const now = new Date();
         const date = now.toLocaleDateString('ru-RU');
         const time = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
         const fullDate = date + ', ' + time;
     
-        alert('📦 4. Дата: ' + fullDate);
+        alert('📦 5. Дата: ' + fullDate);
     
         const data = {
             book: bookTitle,
@@ -1405,19 +1406,19 @@
             date: fullDate
         };
     
-        alert('📦 5. Данные: ' + JSON.stringify(data));
+        alert('📦 6. Данные: ' + JSON.stringify(data));
     
         try {
-            alert('⏳ 6. Отправка fetch...');
+            alert('⏳ 7. Отправка fetch...');
             await fetch(url, {
                 method: 'POST',
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
-            alert('✅ 7. Книга забронирована!');
+            alert('✅ 8. Книга забронирована!');
         } catch (error) {
-            alert('❌ 8. Ошибка: ' + error.message);
+            alert('❌ 9. Ошибка: ' + error.message);
             console.error('Ошибка:', error);
         }
     }
