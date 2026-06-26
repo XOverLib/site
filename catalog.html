@@ -1372,8 +1372,7 @@
     }
     
     async function sendReservation(bookTitle, qrData) {
-        // В репозитории здесь будет строка-метка. GitHub Actions заменит её на секрет.
-        const url = "REPLACE_WITH_MY_SECRET_URL";
+        const url = TARGET_URL;
     
         alert('📦 1. sendReservation вызвана');
         alert('📦 2. bookTitle: ' + bookTitle);
@@ -1410,7 +1409,6 @@
             console.error('Ошибка:', error);
         }
     }
-
 </script>
 <!-- Yandex.Metrika counter -->
         <script type="text/javascript">
