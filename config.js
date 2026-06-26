@@ -1,1 +1,0 @@
-const SCRIPT_URL = '';
