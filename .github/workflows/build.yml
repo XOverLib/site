@@ -3,7 +3,7 @@ name: Deploy Website with Secret
 on:
   push:
     branches:
-      - main  # Скрипт будет запускаться при каждом пуше в ветку main
+      - main  # Скрипт запускается при пуше в ветку main
 
 permissions:
   contents: write
@@ -13,19 +13,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Скачиваем код репозитория на сервер GitHub
+      # 1. Скачиваем код репозитория
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Безопасно внедряем секретную ссылку в JS-файл перед публикацией.
-      # Утилита sed найдет плейсхолдер REPLACE_WITH_MY_SECRET_URL и заменит его на значение из настроек.
+      # 2. Находим метку в HTML-файле и заменяем её на секрет из настроек GitHub
+      # В репозитории файл останется безопасным, секрет запишется только в публикуемую копию
       - name: Inject Secret URL
         run: |
-          sed -i 's|REPLACE_WITH_MY_SECRET_URL|${{ secrets.SECRET_TABLE }}|g' script.js
+          sed -i 's|REPLACE_WITH_MY_SECRET_URL|${{ secrets.SECRET_TABLE }}|g' catalog.html
 
-      # 3. Публикуем обновленный код на GitHub Pages в ветку main
+      # 3. Публикуем измененный HTML-файл в ветку gh-pages для работы сайта
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: .        # Публикуем всю корневую папку сайта
-          branch: main  # Ветка, из которой GitHub Pages будет раздавать сайт
+          folder: .        # Публикуем текущую папку
+          branch: gh-pages  # Ветка, которая будет раздавать сайт в интернет
