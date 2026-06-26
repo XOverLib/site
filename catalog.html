@@ -1342,7 +1342,6 @@
         document.addEventListener('keydown', escHandler);
     
         try {
-            alert('🔍 1. Проверка библиотеки Html5Qrcode...');
             const Html5Qrcode = window.Html5Qrcode;
             if (!Html5Qrcode) {
                 alert('❌ Ошибка: библиотека html5-qrcode не загружена');
@@ -1389,6 +1388,10 @@
     async function sendReservation(bookTitle, qrData) {
     
         const url = SCRIPT_URL;
+        const now = new Date();
+        const date = now.toLocaleDateString('ru-RU');
+        const time = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+        const fullDate = date + ', ' + time; // 26.06.2026, 12:46
         //const url = 'https://script.google.com/macros/s/AKfycbyddiP4vCc0O5OYz2C2SiEPgs2rR2IHQVo_yoALNKWji7kz3-2lZAfZV0NigcNIdgHI/exec';
     
         const data = {
