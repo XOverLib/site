@@ -1375,14 +1375,14 @@
         const url = SCRIPT_URL;
     
         const now = new Date();
-        const var_date = now.toLocaleDateString('ru-RU').replace(/\./g, '-'); // 26-06-2026
-        const var_time = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+        const date = now.toLocaleDateString('ru-RU');
+        const time = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+        const fullDate = date + ', ' + time;
     
         const data = {
             book: bookTitle,
             qr: qrData,
-            date: var_date,
-            time: var_time
+            date: fullDate
         };
     
         try {
