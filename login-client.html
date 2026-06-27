@@ -26,16 +26,8 @@
             box-shadow: 0 8px 30px rgba(0,0,0,0.06);
             text-align: center;
         }
-        h1 {
-            font-size: 2rem;
-            color: #0b1a2e;
-            margin-bottom: 0.5rem;
-        }
-        .subhead {
-            color: #c44536;
-            font-size: 1rem;
-            margin-bottom: 1.5rem;
-        }
+        h1 { font-size: 2rem; color: #0b1a2e; margin-bottom: 0.5rem; }
+        .subhead { color: #c44536; font-size: 1rem; margin-bottom: 1.5rem; }
         .btn-primary {
             background: #c44536;
             color: #fff;
@@ -75,29 +67,6 @@
             font-size: 0.95rem;
             color: #4a5a6e;
         }
-        #manualInput {
-            display: none;
-            margin-top: 1rem;
-            width: 100%;
-            padding: 0.6rem 1rem;
-            border: 2px solid #e0dcd4;
-            border-radius: 8px;
-            font-size: 1rem;
-        }
-        #manualInput:focus { outline: none; border-color: #c44536; }
-        #manualConfirm {
-            display: none;
-            margin-top: 0.5rem;
-            width: 100%;
-            padding: 0.6rem 1rem;
-            background: #c44536;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            cursor: pointer;
-        }
-        #manualConfirm:hover { background: #a83226; }
         #reader-container {
             width: 100%;
             max-width: 350px;
@@ -113,6 +82,24 @@
             font-size: 0.95rem;
             margin-top: 1rem;
         }
+        #fileInput {
+            display: none;
+        }
+        .file-label {
+            display: inline-block;
+            background: #c44536;
+            color: #fff;
+            padding: 0.8rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+            margin-top: 0.5rem;
+            border: none;
+            font-weight: 600;
+        }
+        .file-label:hover { background: #a83226; }
     </style>
 </head>
 <body>
@@ -120,14 +107,15 @@
     <h1>🔑 Вход по QR-коду</h1>
     <p class="subhead">Отсканируйте QR-код из вашего читательского билета</p>
 
+    <!-- Кнопка для камеры -->
     <button class="btn-primary" id="scanBtn">📷 Сканировать QR</button>
-    <button class="btn-secondary" id="manualBtn">⌨ Ввести вручную</button>
+
+    <!-- Кнопка для загрузки фото -->
+    <label class="file-label" id="fileLabel">📁 Загрузить фото QR-кода</label>
+    <input type="file" id="fileInput" accept="image/*" />
 
     <div id="reader-container"></div>
     <div id="status"></div>
-
-    <input type="text" id="manualInput" placeholder="Вставьте строку из QR-кода" />
-    <button id="manualConfirm">🔑 Войти</button>
 
     <a href="/" class="back-link">← На главную</a>
 </div>
@@ -140,15 +128,12 @@
     const readerContainer = document.getElementById('reader-container');
     const status = document.getElementById('status');
     const scanBtn = document.getElementById('scanBtn');
-    const manualBtn = document.getElementById('manualBtn');
-    const manualInput = document.getElementById('manualInput');
-    const manualConfirm = document.getElementById('manualConfirm');
+    const fileInput = document.getElementById('fileInput');
+    const fileLabel = document.getElementById('fileLabel');
 
     // ===== ВХОД ПО QR =====
     function loginWithQR(decodedText) {
-        // Сохраняем QR-строку в localStorage
         localStorage.setItem('reader_qr', decodedText);
-        // Перенаправляем в личный кабинет
         window.location.href = '/site/cabinet.html';
     }
 
@@ -160,6 +145,7 @@
         readerContainer.style.display = 'block';
         status.textContent = '⏳ Запуск камеры...';
         scanBtn.disabled = true;
+        fileLabel.style.display = 'none';
 
         try {
             const Html5Qrcode = window.Html5Qrcode;
@@ -179,9 +165,7 @@
                 { facingMode: 'environment' },
                 config,
                 (decodedText) => {
-                    // Останавливаем сканер
                     stopScanner();
-                    // Вход
                     loginWithQR(decodedText);
                 },
                 () => {}
@@ -190,12 +174,11 @@
             status.textContent = '✅ Камера работает, наведите на QR-код';
         } catch (err) {
             console.warn('Ошибка камеры:', err);
-            status.textContent = '❌ Не удалось открыть камеру. Используйте ручной ввод.';
+            status.textContent = '❌ Не удалось открыть камеру. Используйте загрузку фото.';
             readerContainer.style.display = 'none';
-            manualInput.style.display = 'block';
-            manualConfirm.style.display = 'block';
             isScanning = false;
             scanBtn.disabled = false;
+            fileLabel.style.display = 'inline-block';
         }
     }
 
@@ -210,29 +193,51 @@
         isScanning = false;
         scanBtn.disabled = false;
         readerContainer.style.display = 'none';
+        fileLabel.style.display = 'inline-block';
     }
 
-    // ===== РУЧНОЙ ВВОД =====
-    function manualLogin() {
-        const qrData = manualInput.value.trim();
-        if (!qrData) {
-            status.textContent = '⚠️ Введите строку из QR-кода';
-            return;
-        }
-        loginWithQR(qrData);
+    // ===== ЗАГРУЗКА ФОТО QR-КОДА =====
+    function handleFileUpload(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const imageData = e.target.result;
+            status.textContent = '⏳ Распознавание QR-кода...';
+
+            const img = new Image();
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+
+                // Используем html5-qrcode для декодирования
+                const Html5Qrcode = window.Html5Qrcode;
+                const scanner = new Html5Qrcode('dummy');
+                scanner.scanFile(file, true)
+                    .then(decodedText => {
+                        status.textContent = '✅ QR-код распознан!';
+                        loginWithQR(decodedText);
+                    })
+                    .catch(err => {
+                        console.error('Ошибка распознавания:', err);
+                        status.textContent = '❌ Не удалось распознать QR-код на фото. Попробуйте другое фото.';
+                    });
+            };
+            img.src = imageData;
+        };
+        reader.readAsDataURL(file);
     }
 
     // ===== СОБЫТИЯ =====
     scanBtn.addEventListener('click', startScanner);
-    manualBtn.addEventListener('click', () => {
-        manualInput.style.display = 'block';
-        manualConfirm.style.display = 'block';
-        manualInput.focus();
-        status.textContent = 'Введите строку из QR-кода:';
-    });
-    manualConfirm.addEventListener('click', manualLogin);
-    manualInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') manualLogin();
+
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            const file = e.target.files[0];
+            handleFileUpload(file);
+        }
+        fileInput.value = '';
     });
 
     // ===== КЛАВИША ESC ДЛЯ ОСТАНОВКИ =====
@@ -245,8 +250,7 @@
 
     // ===== ПРОВЕРКА, ЕСТЬ ЛИ УЖЕ QR В localStorage =====
     if (localStorage.getItem('reader_qr')) {
-        // Если уже есть QR — сразу в кабинет
-        window.location.href = '/cabinet.html';
+        window.location.href = '/site/cabinet.html';
     }
 </script>
 </body>
