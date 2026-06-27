@@ -187,14 +187,14 @@
     // ===== ВЫХОД =====
     function logout() {
         localStorage.removeItem('reader_qr');
-        window.location.href = '/login-client.html';
+        window.location.href = '/site/login-client.html';
     }
 
     // ===== ЗАГРУЗКА =====
     (async function() {
         const qr = localStorage.getItem('reader_qr');
         if (!qr) {
-            window.location.href = '/login-client.html';
+            window.location.href = '/site/login-client.html';
             return;
         }
 
