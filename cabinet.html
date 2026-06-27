@@ -31,7 +31,6 @@
         }
         .back-link:hover { text-decoration: underline; }
 
-        /* === Карточка профиля === */
         .profile-card {
             background: #f8f6f2;
             border-radius: 16px;
@@ -50,13 +49,11 @@
         .profile-label { font-weight: 600; color: #0b1a2e; }
         .profile-value { color: #1e1e1e; }
 
-        /* === Абонементы === */
         .abonement {
             border: 1px solid #e0dcd4;
             border-radius: 12px;
             margin-bottom: 0.8rem;
             overflow: hidden;
-            transition: 0.2s;
         }
         .abonement-header {
             background: #f8f6f2;
@@ -66,13 +63,9 @@
             justify-content: space-between;
             align-items: center;
             user-select: none;
-            transition: 0.2s;
         }
         .abonement-header:hover { background: #f0ede8; }
-        .abonement-header .title {
-            font-weight: 600;
-            font-size: 1rem;
-        }
+        .abonement-header .title { font-weight: 600; font-size: 1rem; }
         .abonement-header .badge {
             font-size: 0.8rem;
             background: #c44536;
@@ -115,10 +108,7 @@
             color: #4a5a6e;
             margin-top: 0.3rem;
         }
-        .empty {
-            color: #999;
-            font-style: italic;
-        }
+        .empty { color: #999; font-style: italic; }
 
         .btn-logout {
             background: #c44536;
@@ -163,9 +153,11 @@
 
 <script>
     // ===== КОНФИГУРАЦИЯ =====
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby2IEY4sg6kBX9QMGXU23JRHn5yzm4bWv7-0kkM47fgdqtHju7Yj4yCkROf84UUN1SPiw/exec';
+    // ЭТИ ССЫЛКИ ВСТАВЬ СВОИ
+    const SCRIPT_URL_ABONEMENTS = 'https://script.google.com/macros/s/ТВОЯ_ССЫЛКА_НА_АБОНЕМЕНТЫ/exec';
+    const SCRIPT_URL_BOOKS = 'https://script.google.com/macros/s/ТВОЯ_ССЫЛКА_НА_ВЫДАННЫЕ_КНИГИ/exec';
 
-    // ===== ПАРСИНГ QR-СТРОКИ =====
+    // ===== ПАРСИНГ QR =====
     function parseQR(qr) {
         const parts = qr.split('|');
         if (parts.length < 5) return null;
@@ -178,36 +170,32 @@
         };
     }
 
-    // ===== ЗАГРУЗКА СПИСКА АБОНЕМЕНТОВ =====
+    // ===== ЗАГРУЗКА АБОНЕМЕНТОВ =====
     async function fetchAbonements(clientId) {
         try {
-            const url = `${SCRIPT_URL}?action=get_abonements&client_id=${clientId}`;
+            const url = `${SCRIPT_URL_ABONEMENTS}?action=get_abonements&client_id=${clientId}`;
             const response = await fetch(url);
             const data = await response.json();
             if (data.success) {
                 return data.abonements;
-            } else {
-                console.error('Ошибка загрузки абонементов:', data.error);
-                return [];
             }
+            return [];
         } catch (err) {
             console.error('Ошибка:', err);
             return [];
         }
     }
 
-    // ===== ЗАГРУЗКА ВСЕХ ЗАПИСЕЙ ПО КЛИЕНТУ =====
+    // ===== ЗАГРУЗКА ЗАПИСЕЙ =====
     async function fetchAllRecords(clientId) {
         try {
-            const url = `${SCRIPT_URL}?action=get_all_records&client_id=${clientId}`;
+            const url = `${SCRIPT_URL_BOOKS}?action=get_all_records&client_id=${clientId}`;
             const response = await fetch(url);
             const data = await response.json();
             if (data.success) {
                 return data.records;
-            } else {
-                console.error('Ошибка загрузки записей:', data.error);
-                return [];
             }
+            return [];
         } catch (err) {
             console.error('Ошибка:', err);
             return [];
@@ -216,7 +204,6 @@
 
     // ===== ГРУППИРОВКА =====
     function groupByAbonement(abonements, records) {
-        // Группируем книги по abonement_id
         const booksByAbonement = {};
         records.forEach(r => {
             const key = r.abonement_id;
@@ -228,7 +215,6 @@
             });
         });
 
-        // Собираем полные данные по абонементам
         const groups = abonements.map(a => ({
             abonement_id: a.abonement_id,
             abonement_type: a.abonement_type,
@@ -236,7 +222,6 @@
             books: booksByAbonement[a.abonement_id] || []
         }));
 
-        // Сортируем по дате создания (сначала новые)
         return groups.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     }
 
@@ -250,7 +235,6 @@
 
         const container = document.getElementById('cabinet');
 
-        // ---- Профиль (без текущего абонемента) ----
         let profileHtml = `
             <div class="profile-card">
                 <div class="profile-item"><span class="profile-label">👤 ФИО</span><span class="profile-value">${qrData.name}</span></div>
@@ -259,7 +243,6 @@
             </div>
         `;
 
-        // ---- Абонементы ----
         let abonementsHtml = '';
         if (groups.length === 0) {
             abonementsHtml = `<div class="empty">📭 У вас пока нет абонементов</div>`;
@@ -267,8 +250,6 @@
             groups.forEach((g, idx) => {
                 const total = g.books.length;
                 const taken = g.books.filter(b => b.returned_at === null).length;
-                const returned = total - taken;
-
                 const typeLabel = typeNames[g.abonement_type] || g.abonement_type;
 
                 let booksHtml = '';
@@ -320,7 +301,6 @@
         `;
     }
 
-    // ===== СВЁРТКА / РАЗВЁРТКА =====
     function toggleAbonement(header) {
         const body = header.nextElementSibling;
         const arrow = header.querySelector('.arrow');
@@ -328,13 +308,11 @@
         arrow.classList.toggle('open');
     }
 
-    // ===== ВЫХОД =====
     function logout() {
         localStorage.removeItem('reader_qr');
         window.location.href = '/site/login-client.html';
     }
 
-    // ===== ЗАГРУЗКА =====
     (async function() {
         const qr = localStorage.getItem('reader_qr');
         if (!qr) {
@@ -348,7 +326,6 @@
             return;
         }
 
-        // Загружаем абонементы и записи параллельно
         const [abonements, records] = await Promise.all([
             fetchAbonements(qrData.client_id),
             fetchAllRecords(qrData.client_id)
