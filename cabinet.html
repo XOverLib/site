@@ -1,83 +1,215 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>Личный кабинет</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Личный кабинет — XOVER</title>
     <style>
-        body { font-family: Arial; padding: 2rem; }
-        .card { border: 1px solid #ccc; padding: 1.5rem; border-radius: 12px; max-width: 600px; }
-        .field { margin: 0.5rem 0; }
-        .label { font-weight: bold; color: #555; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            background: #f8f6f2;
+            color: #1e1e1e;
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 24px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+        }
+        h1 { font-size: 2rem; color: #0b1a2e; }
+        .subhead { color: #c44536; margin-bottom: 1.5rem; }
+        .back-link {
+            display: inline-block;
+            margin-top: 1rem;
+            color: #c44536;
+            text-decoration: none;
+        }
+        .back-link:hover { text-decoration: underline; }
+        .card {
+            border: 1px solid #e0dcd4;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .field {
+            display: flex;
+            padding: 0.4rem 0;
+            border-bottom: 1px solid #f0ede8;
+        }
+        .field-label {
+            font-weight: 600;
+            color: #0b1a2e;
+            width: 40%;
+        }
+        .field-value {
+            width: 60%;
+            color: #1e1e1e;
+        }
+        .book-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid #f0ede8;
+        }
+        .book-title { font-weight: 500; }
+        .book-date { color: #4a5a6e; font-size: 0.9rem; }
+        .empty { color: #999; font-style: italic; }
+        .btn-logout {
+            background: #c44536;
+            color: #fff;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 1rem;
+        }
+        .btn-logout:hover { background: #a83226; }
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #4a5a6e;
+        }
+        .error {
+            color: #c44536;
+            text-align: center;
+            padding: 1rem;
+        }
     </style>
 </head>
 <body>
+<div class="container">
     <h1>👤 Личный кабинет</h1>
-    <div id="cabinet" class="card">
-        <p>Загрузка данных...</p>
+    <p class="subhead">Ваши данные и книги на руках</p>
+
+    <div id="cabinet">
+        <div class="loading">⏳ Загрузка данных...</div>
     </div>
 
-    <script>
-        function parseQR(qr) {
-            // Формат: "15|3|Иванов Иван Иванович|1|2026-06-19 15:30:00"
-            const parts = qr.split('|');
-            if (parts.length < 5) return null;
-            return {
-                abonement_id: parts[0],
-                client_id: parts[1],
-                name: parts[2],
-                abonement_type: parts[3],
-                created_at: parts[4]
-            };
+    <a href="/" class="back-link">← На главную</a>
+</div>
+
+<script>
+    // ===== ПАРСИНГ QR-СТРОКИ =====
+    function parseQR(qr) {
+        const parts = qr.split('|');
+        if (parts.length < 5) return null;
+        return {
+            abonement_id: parts[0],
+            client_id: parts[1],
+            name: parts[2],
+            abonement_type: parts[3],
+            created_at: parts[4]
+        };
+    }
+
+    // ===== ПОЛУЧЕНИЕ КНИГ ИЗ GOOGLE ТАБЛИЦЫ =====
+    const SCRIPT_URL = 'https://script.google.com/macros/s/ТВОЯ_ССЫЛКА/exec'; // ← ВСТАВЬ СВОЮ ССЫЛКУ
+
+    async function getBooks(clientId) {
+        try {
+            const url = `${SCRIPT_URL}?action=get_books&client_id=${clientId}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            if (data.success) {
+                return data.books;
+            } else {
+                console.error('Ошибка:', data.error);
+                return [];
+            }
+        } catch (err) {
+            console.error('Ошибка загрузки книг:', err);
+            return [];
+        }
+    }
+
+    // ===== ОТРИСОВКА КАБИНЕТА =====
+    function renderCabinet(qrData, books) {
+        const typeNames = {
+            '1': 'Базовый (10 записей)',
+            '2': 'Стандартный (15 записей)',
+            '3': 'Премиум (20 записей)'
+        };
+
+        const container = document.getElementById('cabinet');
+
+        let booksHtml = '';
+        if (books.length === 0) {
+            booksHtml = '<div class="empty">📭 Нет книг на руках</div>';
+        } else {
+            booksHtml = books.map(b => `
+                <div class="book-item">
+                    <span class="book-title">📖 ${b.title}</span>
+                    <span class="book-date">выдана: ${b.issued_at}</span>
+                </div>
+            `).join('');
         }
 
-        function getBooks(clientId) {
-            // Здесь можно будет запросить книги через Google Таблицу или JSON
-            return [
-                { title: 'Тарзан', issued_at: '2026-06-20' },
-                { title: 'Босоногий Гэн', issued_at: '2026-06-18' }
-            ];
-        }
+        container.innerHTML = `
+            <div class="card">
+                <div class="field">
+                    <span class="field-label">👤 ФИО</span>
+                    <span class="field-value">${qrData.name}</span>
+                </div>
+                <div class="field">
+                    <span class="field-label">🎫 Абонемент</span>
+                    <span class="field-value">${typeNames[qrData.abonement_type] || qrData.abonement_type}</span>
+                </div>
+                <div class="field">
+                    <span class="field-label">📅 Дата создания</span>
+                    <span class="field-value">${qrData.created_at}</span>
+                </div>
+                <div class="field">
+                    <span class="field-label">🆔 ID клиента</span>
+                    <span class="field-value">${qrData.client_id}</span>
+                </div>
+                <div class="field">
+                    <span class="field-label">🆔 ID абонемента</span>
+                    <span class="field-value">${qrData.abonement_id}</span>
+                </div>
+            </div>
 
-        function renderCabinet(data) {
-            const container = document.getElementById('cabinet');
-            const typeNames = {
-                '1': 'Базовый (10 записей)',
-                '2': 'Стандартный (15 записей)',
-                '3': 'Премиум (20 записей)'
-            };
+            <div class="card">
+                <h3 style="margin-bottom: 0.8rem;">📖 Книги на руках</h3>
+                ${booksHtml}
+            </div>
 
-            const books = getBooks(data.client_id);
+            <button class="btn-logout" onclick="logout()">🚪 Выйти</button>
+        `;
+    }
 
-            container.innerHTML = `
-                <div class="field"><span class="label">👤 ФИО:</span> ${data.name}</div>
-                <div class="field"><span class="label">🎫 Абонемент:</span> ${typeNames[data.abonement_type] || data.abonement_type}</div>
-                <div class="field"><span class="label">📅 Дата создания:</span> ${data.created_at}</div>
-                <div class="field"><span class="label">🆔 ID клиента:</span> ${data.client_id}</div>
-                <div class="field"><span class="label">🆔 ID абонемента:</span> ${data.abonement_id}</div>
-                <hr>
-                <h3>📖 Книги на руках</h3>
-                ${books.length ? books.map(b => `<div>• ${b.title} (выдана: ${b.issued_at})</div>`).join('') : '<div>Нет книг на руках</div>'}
-                <hr>
-                <button onclick="logout()" style="margin-top:1rem;">🚪 Выйти</button>
-            `;
-        }
+    // ===== ВЫХОД =====
+    function logout() {
+        localStorage.removeItem('reader_qr');
+        window.location.href = '/login-client.html';
+    }
 
-        function logout() {
-            localStorage.removeItem('reader_qr');
-            window.location.href = '/login-client.html';
-        }
-
-        // === ЗАГРУЗКА ===
+    // ===== ЗАГРУЗКА =====
+    (async function() {
         const qr = localStorage.getItem('reader_qr');
         if (!qr) {
             window.location.href = '/login-client.html';
-        } else {
-            const data = parseQR(qr);
-            if (data) {
-                renderCabinet(data);
-            } else {
-                document.getElementById('cabinet').innerHTML = '<p style="color:red;">❌ Неверный формат QR-кода</p>';
-            }
+            return;
         }
-    </script>
+
+        const qrData = parseQR(qr);
+        if (!qrData) {
+            document.getElementById('cabinet').innerHTML = `
+                <div class="error">❌ Неверный формат QR-кода</div>
+            `;
+            return;
+        }
+
+        // Загружаем книги
+        const books = await getBooks(qrData.client_id);
+        renderCabinet(qrData, books);
+    })();
+</script>
 </body>
 </html>
