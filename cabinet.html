@@ -115,6 +115,10 @@
             color: #4a5a6e;
             margin-top: 0.3rem;
         }
+        .empty {
+            color: #999;
+            font-style: italic;
+        }
 
         .btn-logout {
             background: #c44536;
@@ -138,10 +142,7 @@
             text-align: center;
             padding: 1rem;
         }
-        .empty {
-            color: #999;
-            font-style: italic;
-        }
+
         @media (max-width: 600px) {
             .profile-card { grid-template-columns: 1fr; }
             .abonement-header { flex-wrap: wrap; }
@@ -161,9 +162,10 @@
 </div>
 
 <script>
+    // ===== КОНФИГУРАЦИЯ =====
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby2IEY4sg6kBX9QMGXU23JRHn5yzm4bWv7-0kkM47fgdqtHju7Yj4yCkROf84UUN1SPiw/exec';
 
-    // ===== ПАРСИНГ QR =====
+    // ===== ПАРСИНГ QR-СТРОКИ =====
     function parseQR(qr) {
         const parts = qr.split('|');
         if (parts.length < 5) return null;
@@ -176,6 +178,24 @@
         };
     }
 
+    // ===== ЗАГРУЗКА СПИСКА АБОНЕМЕНТОВ =====
+    async function fetchAbonements(clientId) {
+        try {
+            const url = `${SCRIPT_URL}?action=get_abonements&client_id=${clientId}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            if (data.success) {
+                return data.abonements;
+            } else {
+                console.error('Ошибка загрузки абонементов:', data.error);
+                return [];
+            }
+        } catch (err) {
+            console.error('Ошибка:', err);
+            return [];
+        }
+    }
+
     // ===== ЗАГРУЗКА ВСЕХ ЗАПИСЕЙ ПО КЛИЕНТУ =====
     async function fetchAllRecords(clientId) {
         try {
@@ -185,38 +205,39 @@
             if (data.success) {
                 return data.records;
             } else {
-                console.error('Ошибка:', data.error);
+                console.error('Ошибка загрузки записей:', data.error);
                 return [];
             }
         } catch (err) {
-            console.error('Ошибка загрузки:', err);
+            console.error('Ошибка:', err);
             return [];
         }
     }
 
-    // ===== ГРУППИРОВКА ПО АБОНЕМЕНТАМ =====
-    function groupByAbonement(records) {
-        const groups = {};
+    // ===== ГРУППИРОВКА =====
+    function groupByAbonement(abonements, records) {
+        // Группируем книги по abonement_id
+        const booksByAbonement = {};
         records.forEach(r => {
             const key = r.abonement_id;
-            if (!groups[key]) {
-                groups[key] = {
-                    abonement_id: key,
-                    abonement_type: r.abonement_type,
-                    created_at: r.created_at,
-                    books: []
-                };
-            }
-            groups[key].books.push({
+            if (!booksByAbonement[key]) booksByAbonement[key] = [];
+            booksByAbonement[key].push({
                 title: r.book_title,
                 issued_at: r.issued_at,
                 returned_at: r.returned_at || null
             });
         });
-        // Сортируем абонементы по дате (сначала новые)
-        return Object.values(groups).sort((a, b) => {
-            return new Date(b.created_at) - new Date(a.created_at);
-        });
+
+        // Собираем полные данные по абонементам
+        const groups = abonements.map(a => ({
+            abonement_id: a.abonement_id,
+            abonement_type: a.abonement_type,
+            created_at: a.created_at,
+            books: booksByAbonement[a.abonement_id] || []
+        }));
+
+        // Сортируем по дате создания (сначала новые)
+        return groups.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     }
 
     // ===== ОТРИСОВКА =====
@@ -229,12 +250,11 @@
 
         const container = document.getElementById('cabinet');
 
-        // ---- Профиль ----
+        // ---- Профиль (без текущего абонемента) ----
         let profileHtml = `
             <div class="profile-card">
                 <div class="profile-item"><span class="profile-label">👤 ФИО</span><span class="profile-value">${qrData.name}</span></div>
                 <div class="profile-item"><span class="profile-label">🆔 ID клиента</span><span class="profile-value">${qrData.client_id}</span></div>
-                <div class="profile-item"><span class="profile-label">🎫 Текущий абонемент</span><span class="profile-value">${typeNames[qrData.abonement_type] || qrData.abonement_type}</span></div>
                 <div class="profile-item"><span class="profile-label">📅 Дата регистрации</span><span class="profile-value">${qrData.created_at}</span></div>
             </div>
         `;
@@ -253,7 +273,7 @@
 
                 let booksHtml = '';
                 if (g.books.length === 0) {
-                    booksHtml = `<tr><td colspan="3" class="empty">Нет записей</td></tr>`;
+                    booksHtml = `<tr><td colspan="3" class="empty">📭 В этом абонементе пока нет книг</td></tr>`;
                 } else {
                     g.books.forEach(b => {
                         const status = b.returned_at === null
@@ -269,11 +289,13 @@
                     });
                 }
 
+                const isCurrent = idx === 0 ? '⭐ ' : '';
+
                 abonementsHtml += `
                     <div class="abonement">
                         <div class="abonement-header" onclick="toggleAbonement(this)">
                             <span>
-                                <span class="title">🎫 ${typeLabel}</span>
+                                <span class="title">${isCurrent}🎫 ${typeLabel}</span>
                                 <span class="badge">${taken} на руках / ${total} всего</span>
                             </span>
                             <span class="arrow" id="arrow-${idx}">▼</span>
@@ -326,8 +348,13 @@
             return;
         }
 
-        const records = await fetchAllRecords(qrData.client_id);
-        const groups = groupByAbonement(records);
+        // Загружаем абонементы и записи параллельно
+        const [abonements, records] = await Promise.all([
+            fetchAbonements(qrData.client_id),
+            fetchAllRecords(qrData.client_id)
+        ]);
+
+        const groups = groupByAbonement(abonements, records);
         renderCabinet(qrData, groups);
     })();
 </script>
