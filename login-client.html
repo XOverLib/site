@@ -96,7 +96,7 @@
     <div id="reader-container"></div>
     <div id="status">Выберите способ входа</div>
 
-    <a href="/" class="back-link">← На главную</a>
+    <a href="/site/" class="back-link">← На главную</a>
 </div>
 
 <script src="https://unpkg.com/html5-qrcode"></script>
@@ -115,7 +115,7 @@
     // ===== ВХОД ПО QR =====
     function loginWithQR(decodedText) {
         localStorage.setItem('reader_qr', decodedText);
-        window.location.href = '/site.html';
+        window.location.href = '/site/cabinet.html';
     }
 
     // ===== ЗАПУСК СКАНЕРА (камера) =====
@@ -228,7 +228,7 @@
 
     // ===== ПРОВЕРКА, ЕСТЬ ЛИ УЖЕ QR В localStorage =====
     if (localStorage.getItem('reader_qr')) {
-        window.location.href = '/site.html';
+        window.location.href = '/site/cabinet.html';
     }
 </script>
 </body>
