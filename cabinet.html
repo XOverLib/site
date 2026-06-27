@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Личный кабинет</title>
+    <style>
+        body { font-family: Arial; padding: 2rem; }
+        .card { border: 1px solid #ccc; padding: 1.5rem; border-radius: 12px; max-width: 600px; }
+        .field { margin: 0.5rem 0; }
+        .label { font-weight: bold; color: #555; }
+    </style>
+</head>
+<body>
+    <h1>👤 Личный кабинет</h1>
+    <div id="cabinet" class="card">
+        <p>Загрузка данных...</p>
+    </div>
+
+    <script>
+        function parseQR(qr) {
+            // Формат: "15|3|Иванов Иван Иванович|1|2026-06-19 15:30:00"
+            const parts = qr.split('|');
+            if (parts.length < 5) return null;
+            return {
+                abonement_id: parts[0],
+                client_id: parts[1],
+                name: parts[2],
+                abonement_type: parts[3],
+                created_at: parts[4]
+            };
+        }
+
+        function getBooks(clientId) {
+            // Здесь можно будет запросить книги через Google Таблицу или JSON
+            return [
+                { title: 'Тарзан', issued_at: '2026-06-20' },
+                { title: 'Босоногий Гэн', issued_at: '2026-06-18' }
+            ];
+        }
+
+        function renderCabinet(data) {
+            const container = document.getElementById('cabinet');
+            const typeNames = {
+                '1': 'Базовый (10 записей)',
+                '2': 'Стандартный (15 записей)',
+                '3': 'Премиум (20 записей)'
+            };
+
+            const books = getBooks(data.client_id);
+
+            container.innerHTML = `
+                <div class="field"><span class="label">👤 ФИО:</span> ${data.name}</div>
+                <div class="field"><span class="label">🎫 Абонемент:</span> ${typeNames[data.abonement_type] || data.abonement_type}</div>
+                <div class="field"><span class="label">📅 Дата создания:</span> ${data.created_at}</div>
+                <div class="field"><span class="label">🆔 ID клиента:</span> ${data.client_id}</div>
+                <div class="field"><span class="label">🆔 ID абонемента:</span> ${data.abonement_id}</div>
+                <hr>
+                <h3>📖 Книги на руках</h3>
+                ${books.length ? books.map(b => `<div>• ${b.title} (выдана: ${b.issued_at})</div>`).join('') : '<div>Нет книг на руках</div>'}
+                <hr>
+                <button onclick="logout()" style="margin-top:1rem;">🚪 Выйти</button>
+            `;
+        }
+
+        function logout() {
+            localStorage.removeItem('reader_qr');
+            window.location.href = '/login-client.html';
+        }
+
+        // === ЗАГРУЗКА ===
+        const qr = localStorage.getItem('reader_qr');
+        if (!qr) {
+            window.location.href = '/login-client.html';
+        } else {
+            const data = parseQR(qr);
+            if (data) {
+                renderCabinet(data);
+            } else {
+                document.getElementById('cabinet').innerHTML = '<p style="color:red;">❌ Неверный формат QR-кода</p>';
+            }
+        }
+    </script>
+</body>
+</html>
