@@ -1,28 +1,253 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>Вход по QR-коду</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Вход по QR — XOVER</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            background: #f8f6f2;
+            color: #1e1e1e;
+            line-height: 1.6;
+            padding: 2rem 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 24px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+            text-align: center;
+        }
+        h1 {
+            font-size: 2rem;
+            color: #0b1a2e;
+            margin-bottom: 0.5rem;
+        }
+        .subhead {
+            color: #c44536;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .btn-primary {
+            background: #c44536;
+            color: #fff;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+        }
+        .btn-primary:hover { background: #a83226; }
+        .btn-secondary {
+            background: #e0dcd4;
+            color: #1e1e1e;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 0.5rem;
+            width: 100%;
+        }
+        .btn-secondary:hover { background: #ccc; }
+        .back-link {
+            display: inline-block;
+            margin-top: 1rem;
+            color: #c44536;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .back-link:hover { text-decoration: underline; }
+        #status {
+            margin-top: 1rem;
+            font-size: 0.95rem;
+            color: #4a5a6e;
+        }
+        #manualInput {
+            display: none;
+            margin-top: 1rem;
+            width: 100%;
+            padding: 0.6rem 1rem;
+            border: 2px solid #e0dcd4;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        #manualInput:focus { outline: none; border-color: #c44536; }
+        #manualConfirm {
+            display: none;
+            margin-top: 0.5rem;
+            width: 100%;
+            padding: 0.6rem 1rem;
+            background: #c44536;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        #manualConfirm:hover { background: #a83226; }
+        #reader-container {
+            width: 100%;
+            max-width: 350px;
+            margin: 0 auto;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            aspect-ratio: 1/1;
+            display: none;
+        }
+        .loading {
+            color: #4a5a6e;
+            font-size: 0.95rem;
+            margin-top: 1rem;
+        }
+    </style>
 </head>
 <body>
+<div class="container">
     <h1>🔑 Вход по QR-коду</h1>
-    <p>Отсканируйте QR-код из вашего читательского билета</p>
-    <input type="text" id="qrInput" placeholder="Вставьте строку из QR-кода" style="width: 400px;">
-    <button onclick="login()">Войти</button>
+    <p class="subhead">Отсканируйте QR-код из вашего читательского билета</p>
 
-    <div id="result"></div>
+    <button class="btn-primary" id="scanBtn">📷 Сканировать QR</button>
+    <button class="btn-secondary" id="manualBtn">⌨ Ввести вручную</button>
 
-    <script>
-        function login() {
-            const qr = document.getElementById('qrInput').value.trim();
-            if (!qr) {
-                alert('Введите QR-код');
-                return;
+    <div id="reader-container"></div>
+    <div id="status"></div>
+
+    <input type="text" id="manualInput" placeholder="Вставьте строку из QR-кода" />
+    <button id="manualConfirm">🔑 Войти</button>
+
+    <a href="/" class="back-link">← На главную</a>
+</div>
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+<script>
+    let html5QrCode = null;
+    let isScanning = false;
+
+    const readerContainer = document.getElementById('reader-container');
+    const status = document.getElementById('status');
+    const scanBtn = document.getElementById('scanBtn');
+    const manualBtn = document.getElementById('manualBtn');
+    const manualInput = document.getElementById('manualInput');
+    const manualConfirm = document.getElementById('manualConfirm');
+
+    // ===== ВХОД ПО QR =====
+    function loginWithQR(decodedText) {
+        // Сохраняем QR-строку в localStorage
+        localStorage.setItem('reader_qr', decodedText);
+        // Перенаправляем в личный кабинет
+        window.location.href = '/cabinet.html';
+    }
+
+    // ===== ЗАПУСК СКАНЕРА =====
+    async function startScanner() {
+        if (isScanning) return;
+        isScanning = true;
+
+        readerContainer.style.display = 'block';
+        status.textContent = '⏳ Запуск камеры...';
+        scanBtn.disabled = true;
+
+        try {
+            const Html5Qrcode = window.Html5Qrcode;
+            if (!Html5Qrcode) {
+                throw new Error('Библиотека не загружена');
             }
-            // Сохраняем в localStorage
-            localStorage.setItem('reader_qr', qr);
-            // Переходим в личный кабинет
-            window.location.href = '/cabinet.html';
+
+            html5QrCode = new Html5Qrcode('reader-container');
+
+            const config = {
+                fps: 15,
+                qrbox: { width: 250, height: 250 },
+                aspectRatio: 1.0
+            };
+
+            await html5QrCode.start(
+                { facingMode: 'environment' },
+                config,
+                (decodedText) => {
+                    // Останавливаем сканер
+                    stopScanner();
+                    // Вход
+                    loginWithQR(decodedText);
+                },
+                () => {}
+            );
+
+            status.textContent = '✅ Камера работает, наведите на QR-код';
+        } catch (err) {
+            console.warn('Ошибка камеры:', err);
+            status.textContent = '❌ Не удалось открыть камеру. Используйте ручной ввод.';
+            readerContainer.style.display = 'none';
+            manualInput.style.display = 'block';
+            manualConfirm.style.display = 'block';
+            isScanning = false;
+            scanBtn.disabled = false;
         }
-    </script>
+    }
+
+    // ===== ОСТАНОВКА СКАНЕРА =====
+    function stopScanner() {
+        if (html5QrCode) {
+            try {
+                html5QrCode.stop().catch(() => {});
+            } catch (e) {}
+            html5QrCode = null;
+        }
+        isScanning = false;
+        scanBtn.disabled = false;
+        readerContainer.style.display = 'none';
+    }
+
+    // ===== РУЧНОЙ ВВОД =====
+    function manualLogin() {
+        const qrData = manualInput.value.trim();
+        if (!qrData) {
+            status.textContent = '⚠️ Введите строку из QR-кода';
+            return;
+        }
+        loginWithQR(qrData);
+    }
+
+    // ===== СОБЫТИЯ =====
+    scanBtn.addEventListener('click', startScanner);
+    manualBtn.addEventListener('click', () => {
+        manualInput.style.display = 'block';
+        manualConfirm.style.display = 'block';
+        manualInput.focus();
+        status.textContent = 'Введите строку из QR-кода:';
+    });
+    manualConfirm.addEventListener('click', manualLogin);
+    manualInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') manualLogin();
+    });
+
+    // ===== КЛАВИША ESC ДЛЯ ОСТАНОВКИ =====
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            stopScanner();
+            status.textContent = 'Сканирование отменено';
+        }
+    });
+
+    // ===== ПРОВЕРКА, ЕСТЬ ЛИ УЖЕ QR В localStorage =====
+    if (localStorage.getItem('reader_qr')) {
+        // Если уже есть QR — сразу в кабинет
+        window.location.href = '/cabinet.html';
+    }
+</script>
 </body>
 </html>
