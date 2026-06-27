@@ -41,19 +41,21 @@
             width: 100%;
         }
         .btn-primary:hover { background: #a83226; }
-        .btn-secondary {
-            background: #e0dcd4;
-            color: #1e1e1e;
-            border: none;
-            padding: 0.6rem 1.5rem;
-            border-radius: 8px;
-            font-size: 0.9rem;
+        .file-label {
+            display: inline-block;
+            background: #c44536;
+            color: #fff;
+            padding: 0.8rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
             cursor: pointer;
             transition: 0.2s;
-            margin-top: 0.5rem;
             width: 100%;
+            margin-top: 0.5rem;
+            border: none;
+            font-weight: 600;
         }
-        .btn-secondary:hover { background: #ccc; }
+        .file-label:hover { background: #a83226; }
         .back-link {
             display: inline-block;
             margin-top: 1rem;
@@ -78,21 +80,6 @@
             aspect-ratio: 1/1;
             display: none;
         }
-        .file-label {
-            display: inline-block;
-            background: #c44536;
-            color: #fff;
-            padding: 0.8rem 2rem;
-            border-radius: 12px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: 0.2s;
-            width: 100%;
-            margin-top: 0.5rem;
-            border: none;
-            font-weight: 600;
-        }
-        .file-label:hover { background: #a83226; }
         .hidden { display: none !important; }
         #fileInput { display: none; }
     </style>
@@ -103,7 +90,7 @@
     <p class="subhead">Отсканируйте QR-код из вашего читательского билета</p>
 
     <button class="btn-primary" id="scanBtn">📷 Сканировать QR</button>
-    <label class="file-label" id="fileLabel">📁 Загрузить фото QR-кода</label>
+    <button class="file-label" id="fileLabel">📁 Загрузить фото QR-кода</button>
     <input type="file" id="fileInput" accept="image/*" />
 
     <div id="reader-container"></div>
@@ -112,7 +99,6 @@
     <a href="/" class="back-link">← На главную</a>
 </div>
 
-<!-- Подключаем html5-qrcode для камеры и jsQR для фото -->
 <script src="https://unpkg.com/html5-qrcode"></script>
 <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
 
@@ -197,7 +183,6 @@
         reader.onload = function(e) {
             const img = new Image();
             img.onload = function() {
-                // Создаём canvas для получения пиксельных данных
                 const canvas = document.createElement('canvas');
                 canvas.width = img.width;
                 canvas.height = img.height;
@@ -205,7 +190,6 @@
                 ctx.drawImage(img, 0, 0);
                 const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-                // Пробуем распознать QR
                 const decoded = decodeQRFromImage(imageData);
                 if (decoded) {
                     status.textContent = '✅ QR-код распознан!';
@@ -221,6 +205,10 @@
 
     // ===== СОБЫТИЯ =====
     scanBtn.addEventListener('click', startScanner);
+
+    fileLabel.addEventListener('click', function() {
+        fileInput.click();
+    });
 
     fileInput.addEventListener('change', (e) => {
         if (e.target.files.length > 0) {
