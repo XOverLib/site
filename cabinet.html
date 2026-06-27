@@ -14,14 +14,14 @@
             padding: 2rem 1rem;
         }
         .container {
-            max-width: 700px;
+            max-width: 800px;
             margin: 0 auto;
             background: #ffffff;
             padding: 2rem;
             border-radius: 24px;
             box-shadow: 0 8px 30px rgba(0,0,0,0.06);
         }
-        h1 { font-size: 2rem; color: #0b1a2e; }
+        h1 { font-size: 2rem; color: #0b1a2e; margin-bottom: 0.2rem; }
         .subhead { color: #c44536; margin-bottom: 1.5rem; }
         .back-link {
             display: inline-block;
@@ -30,35 +30,92 @@
             text-decoration: none;
         }
         .back-link:hover { text-decoration: underline; }
-        .card {
-            border: 1px solid #e0dcd4;
-            border-radius: 12px;
+
+        /* === Карточка профиля === */
+        .profile-card {
+            background: #f8f6f2;
+            border-radius: 16px;
             padding: 1.5rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem 2rem;
         }
-        .field {
-            display: flex;
-            padding: 0.4rem 0;
-            border-bottom: 1px solid #f0ede8;
-        }
-        .field-label {
-            font-weight: 600;
-            color: #0b1a2e;
-            width: 40%;
-        }
-        .field-value {
-            width: 60%;
-            color: #1e1e1e;
-        }
-        .book-item {
+        .profile-item {
             display: flex;
             justify-content: space-between;
-            padding: 0.6rem 0;
+            padding: 0.3rem 0;
+            border-bottom: 1px solid #e0dcd4;
+        }
+        .profile-label { font-weight: 600; color: #0b1a2e; }
+        .profile-value { color: #1e1e1e; }
+
+        /* === Абонементы === */
+        .abonement {
+            border: 1px solid #e0dcd4;
+            border-radius: 12px;
+            margin-bottom: 0.8rem;
+            overflow: hidden;
+            transition: 0.2s;
+        }
+        .abonement-header {
+            background: #f8f6f2;
+            padding: 0.8rem 1.2rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            transition: 0.2s;
+        }
+        .abonement-header:hover { background: #f0ede8; }
+        .abonement-header .title {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        .abonement-header .badge {
+            font-size: 0.8rem;
+            background: #c44536;
+            color: #fff;
+            padding: 0.15rem 0.8rem;
+            border-radius: 12px;
+            margin-left: 0.5rem;
+        }
+        .abonement-header .arrow {
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+        .abonement-header .arrow.open { transform: rotate(180deg); }
+        .abonement-body {
+            padding: 0 1.2rem 1.2rem;
+            display: none;
+        }
+        .abonement-body.open { display: block; }
+        .abonement-body table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        .abonement-body th {
+            text-align: left;
+            font-weight: 600;
+            color: #0b1a2e;
+            padding: 0.4rem 0.2rem;
+            border-bottom: 1px solid #e0dcd4;
+        }
+        .abonement-body td {
+            padding: 0.4rem 0.2rem;
             border-bottom: 1px solid #f0ede8;
         }
-        .book-title { font-weight: 500; }
-        .book-date { color: #4a5a6e; font-size: 0.9rem; }
-        .empty { color: #999; font-style: italic; }
+        .status-taken { color: #c44536; font-weight: 500; }
+        .status-returned { color: #28a745; }
+        .abonement-stats {
+            font-size: 0.85rem;
+            color: #4a5a6e;
+            margin-top: 0.3rem;
+        }
+
         .btn-logout {
             background: #c44536;
             color: #fff;
@@ -81,12 +138,20 @@
             text-align: center;
             padding: 1rem;
         }
+        .empty {
+            color: #999;
+            font-style: italic;
+        }
+        @media (max-width: 600px) {
+            .profile-card { grid-template-columns: 1fr; }
+            .abonement-header { flex-wrap: wrap; }
+        }
     </style>
 </head>
 <body>
 <div class="container">
     <h1>👤 Личный кабинет</h1>
-    <p class="subhead">Ваши данные и книги на руках</p>
+    <p class="subhead">Ваши данные и история абонементов</p>
 
     <div id="cabinet">
         <div class="loading">⏳ Загрузка данных...</div>
@@ -96,7 +161,9 @@
 </div>
 
 <script>
-    // ===== ПАРСИНГ QR-СТРОКИ =====
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby2IEY4sg6kBX9QMGXU23JRHn5yzm4bWv7-0kkM47fgdqtHju7Yj4yCkROf84UUN1SPiw/exec';
+
+    // ===== ПАРСИНГ QR =====
     function parseQR(qr) {
         const parts = qr.split('|');
         if (parts.length < 5) return null;
@@ -109,28 +176,51 @@
         };
     }
 
-    // ===== ПОЛУЧЕНИЕ КНИГ ИЗ GOOGLE ТАБЛИЦЫ =====
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby2IEY4sg6kBX9QMGXU23JRHn5yzm4bWv7-0kkM47fgdqtHju7Yj4yCkROf84UUN1SPiw/exec'; // ← ВСТАВЬ СВОЮ ССЫЛКУ
-
-    async function getBooks(clientId) {
+    // ===== ЗАГРУЗКА ВСЕХ ЗАПИСЕЙ ПО КЛИЕНТУ =====
+    async function fetchAllRecords(clientId) {
         try {
-            const url = `${SCRIPT_URL}?action=get_books&client_id=${clientId}`;
+            const url = `${SCRIPT_URL}?action=get_all_records&client_id=${clientId}`;
             const response = await fetch(url);
             const data = await response.json();
             if (data.success) {
-                return data.books;
+                return data.records;
             } else {
                 console.error('Ошибка:', data.error);
                 return [];
             }
         } catch (err) {
-            console.error('Ошибка загрузки книг:', err);
+            console.error('Ошибка загрузки:', err);
             return [];
         }
     }
 
-    // ===== ОТРИСОВКА КАБИНЕТА =====
-    function renderCabinet(qrData, books) {
+    // ===== ГРУППИРОВКА ПО АБОНЕМЕНТАМ =====
+    function groupByAbonement(records) {
+        const groups = {};
+        records.forEach(r => {
+            const key = r.abonement_id;
+            if (!groups[key]) {
+                groups[key] = {
+                    abonement_id: key,
+                    abonement_type: r.abonement_type,
+                    created_at: r.created_at,
+                    books: []
+                };
+            }
+            groups[key].books.push({
+                title: r.book_title,
+                issued_at: r.issued_at,
+                returned_at: r.returned_at || null
+            });
+        });
+        // Сортируем абонементы по дате (сначала новые)
+        return Object.values(groups).sort((a, b) => {
+            return new Date(b.created_at) - new Date(a.created_at);
+        });
+    }
+
+    // ===== ОТРИСОВКА =====
+    function renderCabinet(qrData, groups) {
         const typeNames = {
             '1': 'Базовый (10 записей)',
             '2': 'Стандартный (15 записей)',
@@ -139,49 +229,81 @@
 
         const container = document.getElementById('cabinet');
 
-        let booksHtml = '';
-        if (books.length === 0) {
-            booksHtml = '<div class="empty">📭 Нет книг на руках</div>';
+        // ---- Профиль ----
+        let profileHtml = `
+            <div class="profile-card">
+                <div class="profile-item"><span class="profile-label">👤 ФИО</span><span class="profile-value">${qrData.name}</span></div>
+                <div class="profile-item"><span class="profile-label">🆔 ID клиента</span><span class="profile-value">${qrData.client_id}</span></div>
+                <div class="profile-item"><span class="profile-label">🎫 Текущий абонемент</span><span class="profile-value">${typeNames[qrData.abonement_type] || qrData.abonement_type}</span></div>
+                <div class="profile-item"><span class="profile-label">📅 Дата регистрации</span><span class="profile-value">${qrData.created_at}</span></div>
+            </div>
+        `;
+
+        // ---- Абонементы ----
+        let abonementsHtml = '';
+        if (groups.length === 0) {
+            abonementsHtml = `<div class="empty">📭 У вас пока нет абонементов</div>`;
         } else {
-            booksHtml = books.map(b => `
-                <div class="book-item">
-                    <span class="book-title">📖 ${b.title}</span>
-                    <span class="book-date">выдана: ${b.issued_at}</span>
-                </div>
-            `).join('');
+            groups.forEach((g, idx) => {
+                const total = g.books.length;
+                const taken = g.books.filter(b => b.returned_at === null).length;
+                const returned = total - taken;
+
+                const typeLabel = typeNames[g.abonement_type] || g.abonement_type;
+
+                let booksHtml = '';
+                if (g.books.length === 0) {
+                    booksHtml = `<tr><td colspan="3" class="empty">Нет записей</td></tr>`;
+                } else {
+                    g.books.forEach(b => {
+                        const status = b.returned_at === null
+                            ? `<span class="status-taken">📖 На руках</span>`
+                            : `<span class="status-returned">✅ Возвращена (${b.returned_at})</span>`;
+                        booksHtml += `
+                            <tr>
+                                <td>${b.title}</td>
+                                <td>${b.issued_at}</td>
+                                <td>${status}</td>
+                            </tr>
+                        `;
+                    });
+                }
+
+                abonementsHtml += `
+                    <div class="abonement">
+                        <div class="abonement-header" onclick="toggleAbonement(this)">
+                            <span>
+                                <span class="title">🎫 ${typeLabel}</span>
+                                <span class="badge">${taken} на руках / ${total} всего</span>
+                            </span>
+                            <span class="arrow" id="arrow-${idx}">▼</span>
+                        </div>
+                        <div class="abonement-body" id="body-${idx}">
+                            <div class="abonement-stats">📅 Создан: ${g.created_at}</div>
+                            <table>
+                                <thead><tr><th>Книга</th><th>Выдана</th><th>Статус</th></tr></thead>
+                                <tbody>${booksHtml}</tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+            });
         }
 
         container.innerHTML = `
-            <div class="card">
-                <div class="field">
-                    <span class="field-label">👤 ФИО</span>
-                    <span class="field-value">${qrData.name}</span>
-                </div>
-                <div class="field">
-                    <span class="field-label">🎫 Абонемент</span>
-                    <span class="field-value">${typeNames[qrData.abonement_type] || qrData.abonement_type}</span>
-                </div>
-                <div class="field">
-                    <span class="field-label">📅 Дата создания</span>
-                    <span class="field-value">${qrData.created_at}</span>
-                </div>
-                <div class="field">
-                    <span class="field-label">🆔 ID клиента</span>
-                    <span class="field-value">${qrData.client_id}</span>
-                </div>
-                <div class="field">
-                    <span class="field-label">🆔 ID абонемента</span>
-                    <span class="field-value">${qrData.abonement_id}</span>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3 style="margin-bottom: 0.8rem;">📖 Книги на руках</h3>
-                ${booksHtml}
-            </div>
-
+            ${profileHtml}
+            <h3 style="margin: 1.5rem 0 0.8rem;">📚 История абонементов</h3>
+            ${abonementsHtml}
             <button class="btn-logout" onclick="logout()">🚪 Выйти</button>
         `;
+    }
+
+    // ===== СВЁРТКА / РАЗВЁРТКА =====
+    function toggleAbonement(header) {
+        const body = header.nextElementSibling;
+        const arrow = header.querySelector('.arrow');
+        body.classList.toggle('open');
+        arrow.classList.toggle('open');
     }
 
     // ===== ВЫХОД =====
@@ -200,15 +322,13 @@
 
         const qrData = parseQR(qr);
         if (!qrData) {
-            document.getElementById('cabinet').innerHTML = `
-                <div class="error">❌ Неверный формат QR-кода</div>
-            `;
+            document.getElementById('cabinet').innerHTML = `<div class="error">❌ Неверный формат QR-кода</div>`;
             return;
         }
 
-        // Загружаем книги
-        const books = await getBooks(qrData.client_id);
-        renderCabinet(qrData, books);
+        const records = await fetchAllRecords(qrData.client_id);
+        const groups = groupByAbonement(records);
+        renderCabinet(qrData, groups);
     })();
 </script>
 </body>
