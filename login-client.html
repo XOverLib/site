@@ -66,6 +66,7 @@
             margin-top: 1rem;
             font-size: 0.95rem;
             color: #4a5a6e;
+            min-height: 2rem;
         }
         #reader-container {
             width: 100%;
@@ -100,6 +101,7 @@
             font-weight: 600;
         }
         .file-label:hover { background: #a83226; }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
@@ -107,15 +109,12 @@
     <h1>🔑 Вход по QR-коду</h1>
     <p class="subhead">Отсканируйте QR-код из вашего читательского билета</p>
 
-    <!-- Кнопка для камеры -->
     <button class="btn-primary" id="scanBtn">📷 Сканировать QR</button>
-
-    <!-- Кнопка для загрузки фото -->
     <label class="file-label" id="fileLabel">📁 Загрузить фото QR-кода</label>
     <input type="file" id="fileInput" accept="image/*" />
 
     <div id="reader-container"></div>
-    <div id="status"></div>
+    <div id="status">Выберите способ входа</div>
 
     <a href="/" class="back-link">← На главную</a>
 </div>
@@ -134,7 +133,7 @@
     // ===== ВХОД ПО QR =====
     function loginWithQR(decodedText) {
         localStorage.setItem('reader_qr', decodedText);
-        window.location.href = '/site/cabinet.html';
+        window.location.href = '/cabinet.html';
     }
 
     // ===== ЗАПУСК СКАНЕРА =====
@@ -145,7 +144,7 @@
         readerContainer.style.display = 'block';
         status.textContent = '⏳ Запуск камеры...';
         scanBtn.disabled = true;
-        fileLabel.style.display = 'none';
+        fileLabel.classList.add('hidden');
 
         try {
             const Html5Qrcode = window.Html5Qrcode;
@@ -178,7 +177,7 @@
             readerContainer.style.display = 'none';
             isScanning = false;
             scanBtn.disabled = false;
-            fileLabel.style.display = 'inline-block';
+            fileLabel.classList.remove('hidden');
         }
     }
 
@@ -193,38 +192,35 @@
         isScanning = false;
         scanBtn.disabled = false;
         readerContainer.style.display = 'none';
-        fileLabel.style.display = 'inline-block';
+        fileLabel.classList.remove('hidden');
     }
 
-    // ===== ЗАГРУЗКА ФОТО QR-КОДА =====
+    // ===== ЗАГРУЗКА ФОТО QR-КОДА (рабочий вариант) =====
     function handleFileUpload(file) {
+        status.textContent = '⏳ Распознавание QR-кода...';
+
         const reader = new FileReader();
         reader.onload = function(e) {
             const imageData = e.target.result;
-            status.textContent = '⏳ Распознавание QR-кода...';
 
-            const img = new Image();
-            img.onload = function() {
-                const canvas = document.createElement('canvas');
-                canvas.width = img.width;
-                canvas.height = img.height;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0);
+            // Создаём временный элемент для сканирования
+            const tempDiv = document.createElement('div');
+            tempDiv.id = 'temp-reader';
+            tempDiv.style.display = 'none';
+            document.body.appendChild(tempDiv);
 
-                // Используем html5-qrcode для декодирования
-                const Html5Qrcode = window.Html5Qrcode;
-                const scanner = new Html5Qrcode('dummy');
-                scanner.scanFile(file, true)
-                    .then(decodedText => {
-                        status.textContent = '✅ QR-код распознан!';
-                        loginWithQR(decodedText);
-                    })
-                    .catch(err => {
-                        console.error('Ошибка распознавания:', err);
-                        status.textContent = '❌ Не удалось распознать QR-код на фото. Попробуйте другое фото.';
-                    });
-            };
-            img.src = imageData;
+            const html5QrCode = new Html5Qrcode('temp-reader');
+            html5QrCode.scanFile(file, true)
+                .then(decodedText => {
+                    status.textContent = '✅ QR-код распознан!';
+                    document.body.removeChild(tempDiv);
+                    loginWithQR(decodedText);
+                })
+                .catch(err => {
+                    console.error('Ошибка распознавания:', err);
+                    status.textContent = '❌ Не удалось распознать QR-код на фото. Попробуйте другое фото.';
+                    document.body.removeChild(tempDiv);
+                });
         };
         reader.readAsDataURL(file);
     }
@@ -250,7 +246,7 @@
 
     // ===== ПРОВЕРКА, ЕСТЬ ЛИ УЖЕ QR В localStorage =====
     if (localStorage.getItem('reader_qr')) {
-        window.location.href = '/site/cabinet.html';
+        window.location.href = '/cabinet.html';
     }
 </script>
 </body>
