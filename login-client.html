@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Вход по QR-коду</title>
+</head>
+<body>
+    <h1>🔑 Вход по QR-коду</h1>
+    <p>Отсканируйте QR-код из вашего читательского билета</p>
+    <input type="text" id="qrInput" placeholder="Вставьте строку из QR-кода" style="width: 400px;">
+    <button onclick="login()">Войти</button>
+
+    <div id="result"></div>
+
+    <script>
+        function login() {
+            const qr = document.getElementById('qrInput').value.trim();
+            if (!qr) {
+                alert('Введите QR-код');
+                return;
+            }
+            // Сохраняем в localStorage
+            localStorage.setItem('reader_qr', qr);
+            // Переходим в личный кабинет
+            window.location.href = '/cabinet.html';
+        }
+    </script>
+</body>
+</html>
