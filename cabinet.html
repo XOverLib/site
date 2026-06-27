@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Личный кабинет — XOVER</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -133,6 +134,7 @@
             padding: 1rem;
         }
 
+        /* ===== КНОПКА УВЕДОМЛЕНИЙ ===== */
         .notification-bell {
             position: fixed;
             top: 20px;
@@ -202,6 +204,13 @@
     </style>
 </head>
 <body>
+
+<!-- ===== КНОПКА-КОЛОКОЛЬЧИК ===== -->
+<button class="notification-bell" id="notificationBell" style="display:none;">
+    🔔
+    <span class="badge" id="unreadCount">0</span>
+</button>
+
 <div class="container">
     <h1>👤 Личный кабинет</h1>
     <p class="subhead">Ваши данные и история абонементов</p>
@@ -213,13 +222,38 @@
     <a href="/site/" class="back-link">← На главную</a>
 </div>
 
-<script>
-    // ===== КОНФИГУРАЦИЯ =====
-    // ЭТИ ССЫЛКИ ВСТАВЬ СВОИ
-    SCRIPT_URL_ABONEMENTS = 'https://script.google.com/macros/s/AKfycbxXUN9rzOqcm135MTruAOc1NkbKxiz9e2gBiCZMGn6JYYkB595GQT3vZyPIHrc5pIafcg/exec'
-    SCRIPT_URL_BOOKS = 'https://script.google.com/macros/s/AKfycby2IEY4sg6kBX9QMGXU23JRHn5yzm4bWv7-0kkM47fgdqtHju7Yj4yCkROf84UUN1SPiw/exec'
+<!-- ===== МОДАЛКА УВЕДОМЛЕНИЙ ===== -->
+<div class="modal fade notification-modal" id="notificationModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">📬 Уведомления</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="notificationList">
+                <p class="text-muted">Загрузка...</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-    // ===== ПАРСИНГ QR =====
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // ============================================================
+    //  КОНФИГУРАЦИЯ
+    // ============================================================
+    const SCRIPT_URL_ABONEMENTS = 'https://script.google.com/macros/s/ТВОЯ_ССЫЛКА_НА_АБОНЕМЕНТЫ/exec';
+    const SCRIPT_URL_BOOKS = 'https://script.google.com/macros/s/ТВОЯ_ССЫЛКА_НА_ВЫДАННЫЕ_КНИГИ/exec';
+    const SCRIPT_URL_NOTIFICATIONS = 'https://script.google.com/macros/s/ТВОЯ_ССЫЛКА_НА_УВЕДОМЛЕНИЯ/exec';
+
+    // ============================================================
+    //  QR
+    // ============================================================
     function parseQR(qr) {
         const parts = qr.split('|');
         if (parts.length < 5) return null;
@@ -232,39 +266,117 @@
         };
     }
 
-    // ===== ЗАГРУЗКА АБОНЕМЕНТОВ =====
+    // ============================================================
+    //  АБОНЕМЕНТЫ
+    // ============================================================
     async function fetchAbonements(clientId) {
         try {
             const url = `${SCRIPT_URL_ABONEMENTS}?action=get_abonements&client_id=${clientId}`;
             const response = await fetch(url);
             const data = await response.json();
-            if (data.success) {
-                return data.abonements;
-            }
+            if (data.success) return data.abonements;
             return [];
         } catch (err) {
-            console.error('Ошибка:', err);
+            console.error('Ошибка загрузки абонементов:', err);
             return [];
         }
     }
 
-    // ===== ЗАГРУЗКА ЗАПИСЕЙ =====
+    // ============================================================
+    //  ЗАПИСИ (КНИГИ)
+    // ============================================================
     async function fetchAllRecords(clientId) {
         try {
             const url = `${SCRIPT_URL_BOOKS}?action=get_all_records&client_id=${clientId}`;
             const response = await fetch(url);
             const data = await response.json();
-            if (data.success) {
-                return data.records;
-            }
+            if (data.success) return data.records;
             return [];
         } catch (err) {
-            console.error('Ошибка:', err);
+            console.error('Ошибка загрузки записей:', err);
             return [];
         }
     }
 
-    // ===== ГРУППИРОВКА =====
+    // ============================================================
+    //  УВЕДОМЛЕНИЯ
+    // ============================================================
+    let notifications = [];
+    let unreadCount = 0;
+
+    async function fetchNotifications(clientId) {
+        try {
+            const url = `${SCRIPT_URL_NOTIFICATIONS}?action=get_notifications&client_id=${clientId}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            if (data.success) {
+                notifications = data.notifications;
+                unreadCount = notifications.filter(n => !n.is_read).length;
+                updateNotificationUI();
+                return notifications;
+            }
+            return [];
+        } catch (err) {
+            console.error('Ошибка загрузки уведомлений:', err);
+            return [];
+        }
+    }
+
+    function updateNotificationUI() {
+        const bell = document.getElementById('notificationBell');
+        const countBadge = document.getElementById('unreadCount');
+        if (unreadCount > 0) {
+            bell.style.display = 'flex';
+            countBadge.textContent = unreadCount;
+        } else {
+            bell.style.display = 'none';
+        }
+    }
+
+    function renderNotifications() {
+        const container = document.getElementById('notificationList');
+        if (!notifications || notifications.length === 0) {
+            container.innerHTML = '<p class="text-muted">📭 У вас пока нет уведомлений</p>';
+            return;
+        }
+        const sorted = [...notifications].reverse();
+        container.innerHTML = sorted.map(n => `
+            <div class="notification-item ${n.is_read ? '' : 'unread'}">
+                <div class="message">${n.message}</div>
+                <div class="date">${n.created_at}</div>
+                ${!n.is_read ? `<button class="mark-read-btn" data-created-at="${n.created_at}">✓ Отметить как прочитанное</button>` : ''}
+            </div>
+        `).join('');
+
+        document.querySelectorAll('.mark-read-btn').forEach(btn => {
+            btn.addEventListener('click', async function() {
+                const createdAt = this.dataset.createdAt;
+                await markAsRead(createdAt);
+                await fetchNotifications(qrData.client_id);
+                renderNotifications();
+            });
+        });
+    }
+
+    async function markAsRead(createdAt) {
+        try {
+            await fetch(SCRIPT_URL_NOTIFICATIONS, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'mark_as_read',
+                    client_id: qrData.client_id,
+                    created_at: createdAt
+                })
+            });
+        } catch (err) {
+            console.error('Ошибка отметки прочтения:', err);
+        }
+    }
+
+    // ============================================================
+    //  ГРУППИРОВКА
+    // ============================================================
     function groupByAbonement(abonements, records) {
         const booksByAbonement = {};
         records.forEach(r => {
@@ -287,7 +399,9 @@
         return groups.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     }
 
-    // ===== ОТРИСОВКА =====
+    // ============================================================
+    //  ОТРИСОВКА
+    // ============================================================
     function renderCabinet(qrData, groups) {
         const typeNames = {
             '1': 'Базовый (10 записей)',
@@ -363,6 +477,9 @@
         `;
     }
 
+    // ============================================================
+    //  СВЁРТКА
+    // ============================================================
     function toggleAbonement(header) {
         const body = header.nextElementSibling;
         const arrow = header.querySelector('.arrow');
@@ -375,6 +492,11 @@
         window.location.href = '/site/login-client.html';
     }
 
+    // ============================================================
+    //  ЗАПУСК
+    // ============================================================
+    let qrData = null;
+
     (async function() {
         const qr = localStorage.getItem('reader_qr');
         if (!qr) {
@@ -382,12 +504,13 @@
             return;
         }
 
-        const qrData = parseQR(qr);
+        qrData = parseQR(qr);
         if (!qrData) {
             document.getElementById('cabinet').innerHTML = `<div class="error">❌ Неверный формат QR-кода</div>`;
             return;
         }
 
+        // Загружаем всё параллельно
         const [abonements, records] = await Promise.all([
             fetchAbonements(qrData.client_id),
             fetchAllRecords(qrData.client_id)
@@ -395,6 +518,16 @@
 
         const groups = groupByAbonement(abonements, records);
         renderCabinet(qrData, groups);
+
+        // Загружаем уведомления
+        await fetchNotifications(qrData.client_id);
+
+        // Колокольчик открывает модалку
+        document.getElementById('notificationBell').addEventListener('click', function() {
+            renderNotifications();
+            const modal = new bootstrap.Modal(document.getElementById('notificationModal'));
+            modal.show();
+        });
     })();
 </script>
 </body>
