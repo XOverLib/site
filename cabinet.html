@@ -133,6 +133,68 @@
             padding: 1rem;
         }
 
+        .notification-bell {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #c44536;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 999;
+            transition: 0.2s;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .notification-bell:hover {
+            transform: scale(1.1);
+        }
+        .notification-bell .badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #ffc107;
+            color: #000;
+            border-radius: 50%;
+            padding: 2px 8px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .notification-modal .modal-content {
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        .notification-item {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid #e0dcd4;
+        }
+        .notification-item.unread {
+            background: #fef9e7;
+            border-left: 4px solid #c44536;
+        }
+        .notification-item .date {
+            font-size: 0.75rem;
+            color: #999;
+        }
+        .notification-item .message {
+            font-size: 0.95rem;
+            margin: 0.3rem 0;
+        }
+        .mark-read-btn {
+            background: none;
+            border: none;
+            color: #c44536;
+            cursor: pointer;
+            font-size: 0.8rem;
+            text-decoration: underline;
+        }
+
         @media (max-width: 600px) {
             .profile-card { grid-template-columns: 1fr; }
             .abonement-header { flex-wrap: wrap; }
