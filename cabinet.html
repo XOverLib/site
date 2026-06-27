@@ -182,14 +182,6 @@
             font-size: 0.95rem;
             margin: 0.3rem 0;
         }
-        .mark-read-btn {
-            background: none;
-            border: none;
-            color: #c44536;
-            cursor: pointer;
-            font-size: 0.8rem;
-            text-decoration: underline;
-        }
 
         @media (max-width: 600px) {
             .profile-card { grid-template-columns: 1fr; }
@@ -297,6 +289,7 @@
     // ============================================================
     let notifications = [];
     let unreadCount = 0;
+    let qrData = null;
 
     async function fetchNotifications(clientId) {
         try {
@@ -338,33 +331,44 @@
             <div class="notification-item ${n.is_read ? '' : 'unread'}">
                 <div class="message">${n.message}</div>
                 <div class="date">${n.created_at}</div>
-                ${!n.is_read ? `<button class="mark-read-btn" data-created-at="${n.created_at}">✓ Отметить как прочитанное</button>` : ''}
             </div>
         `).join('');
-
-        document.querySelectorAll('.mark-read-btn').forEach(btn => {
-            btn.addEventListener('click', async function() {
-                const createdAt = this.dataset.createdAt;
-                await markAsRead(createdAt);
-                await fetchNotifications(qrData.client_id);
-                renderNotifications();
-            });
-        });
     }
 
-    async function markAsRead(createdAt) {
+    async function markAllAsRead() {
+        if (unreadCount === 0) return;
         try {
-            await fetch(SCRIPT_URL_NOTIFICATIONS, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    action: 'mark_as_read',
-                    client_id: qrData.client_id,
-                    created_at: createdAt
-                })
-            });
+            const unreadMessages = notifications.filter(n => !n.is_read);
+            for (const n of unreadMessages) {
+                await fetch(SCRIPT_URL_NOTIFICATIONS, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'mark_as_read',
+                        client_id: qrData.client_id,
+                        created_at: n.created_at
+                    })
+                });
+            }
+            notifications = notifications.map(n => ({ ...n, is_read: true }));
+            unreadCount = 0;
+            updateNotificationUI();
         } catch (err) {
             console.error('Ошибка отметки прочтения:', err);
+        }
+    }
+
+    // ===== АВТО-СКРОЛЛ К ПЕРВОМУ НЕПРОЧИТАННОМУ =====
+    function scrollToFirstUnread() {
+        const container = document.getElementById('notificationList');
+        const firstUnread = container.querySelector('.notification-item.unread');
+        if (firstUnread) {
+            setTimeout(() => {
+                firstUnread.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+            }, 300);
         }
     }
 
@@ -489,8 +493,6 @@
     // ============================================================
     //  ЗАПУСК
     // ============================================================
-    let qrData = null;
-
     (async function() {
         const qr = localStorage.getItem('reader_qr');
         if (!qr) {
@@ -504,7 +506,6 @@
             return;
         }
 
-        // Загружаем абонементы и записи
         const [abonements, records] = await Promise.all([
             fetchAbonements(qrData.client_id),
             fetchAllRecords(qrData.client_id)
@@ -513,14 +514,18 @@
         const groups = groupByAbonement(abonements, records);
         renderCabinet(qrData, groups);
 
-        // Загружаем уведомления
         await fetchNotifications(qrData.client_id);
 
-        // Колокольчик → модалка
-        document.getElementById('notificationBell').addEventListener('click', function() {
+        // ===== КОЛОКОЛЬЧИК → МОДАЛКА =====
+        document.getElementById('notificationBell').addEventListener('click', async function() {
             renderNotifications();
+            await markAllAsRead();
             const modal = new bootstrap.Modal(document.getElementById('notificationModal'));
             modal.show();
+            
+            modal._element.addEventListener('shown.bs.modal', function() {
+                scrollToFirstUnread();
+            });
         });
     })();
 </script>
