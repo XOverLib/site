@@ -134,7 +134,7 @@
             padding: 1rem;
         }
 
-        /* ===== КНОПКА УВЕДОМЛЕНИЙ ===== */
+        /* ===== УВЕДОМЛЕНИЯ ===== */
         .notification-bell {
             position: fixed;
             top: 20px;
@@ -154,9 +154,7 @@
             align-items: center;
             justify-content: center;
         }
-        .notification-bell:hover {
-            transform: scale(1.1);
-        }
+        .notification-bell:hover { transform: scale(1.1); }
         .notification-bell .badge {
             position: absolute;
             top: -6px;
@@ -167,10 +165,6 @@
             padding: 2px 8px;
             font-size: 14px;
             font-weight: bold;
-        }
-        .notification-modal .modal-content {
-            max-height: 70vh;
-            overflow-y: auto;
         }
         .notification-item {
             padding: 0.8rem 1rem;
@@ -205,7 +199,7 @@
 </head>
 <body>
 
-<!-- ===== КНОПКА-КОЛОКОЛЬЧИК ===== -->
+<!-- ===== КОЛОКОЛЬЧИК ===== -->
 <button class="notification-bell" id="notificationBell" style="display:none;">
     🔔
     <span class="badge" id="unreadCount">0</span>
@@ -223,7 +217,7 @@
 </div>
 
 <!-- ===== МОДАЛКА УВЕДОМЛЕНИЙ ===== -->
-<div class="modal fade notification-modal" id="notificationModal" tabindex="-1">
+<div class="modal fade" id="notificationModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -245,11 +239,11 @@
 
 <script>
     // ============================================================
-    //  КОНФИГУРАЦИЯ
+    //  КОНФИГУРАЦИЯ — ВСТАВЬ СВОИ ССЫЛКИ
     // ============================================================
-    const SCRIPT_URL_ABONEMENTS = 'https://script.google.com/macros/s/ТВОЯ_ССЫЛКА_НА_АБОНЕМЕНТЫ/exec';
-    const SCRIPT_URL_BOOKS = 'https://script.google.com/macros/s/ТВОЯ_ССЫЛКА_НА_ВЫДАННЫЕ_КНИГИ/exec';
-    const SCRIPT_URL_NOTIFICATIONS = 'https://script.google.com/macros/s/ТВОЯ_ССЫЛКА_НА_УВЕДОМЛЕНИЯ/exec';
+    const SCRIPT_URL_ABONEMENTS = 'https://script.google.com/macros/s/AKfycbxXUN9rzOqcm135MTruAOc1NkbKxiz9e2gBiCZMGn6JYYkB595GQT3vZyPIHrc5pIafcg/exec';
+    const SCRIPT_URL_BOOKS = 'https://script.google.com/macros/s/AKfycby2IEY4sg6kBX9QMGXU23JRHn5yzm4bWv7-0kkM47fgdqtHju7Yj4yCkROf84UUN1SPiw/exec';
+    const SCRIPT_URL_NOTIFICATIONS = 'https://script.google.com/macros/s/AKfycbxptSiKApHDwYpnRZAkVh4Z5OxKxnUvFw-ibOBRl4uFXofKbP6eFMj1dYBxaYsuJnr0/exec';
 
     // ============================================================
     //  QR
@@ -510,7 +504,7 @@
             return;
         }
 
-        // Загружаем всё параллельно
+        // Загружаем абонементы и записи
         const [abonements, records] = await Promise.all([
             fetchAbonements(qrData.client_id),
             fetchAllRecords(qrData.client_id)
@@ -522,7 +516,7 @@
         // Загружаем уведомления
         await fetchNotifications(qrData.client_id);
 
-        // Колокольчик открывает модалку
+        // Колокольчик → модалка
         document.getElementById('notificationBell').addEventListener('click', function() {
             renderNotifications();
             const modal = new bootstrap.Modal(document.getElementById('notificationModal'));
