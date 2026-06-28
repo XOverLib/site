@@ -343,7 +343,7 @@
         try {
             const unreadMessages = notifications.filter(n => !n.is_read);
             for (const n of unreadMessages) {
-                await fetch(SCRIPT_URL_NOTIFICATIONS, {
+                const response = await fetch(SCRIPT_URL_NOTIFICATIONS, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
