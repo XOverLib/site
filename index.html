@@ -213,26 +213,25 @@
     <div class="container">
 
         <!-- Кнопки-флаги -->
-        <div id="google_translate_element" style="display:none;"></div>
         <div class="lang-switch">
-            <button class="notranslate" onclick="translatePage('ru')">🇷🇺</button>
-            <button class="notranslate" onclick="translatePage('am')">🇦🇲</button>
-            <button class="notranslate" onclick="translatePage('be')">🇧🇾</button>
-            <button class="notranslate" onclick="translatePage('zh')">🇨🇳</button>
-            <button class="notranslate" onclick="translatePage('de')">🇩🇪</button>
-            <button class="notranslate" onclick="translatePage('es')">🇪🇸</button>
-            <button class="notranslate" onclick="translatePage('fi')">🇫🇮</button>
-            <button class="notranslate" onclick="translatePage('fr')">🇫🇷</button>
-            <button class="notranslate" onclick="translatePage('en')">🇬🇧</button>
-            <button class="notranslate" onclick="translatePage('hr')">🇭🇷</button>
-            <button class="notranslate" onclick="translatePage('hu')">🇭🇺</button>
-            <button class="notranslate" onclick="translatePage('it')">🇮🇹</button>
-            <button class="notranslate" onclick="translatePage('ja')">🇯🇵</button>
-            <button class="notranslate" onclick="translatePage('nl')">🇳🇱</button>
-            <button class="notranslate" onclick="translatePage('pl')">🇵🇱</button>
-            <button class="notranslate" onclick="translatePage('pt')">🇵🇹</button>
-            <button class="notranslate" onclick="translatePage('ro')">🇷🇴</button>
-            <button class="notranslate" onclick="translatePage('sr')">🇷🇸</button>
+            <button class="lang-btn" data-lang="ru">🇷🇺</button>
+            <button class="lang-btn" data-lang="am">🇦🇲</button>
+            <button class="lang-btn" data-lang="be">🇧🇾</button>
+            <button class="lang-btn" data-lang="zh">🇨🇳</button>
+            <button class="lang-btn" data-lang="de">🇩🇪</button>
+            <button class="lang-btn" data-lang="es">🇪🇸</button>
+            <button class="lang-btn" data-lang="fi">🇫🇮</button>
+            <button class="lang-btn" data-lang="fr">🇫🇷</button>
+            <button class="lang-btn active" data-lang="en">🇬🇧</button>
+            <button class="lang-btn" data-lang="hr">🇭🇷</button>
+            <button class="lang-btn" data-lang="hu">🇭🇺</button>
+            <button class="lang-btn" data-lang="it">🇮🇹</button>
+            <button class="lang-btn" data-lang="ja">🇯🇵</button>
+            <button class="lang-btn" data-lang="nl">🇳🇱</button>
+            <button class="lang-btn" data-lang="pl">🇵🇱</button>
+            <button class="lang-btn" data-lang="pt">🇵🇹</button>
+            <button class="lang-btn" data-lang="ro">🇷🇴</button>
+            <button class="lang-btn" data-lang="sr">🇷🇸</button>
         </div>
 
         <!-- Логотип -->
@@ -417,27 +416,5 @@
         </script>
         <noscript><div><img src="https://mc.yandex.ru/watch/110064832" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     <!-- /Yandex.Metrika counter -->
-
-<script type="text/javascript">
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({
-    pageLanguage: 'ru',
-    includedLanguages: 'ru,en,zh-CN',
-    layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-  }, 'google_translate_element');
-}
-
-function translatePage(langCode) {
-  const googleSelect = document.querySelector('#google_translate_element select');
-  if (googleSelect) {
-    googleSelect.value = langCode;
-    // Создаем событие изменения для имитации клика пользователя
-    googleSelect.dispatchEvent(new Event('change'));
-  }
-}
-</script>
-<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
-
 </body>
 </html>
