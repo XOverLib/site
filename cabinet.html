@@ -339,25 +339,37 @@
     }
 
     async function markAllAsRead() {
-        if (unreadCount === 0) return;
+        if (unreadCount === 0) {
+            console.log('ℹ️ Нет непрочитанных уведомлений');
+            return;
+        }
         try {
             const unreadMessages = notifications.filter(n => !n.is_read);
+            console.log('📤 Отмечаем как прочитанные:', unreadMessages);
+            
             for (const n of unreadMessages) {
+                const payload = {
+                    action: 'mark_as_read',
+                    client_id: qrData.client_id,
+                    created_at: n.created_at
+                };
+                console.log('📤 Отправка mark_as_read:', payload);
+                
                 const response = await fetch(SCRIPT_URL_NOTIFICATIONS, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'mark_as_read',
-                        client_id: qrData.client_id,
-                        created_at: n.created_at
-                    })
+                    body: JSON.stringify(payload)
                 });
+                const result = await response.json();
+                console.log('📦 Ответ mark_as_read:', result);
             }
+            
             notifications = notifications.map(n => ({ ...n, is_read: true }));
             unreadCount = 0;
             updateNotificationUI();
+            console.log('✅ Все уведомления отмечены как прочитанные');
         } catch (err) {
-            console.error('Ошибка отметки прочтения:', err);
+            console.error('❌ Ошибка отметки прочтения:', err);
         }
     }
 
