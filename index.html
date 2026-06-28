@@ -31,6 +31,27 @@
             gap: 0.3rem;
             margin-bottom: 1.5rem;
         }
+        /* Скрываем стандартный выпадающий список Google Translate,
+           оставляем только кнопки-флаги */
+        .goog-te-gadget .goog-te-combo {
+            display: none !important;
+        }
+        .goog-logo-link {
+            display: none !important;
+        }
+        .goog-te-gadget {
+            font-size: 0 !important;
+        }
+        .goog-te-banner-frame {
+            display: none !important;
+        }
+        body {
+            top: 0 !important;
+        }
+        .skiptranslate {
+            display: none !important;
+        }
+
         .lang-btn {
             background: none;
             border: 2px solid #c44536;
@@ -50,10 +71,6 @@
         .lang-btn:hover {
             background: #c44536;
             color: #fff;
-        }
-        .lang-btn svg {
-            height: 1.2em;
-            vertical-align: middle;
         }
 
         .logo-area {
@@ -208,16 +225,19 @@
         }
     </style>
     <link rel="icon" type="image/png" href="favicon.png">
+
+    <!-- Google Translate -->
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </head>
 <body>
     <div class="container">
 
-        <!-- Кнопки-флаги -->
+        <!-- Кнопки-флаги (теперь управляют Google Translate) -->
         <div class="lang-switch">
             <button class="lang-btn" data-lang="ru">🇷🇺</button>
             <button class="lang-btn" data-lang="am">🇦🇲</button>
             <button class="lang-btn" data-lang="be">🇧🇾</button>
-            <button class="lang-btn" data-lang="zh">🇨🇳</button>
+            <button class="lang-btn" data-lang="zh-CN">🇨🇳</button>
             <button class="lang-btn" data-lang="de">🇩🇪</button>
             <button class="lang-btn" data-lang="es">🇪🇸</button>
             <button class="lang-btn" data-lang="fi">🇫🇮</button>
@@ -239,182 +259,131 @@
             <img src="logo.png" alt="XOVER logo" />
         </div>
 
-        <!-- ===== КОНТЕЙНЕРЫ ДЛЯ ТЕКСТА ===== -->
-        <div class="subhead" id="subhead"></div>
+        <!-- ===== ВЕСЬ ТЕКСТ НА СТРАНИЦЕ (без изменений) ===== -->
+        <div class="subhead" id="subhead">International Center for Graphic Literature</div>
 
         <div class="badge-grid">
-            <div class="badge-item"><span id="badge1"></span> <span id="badge1_desc"></span></div>
-            <div class="badge-item"><span id="badge2"></span> <span id="badge2_desc"></span></div>
-            <div class="badge-item"><span id="badge3"></span> <span id="badge3_desc"></span></div>
-            <div class="badge-item"><span id="badge4"></span> <span id="badge4_desc"></span></div>
+            <div class="badge-item"><span id="badge1">1500+</span> <span id="badge1_desc">books in the catalog</span></div>
+            <div class="badge-item"><span id="badge2">120</span> <span id="badge2_desc">active readers</span></div>
+            <div class="badge-item"><span id="badge3">250</span> <span id="badge3_desc">comics collections</span></div>
+            <div class="badge-item"><span id="badge4">10</span> <span id="badge4_desc">years of activity</span></div>
         </div>
 
-        <p style="font-size:1.2rem; margin-bottom:1.8rem; color:#0b1a2e;" id="desc"></p>
-
-        <h2 class="section-title" id="gcd_title"></h2>
-        <div class="gcd-stats">
-            <div class="stat"><div class="stat-number" id="stat_imp"></div><div class="stat-label" id="gcd_imp"></div></div>
-            <div class="stat"><div class="stat-number" id="stat_world"></div><div class="stat-label" id="gcd_world"></div></div>
-            <div class="stat"><div class="stat-number" id="stat_russia"></div><div class="stat-label" id="gcd_russia"></div></div>
-            <div class="stat"><div class="stat-number" id="stat_gap"></div><div class="stat-label" id="gcd_gap"></div></div>
-        </div>
-        <p style="margin-top:-0.2rem;">
-            <a href="https://www.comics.org/accounts/profile/38733/" target="_blank" style="color:#c44536;" id="profile_link"></a>
+        <p style="font-size:1.2rem; margin-bottom:1.8rem; color:#0b1a2e;" id="desc">
+            Research, preservation, and popularization of graphic literature in Russia and the world.
         </p>
 
-        <h2 class="section-title" id="about_title"></h2>
-        <p style="color:#0b1a2e;" id="about_text"></p>
-        <p style="margin-top:0.6rem; color:#0b1a2e;" id="about_mission"></p>
+        <h2 class="section-title" id="gcd_title">GCD — Contribution to the World Catalog</h2>
+        <div class="gcd-stats">
+            <div class="stat"><div class="stat-number" id="stat_imp">1250</div><div class="stat-label" id="gcd_imp">Edits</div></div>
+            <div class="stat"><div class="stat-number" id="stat_world">172</div><div class="stat-label" id="gcd_world">World rank</div></div>
+            <div class="stat"><div class="stat-number" id="stat_russia">7</div><div class="stat-label" id="gcd_russia">Russia rank</div></div>
+            <div class="stat"><div class="stat-number" id="stat_gap">89</div><div class="stat-label" id="gcd_gap">Gap to top</div></div>
+        </div>
+        <p style="margin-top:-0.2rem;">
+            <a href="https://www.comics.org/accounts/profile/38733/" target="_blank" style="color:#c44536;" id="profile_link">👤 GCD profile</a>
+        </p>
 
-        <h2 class="section-title" id="publish_title"></h2>
+        <h2 class="section-title" id="about_title">About the Center</h2>
+        <p style="color:#0b1a2e;" id="about_text">
+            The XOVER Center for Graphic Literature was founded in 2015 to study, preserve, and popularize comics and graphic novels.
+        </p>
+        <p style="margin-top:0.6rem; color:#0b1a2e;" id="about_mission">
+            Our mission is to make graphic literature accessible, build bridges between cultures, and support research.
+        </p>
+
+        <h2 class="section-title" id="publish_title">Publishing Projects</h2>
         <ul style="color:#0b1a2e;">
-            <li id="publish_1"></li>
-            <li id="publish_2"></li>
-            <li id="publish_3"></li>
+            <li id="publish_1">📘 Publication of rare comics and graphic novels in Russian</li>
+            <li id="publish_2">📗 Educational programs and lectures on graphic literature</li>
+            <li id="publish_3">📙 Research expeditions and archiving of comics heritage</li>
         </ul>
 
-        <h2 class="section-title" id="recent_title"></h2>
-        <div id="recent-grid" class="recent-grid"></div>
-
-        <h2 class="section-title" id="nav_title"></h2>
-        <div class="link-list">
-            <a href="https://vk.ru/graphic.literature" target="_blank" id="nav_vk"></a>
-            <a href="https://t.me/graphicliterature" target="_blank" id="nav_tg"></a>
-            <a href="https://www.comics.org/accounts/profile/38733/" target="_blank" id="nav_gcd"></a>
-            <a href="https://fantlab.ru/edition451026" target="_blank" id="nav_arrow"></a>
-            <a href="/catalog_closed.html" target="_blank" id="nav_catalog"></a>
-            <a href="/site/login-client.html">🔑 Вход по QR</a>
+        <h2 class="section-title" id="recent_title">Recent Acquisitions</h2>
+        <div id="recent-grid" class="recent-grid">
+            <div class="recent-item">
+                <img src="https://via.placeholder.com/150x200" alt="Comic 1" />
+                <div class="caption">Blueberry — Moebius</div>
+            </div>
+            <div class="recent-item">
+                <img src="https://via.placeholder.com/150x200" alt="Comic 2" />
+                <div class="caption">Barefoot Gen — Keiji Nakazawa</div>
+            </div>
+            <div class="recent-item">
+                <img src="https://via.placeholder.com/150x200" alt="Comic 3" />
+                <div class="caption">The Incal — Jodorowsky & Moebius</div>
+            </div>
         </div>
 
-        <div class="footer" id="footer"></div>
+        <h2 class="section-title" id="nav_title">Navigation</h2>
+        <div class="link-list">
+            <a href="https://vk.ru/graphic.literature" target="_blank" id="nav_vk">VK</a>
+            <a href="https://t.me/graphicliterature" target="_blank" id="nav_tg">Telegram</a>
+            <a href="https://www.comics.org/accounts/profile/38733/" target="_blank" id="nav_gcd">GCD profile</a>
+            <a href="https://fantlab.ru/edition451026" target="_blank" id="nav_arrow">Fantlab</a>
+            <a href="/catalog_closed.html" target="_blank" id="nav_catalog">📚 Catalog</a>
+            <a href="/site/login-client.html">🔑 QR Login</a>
+        </div>
+
+        <div class="footer" id="footer">© 2026 XOVER Center for Graphic Literature</div>
 
     </div>
 
     <script>
-        let translations = {};
-        let stats = {};
-
-        // ===== ЗАГРУЗКА ДАННЫХ =====
-        async function loadTranslations() {
-            const response = await fetch('languages.json');
-            translations = await response.json();
-            return translations;
+        // ===== ИНИЦИАЛИЗАЦИЯ GOOGLE TRANSLATE =====
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'ru',
+                includedLanguages: 'en,am,be,zh-CN,de,es,fi,fr,hr,hu,it,ja,nl,pl,pt,ro,sr',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
         }
 
-        async function loadStats() {
-            const response = await fetch('stats.json');
-            stats = await response.json();
-            return stats;
-        }
-
-        // ===== ПОДСТАНОВКА ЧИСЕЛ =====
-        function replacePlaceholders(text) {
-            if (!text) return text;
-            for (const [key, value] of Object.entries(stats)) {
-                text = text.replace(new RegExp(`\\{${key}\\}`, 'g'), value);
-            }
-            return text;
-        }
-
-        // ===== УСТАНОВКА ЯЗЫКА =====
-        function setLanguage(lang) {
-            if (!translations[lang]) return;
-
-            const t = translations[lang];
-
-            function tr(key) {
-                const text = t[key] || key;
-                return replacePlaceholders(text);
+        // ===== УПРАВЛЕНИЕ ЯЗЫКОМ ЧЕРЕЗ ФЛАГИ =====
+        document.addEventListener('DOMContentLoaded', function() {
+            // Функция для переключения языка через Google Translate
+            function changeLanguage(langCode) {
+                const select = document.querySelector('.goog-te-combo');
+                if (select) {
+                    select.value = langCode;
+                    select.dispatchEvent(new Event('change'));
+                    localStorage.setItem('preferred_lang', langCode);
+                } else {
+                    // Если Google Translate ещё не загружен — пробуем через 500ms
+                    setTimeout(() => changeLanguage(langCode), 500);
+                }
             }
 
-            document.getElementById('subhead').textContent = tr('subhead');
-            document.getElementById('badge1').textContent = tr('badge1');
-            document.getElementById('badge1_desc').textContent = tr('badge1_desc');
-            document.getElementById('badge2').textContent = tr('badge2');
-            document.getElementById('badge2_desc').textContent = tr('badge2_desc');
-            document.getElementById('badge3').textContent = tr('badge3');
-            document.getElementById('badge3_desc').textContent = tr('badge3_desc');
-            document.getElementById('badge4').textContent = tr('badge4');
-            document.getElementById('badge4_desc').textContent = tr('badge4_desc');
-            document.getElementById('desc').textContent = tr('desc');
-            document.getElementById('gcd_title').textContent = tr('gcd_title');
-            document.getElementById('gcd_imp').textContent = tr('gcd_imp');
-            document.getElementById('gcd_world').textContent = tr('gcd_world');
-            document.getElementById('gcd_russia').textContent = tr('gcd_russia');
-            document.getElementById('gcd_gap').textContent = tr('gcd_gap');
-            document.getElementById('profile_link').textContent = tr('profile_link');
-            document.getElementById('about_title').textContent = tr('about_title');
-            document.getElementById('about_text').textContent = tr('about_text');
-            document.getElementById('about_mission').textContent = tr('about_mission');
-            document.getElementById('publish_title').textContent = tr('publish_title');
-            document.getElementById('publish_1').textContent = tr('publish_1');
-            document.getElementById('publish_2').textContent = tr('publish_2');
-            document.getElementById('publish_3').textContent = tr('publish_3');
-            document.getElementById('recent_title').textContent = tr('recent_title');
-            document.getElementById('nav_title').textContent = tr('nav_title');
-            document.getElementById('nav_vk').textContent = tr('nav_vk');
-            document.getElementById('nav_tg').textContent = tr('nav_tg');
-            document.getElementById('nav_gcd').textContent = tr('nav_gcd');
-            document.getElementById('nav_arrow').textContent = tr('nav_arrow');
-            document.getElementById('footer').innerHTML = tr('footer');
-
-            // ===== ЧИСЛА В GCD СТАТИСТИКЕ (берутся напрямую из stats) =====
-            document.getElementById('stat_imp').textContent = stats.imp || '';
-            document.getElementById('stat_world').textContent = stats.world_rank_number || '';
-            document.getElementById('stat_russia').textContent = stats.russia_rank_number || '';
-            document.getElementById('stat_gap').textContent = stats.gap || '';
-
-            // ===== КАРТИНКИ =====
-            const grid = document.getElementById('recent-grid');
-            grid.innerHTML = '';
-            if (t.recent_items && t.recent_items.length > 0) {
-                t.recent_items.forEach(item => {
-                    const div = document.createElement('div');
-                    div.className = 'recent-item';
-                    div.innerHTML = `
-                        <img src="${item.img}" alt="${item.caption}">
-                        <div class="caption">${item.caption}</div>
-                    `;
-                    grid.appendChild(div);
-                });
-            }
-
-            // ===== АКТИВНАЯ КНОПКА ЯЗЫКА =====
+            // Обработчики на флаги
             document.querySelectorAll('.lang-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.lang === lang);
-            });
-
-            document.documentElement.lang = lang;
-        }
-
-        // ===== ЗАПУСК =====
-        document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                await Promise.all([loadTranslations(), loadStats()]);
-                setLanguage('en');
-            } catch (error) {
-                console.error('Ошибка загрузки данных:', error);
-            }
-
-            document.querySelectorAll('.lang-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    setLanguage(btn.dataset.lang);
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const lang = this.getAttribute('data-lang');
+                    changeLanguage(lang);
+                    
+                    // Обновляем активную кнопку
+                    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
                 });
             });
+
+            // Восстанавливаем язык из localStorage после загрузки Google Translate
+            const savedLang = localStorage.getItem('preferred_lang');
+            if (savedLang) {
+                const checkInterval = setInterval(() => {
+                    const select = document.querySelector('.goog-te-combo');
+                    if (select) {
+                        select.value = savedLang;
+                        select.dispatchEvent(new Event('change'));
+                        clearInterval(checkInterval);
+                    }
+                }, 500);
+                setTimeout(() => clearInterval(checkInterval), 10000);
+            }
         });
     </script>
-    <!-- Yandex.Metrika counter -->
-        <script type="text/javascript">
-            (function(m,e,t,r,i,k,a){
-                m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-                m[i].l=1*new Date();
-                for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-                k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-            })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=110064832', 'ym');
-        
-            ym(110064832, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-        </script>
-        <noscript><div><img src="https://mc.yandex.ru/watch/110064832" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    <!-- /Yandex.Metrika counter -->
+
+    <script src="https://mc.yandex.ru/metrika/tag.js" async></script>
 </body>
 </html>
