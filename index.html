@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -30,28 +30,9 @@
             justify-content: flex-end;
             gap: 0.3rem;
             margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 10;
         }
-        /* Скрываем стандартный выпадающий список Google Translate,
-           оставляем только кнопки-флаги */
-        .goog-te-gadget .goog-te-combo {
-            display: none !important;
-        }
-        .goog-logo-link {
-            display: none !important;
-        }
-        .goog-te-gadget {
-            font-size: 0 !important;
-        }
-        .goog-te-banner-frame {
-            display: none !important;
-        }
-        body {
-            top: 0 !important;
-        }
-        .skiptranslate {
-            display: none !important;
-        }
-
         .lang-btn {
             background: none;
             border: 2px solid #c44536;
@@ -72,7 +53,6 @@
             background: #c44536;
             color: #fff;
         }
-
         .logo-area {
             display: flex;
             align-items: center;
@@ -83,7 +63,6 @@
             height: 60px;
             width: auto;
         }
-
         h1 {
             font-size: 3rem;
             font-weight: 700;
@@ -116,7 +95,6 @@
             font-weight: 300;
             color: #c44536;
         }
-
         .section-title {
             font-size: 1.8rem;
             font-weight: 600;
@@ -147,7 +125,6 @@
             font-size: 0.9rem;
             color: #c44536;
         }
-
         ul {
             padding-left: 1.5rem;
             margin: 0.8rem 0 1.5rem;
@@ -204,6 +181,26 @@
             color: #0b1a2e;
         }
 
+        /* Скрываем лишние элементы Google Translate */
+        .goog-te-gadget .goog-te-combo {
+            display: none !important;
+        }
+        .goog-logo-link {
+            display: none !important;
+        }
+        .goog-te-gadget {
+            font-size: 0 !important;
+        }
+        .goog-te-banner-frame {
+            display: none !important;
+        }
+        body {
+            top: 0 !important;
+        }
+        .skiptranslate {
+            display: none !important;
+        }
+
         @media (max-width: 600px) {
             h1 {
                 font-size: 2.2rem;
@@ -225,14 +222,13 @@
         }
     </style>
     <link rel="icon" type="image/png" href="favicon.png">
-
     <!-- Google Translate -->
     <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </head>
 <body>
     <div class="container">
 
-        <!-- Кнопки-флаги (теперь управляют Google Translate) -->
+        <!-- Кнопки-флаги -->
         <div class="lang-switch">
             <button class="lang-btn" data-lang="ru">🇷🇺</button>
             <button class="lang-btn" data-lang="am">🇦🇲</button>
@@ -259,48 +255,48 @@
             <img src="logo.png" alt="XOVER logo" />
         </div>
 
-        <!-- ===== ВЕСЬ ТЕКСТ НА СТРАНИЦЕ (без изменений) ===== -->
-        <div class="subhead" id="subhead">International Center for Graphic Literature</div>
+        <!-- ===== ВЕСЬ ТЕКСТ НА СТРАНИЦЕ (статический) ===== -->
+        <div class="subhead">International Center for Graphic Literature</div>
 
         <div class="badge-grid">
-            <div class="badge-item"><span id="badge1">1500+</span> <span id="badge1_desc">books in the catalog</span></div>
-            <div class="badge-item"><span id="badge2">120</span> <span id="badge2_desc">active readers</span></div>
-            <div class="badge-item"><span id="badge3">250</span> <span id="badge3_desc">comics collections</span></div>
-            <div class="badge-item"><span id="badge4">10</span> <span id="badge4_desc">years of activity</span></div>
+            <div class="badge-item"><span>1500+</span> books in the catalog</div>
+            <div class="badge-item"><span>120</span> active readers</div>
+            <div class="badge-item"><span>250</span> comics collections</div>
+            <div class="badge-item"><span>10</span> years of activity</div>
         </div>
 
-        <p style="font-size:1.2rem; margin-bottom:1.8rem; color:#0b1a2e;" id="desc">
+        <p style="font-size:1.2rem; margin-bottom:1.8rem; color:#0b1a2e;">
             Research, preservation, and popularization of graphic literature in Russia and the world.
         </p>
 
-        <h2 class="section-title" id="gcd_title">GCD — Contribution to the World Catalog</h2>
+        <h2 class="section-title">GCD — Contribution to the World Catalog</h2>
         <div class="gcd-stats">
-            <div class="stat"><div class="stat-number" id="stat_imp">1250</div><div class="stat-label" id="gcd_imp">Edits</div></div>
-            <div class="stat"><div class="stat-number" id="stat_world">172</div><div class="stat-label" id="gcd_world">World rank</div></div>
-            <div class="stat"><div class="stat-number" id="stat_russia">7</div><div class="stat-label" id="gcd_russia">Russia rank</div></div>
-            <div class="stat"><div class="stat-number" id="stat_gap">89</div><div class="stat-label" id="gcd_gap">Gap to top</div></div>
+            <div class="stat"><div class="stat-number" id="stat_imp">1250</div><div class="stat-label">Edits</div></div>
+            <div class="stat"><div class="stat-number" id="stat_world">172</div><div class="stat-label">World rank</div></div>
+            <div class="stat"><div class="stat-number" id="stat_russia">7</div><div class="stat-label">Russia rank</div></div>
+            <div class="stat"><div class="stat-number" id="stat_gap">89</div><div class="stat-label">Gap to top</div></div>
         </div>
         <p style="margin-top:-0.2rem;">
-            <a href="https://www.comics.org/accounts/profile/38733/" target="_blank" style="color:#c44536;" id="profile_link">👤 GCD profile</a>
+            <a href="https://www.comics.org/accounts/profile/38733/" target="_blank" style="color:#c44536;">👤 GCD profile</a>
         </p>
 
-        <h2 class="section-title" id="about_title">About the Center</h2>
-        <p style="color:#0b1a2e;" id="about_text">
+        <h2 class="section-title">About the Center</h2>
+        <p style="color:#0b1a2e;">
             The XOVER Center for Graphic Literature was founded in 2015 to study, preserve, and popularize comics and graphic novels.
         </p>
-        <p style="margin-top:0.6rem; color:#0b1a2e;" id="about_mission">
+        <p style="margin-top:0.6rem; color:#0b1a2e;">
             Our mission is to make graphic literature accessible, build bridges between cultures, and support research.
         </p>
 
-        <h2 class="section-title" id="publish_title">Publishing Projects</h2>
+        <h2 class="section-title">Publishing Projects</h2>
         <ul style="color:#0b1a2e;">
-            <li id="publish_1">📘 Publication of rare comics and graphic novels in Russian</li>
-            <li id="publish_2">📗 Educational programs and lectures on graphic literature</li>
-            <li id="publish_3">📙 Research expeditions and archiving of comics heritage</li>
+            <li>📘 Publication of rare comics and graphic novels in Russian</li>
+            <li>📗 Educational programs and lectures on graphic literature</li>
+            <li>📙 Research expeditions and archiving of comics heritage</li>
         </ul>
 
-        <h2 class="section-title" id="recent_title">Recent Acquisitions</h2>
-        <div id="recent-grid" class="recent-grid">
+        <h2 class="section-title">Recent Acquisitions</h2>
+        <div class="recent-grid">
             <div class="recent-item">
                 <img src="https://via.placeholder.com/150x200" alt="Comic 1" />
                 <div class="caption">Blueberry — Moebius</div>
@@ -315,17 +311,17 @@
             </div>
         </div>
 
-        <h2 class="section-title" id="nav_title">Navigation</h2>
+        <h2 class="section-title">Navigation</h2>
         <div class="link-list">
-            <a href="https://vk.ru/graphic.literature" target="_blank" id="nav_vk">VK</a>
-            <a href="https://t.me/graphicliterature" target="_blank" id="nav_tg">Telegram</a>
-            <a href="https://www.comics.org/accounts/profile/38733/" target="_blank" id="nav_gcd">GCD profile</a>
-            <a href="https://fantlab.ru/edition451026" target="_blank" id="nav_arrow">Fantlab</a>
-            <a href="/catalog_closed.html" target="_blank" id="nav_catalog">📚 Catalog</a>
+            <a href="https://vk.ru/graphic.literature" target="_blank">VK</a>
+            <a href="https://t.me/graphicliterature" target="_blank">Telegram</a>
+            <a href="https://www.comics.org/accounts/profile/38733/" target="_blank">GCD profile</a>
+            <a href="https://fantlab.ru/edition451026" target="_blank">Fantlab</a>
+            <a href="/catalog_closed.html" target="_blank">📚 Catalog</a>
             <a href="/site/login-client.html">🔑 QR Login</a>
         </div>
 
-        <div class="footer" id="footer">© 2026 XOVER Center for Graphic Literature</div>
+        <div class="footer">© 2026 XOVER Center for Graphic Literature</div>
 
     </div>
 
@@ -342,7 +338,6 @@
 
         // ===== УПРАВЛЕНИЕ ЯЗЫКОМ ЧЕРЕЗ ФЛАГИ =====
         document.addEventListener('DOMContentLoaded', function() {
-            // Функция для переключения языка через Google Translate
             function changeLanguage(langCode) {
                 const select = document.querySelector('.goog-te-combo');
                 if (select) {
@@ -350,25 +345,20 @@
                     select.dispatchEvent(new Event('change'));
                     localStorage.setItem('preferred_lang', langCode);
                 } else {
-                    // Если Google Translate ещё не загружен — пробуем через 500ms
                     setTimeout(() => changeLanguage(langCode), 500);
                 }
             }
 
-            // Обработчики на флаги
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.addEventListener('click', function(e) {
                     e.preventDefault();
                     const lang = this.getAttribute('data-lang');
                     changeLanguage(lang);
-                    
-                    // Обновляем активную кнопку
                     document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
                 });
             });
 
-            // Восстанавливаем язык из localStorage после загрузки Google Translate
             const savedLang = localStorage.getItem('preferred_lang');
             if (savedLang) {
                 const checkInterval = setInterval(() => {
@@ -383,7 +373,5 @@
             }
         });
     </script>
-
-    <script src="https://mc.yandex.ru/metrika/tag.js" async></script>
 </body>
 </html>
