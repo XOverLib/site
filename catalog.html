@@ -901,10 +901,10 @@
                 // ===== АВТО-ОТКРЫТИЕ ПО ID ИЗ URL =====
                 const urlParams = new URLSearchParams(window.location.search);
                 const id = urlParams.get('id');
-                if (id) {
-                    const index = allData.findIndex(item => item['ID_альбома'] == id);
-                    if (index !== -1) {
-                        setTimeout(() => openCard(index), 300);
+                if (id !== null) {
+                    const index = parseInt(id);
+                    if (!isNaN(index) && index >= 0 && index < allData.length) {
+                        setTimeout(() => openCardById(index), 300);
                     }
                 }
                 // =====================================
@@ -1324,6 +1324,40 @@
         fieldsContainer.appendChild(grid);
         document.getElementById('modalOverlay').classList.add('open');
         document.body.style.overflow = 'hidden';
+    }
+
+    function openCardById(id) {
+        const index = parseInt(id);
+        if (isNaN(index) || index < 0 || index >= allData.length) {
+            alert('Издание не найдено');
+            return;
+        }
+    
+        const item = allData[index];
+        
+        // Проверяем, есть ли книга в filteredData (с учётом фильтров)
+        let filteredIndex = filteredData.indexOf(item);
+        
+        if (filteredIndex === -1) {
+            // Если книга не в фильтре — сбрасываем фильтры
+            resetFilters();
+            filteredIndex = filteredData.indexOf(item);
+            if (filteredIndex === -1) return;
+        }
+    
+        // Вычисляем страницу, на которой находится книга
+        const page = Math.floor(filteredIndex / perPage) + 1;
+        
+        // Переключаемся на нужную страницу
+        currentPage = page;
+        
+        // Открываем модалку с задержкой (чтобы страница отрисовалась)
+        setTimeout(() => {
+            // Находим позицию книги на текущей странице
+            const start = (currentPage - 1) * perPage;
+            const pageIndex = filteredIndex - start;
+            openCard(pageIndex);
+        }, 200);
     }
 
     function closeModal() {
