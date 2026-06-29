@@ -1205,6 +1205,11 @@
     
         document.getElementById('modalTitle').textContent = item['Название'] || 'Без названия';
 
+        // ===== УДАЛЯЕМ СТАРУЮ ССЫЛКУ, ЕСЛИ ОНА ЕСТЬ =====
+        const oldLink = document.getElementById('book-link-container');
+        if (oldLink) oldLink.remove();
+        // ================================================
+        
         // ===== ССЫЛКА НА ИЗДАНИЕ =====
         const linkContainer = document.createElement('div');
         linkContainer.style.cssText = `
