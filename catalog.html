@@ -639,11 +639,9 @@
     <div id="advancedSearch" style="display:none; margin-bottom: 1rem; padding: 0.8rem; background: var(--bg-toggle); border-radius: 12px; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
         <select id="advField" onchange="updateAdvValues()" style="padding: 0.4rem 0.8rem; border-radius: 8px; border: 2px solid var(--border-color); background: var(--bg-input); color: var(--text-primary);">
             <option value="">Выберите поле...</option>
-            <!-- заполняется скриптом -->
         </select>
         <select id="advValue" style="padding: 0.4rem 0.8rem; border-radius: 8px; border: 2px solid var(--border-color); background: var(--bg-input); color: var(--text-primary);">
             <option value="">Выберите значение...</option>
-            <!-- заполняется скриптом -->
         </select>
         <button onclick="applyAdvancedFilter()" style="padding: 0.4rem 1.2rem; background: var(--accent); color: #fff; border: none; border-radius: 8px; cursor: pointer;">Применить</button>
         <button onclick="clearAdvancedFilter()" style="padding: 0.4rem 1.2rem; background: var(--border-color); color: var(--text-primary); border: none; border-radius: 8px; cursor: pointer;">Очистить</button>
@@ -759,9 +757,7 @@
         document.getElementById('pageSubhead').textContent = t('subhead');
         document.getElementById('backLink').textContent = t('back_link');
         document.getElementById('searchInput').placeholder = t('search_placeholder');
-        const langFilter = document.getElementById('languageFilter');
         langFilter.options[0].textContent = t('language_filter');
-        const typeFilter = document.getElementById('typeFilter');
         typeFilter.options[0].textContent = t('type_filter');
         document.getElementById('searchBtn').textContent = t('search_button');
         document.getElementById('resetBtn').textContent = t('reset_button');
@@ -833,6 +829,8 @@
     let filteredData = [];
     let currentPage = 1;
     const perPage = 25;
+    let advField = '';
+    let advValue = '';
 
     const tooltip = document.getElementById('coverTooltip');
     const tooltipImg = document.getElementById('tooltipImage');
@@ -910,28 +908,34 @@
 
     function applyFilters() {
         const search = document.getElementById('searchInput').value.toLowerCase().trim();
-        const lang = document.getElementById('languageFilter').value;
-        const type = document.getElementById('typeFilter').value;
+    
         filteredData = allData.filter(item => {
             const title = (item['Название'] || '').toLowerCase();
             const authors = (item['Авторы'] || '').toLowerCase();
             const series = (item['Серия'] || '').toLowerCase();
             const matchSearch = !search || title.includes(search) || authors.includes(search) || series.includes(search);
-            const matchLang = !lang || item['Язык'] === lang;
-            const matchType = !type || item['Тип литературы'] === type;
-            return matchSearch && matchLang && matchType;
+    
+            // Расширенный фильтр
+            let matchAdv = true;
+            if (advField && advValue) {
+                const itemVal = item[advField] ? item[advField].toString().trim() : '';
+                matchAdv = itemVal === advValue;
+            }
+    
+            return matchSearch && matchAdv;
         });
+    
         currentPage = 1;
         renderAll();
     }
-
     function resetFilters() {
         document.getElementById('searchInput').value = '';
-        document.getElementById('languageFilter').value = '';
-        document.getElementById('typeFilter').value = '';
+        advField = '';
+        advValue = '';
+        document.getElementById('advField').value = '';
+        document.getElementById('advValue').value = '';
         applyFilters();
     }
-
     function renderAll() {
         renderTable();
         renderGrid();
@@ -1425,7 +1429,7 @@
     
     function toggleAdvancedSearch() {
         const panel = document.getElementById('advancedSearch');
-        if (panel.style.display === 'none') {
+        if (panel.style.display === 'none' || panel.style.display === '') {
             panel.style.display = 'flex';
             populateAdvFields();
         } else {
