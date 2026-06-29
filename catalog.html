@@ -1208,11 +1208,15 @@
         const item = filteredData[index];
         if (!item) return;
 
-        // ===== МЕНЯЕМ URL НА ИНДЕКС В allData =====
-        const realIndex = allData.indexOf(item);
-        const newUrl = `${window.location.pathname}?id=${realIndex}`;
-        window.history.pushState({ id: realIndex }, '', newUrl);
-        // ==========================================
+        // ===== НЕ ИЩЕМ В allData, А ИСПОЛЬЗУЕМ ПЕРЕДАННЫЙ ИНДЕКС =====
+        // Но нам нужен индекс в allData, чтобы сохранить в URL.
+        // Поэтому ищем по уникальному полю (например, по обложке или названию + автору)
+        const realIndex = allData.findIndex(b => b['ID_альбома'] === item['ID_альбома']);
+        // Если ID_альбома нет — используем позицию в filteredData
+        const finalIndex = realIndex !== -1 ? realIndex : index;
+        const newUrl = `${window.location.pathname}?id=${finalIndex}`;
+        window.history.pushState({ id: finalIndex }, '', newUrl);
+        // ===========================================================
 
         document.getElementById('modalTitle').textContent = item['Название'] || 'Без названия';
 
