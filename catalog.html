@@ -904,22 +904,7 @@
                 if (id !== null) {
                     const index = parseInt(id);
                     if (!isNaN(index) && index >= 0 && index < allData.length) {
-                        // Открываем книгу по индексу в allData
-                        const item = allData[index];
-                        let filteredIndex = filteredData.indexOf(item);
-                        if (filteredIndex === -1) {
-                            resetFilters();
-                            filteredIndex = filteredData.indexOf(item);
-                        }
-                        if (filteredIndex !== -1) {
-                            const page = Math.floor(filteredIndex / perPage) + 1;
-                            currentPage = page;
-                            setTimeout(() => {
-                                const start = (currentPage - 1) * perPage;
-                                const pageIndex = filteredIndex - start;
-                                openCard(pageIndex);
-                            }, 300);
-                        }
+                        openCardById(index);
                     }
                 }
                 // =====================================
@@ -1336,6 +1321,35 @@
         fieldsContainer.appendChild(grid);
         document.getElementById('modalOverlay').classList.add('open');
         document.body.style.overflow = 'hidden';
+    }
+
+    function openCardById(id) {
+        const index = parseInt(id);
+        if (isNaN(index) || index < 0 || index >= allData.length) {
+            alert('Издание не найдено');
+            return;
+        }
+    
+        const item = allData[index];
+        let filteredIndex = filteredData.indexOf(item);
+        
+        if (filteredIndex === -1) {
+            resetFilters();
+            filteredIndex = filteredData.indexOf(item);
+            if (filteredIndex === -1) {
+                alert('Издание не найдено после сброса фильтров');
+                return;
+            }
+        }
+    
+        const page = Math.floor(filteredIndex / perPage) + 1;
+        currentPage = page;
+        
+        setTimeout(() => {
+            const start = (currentPage - 1) * perPage;
+            const pageIndex = filteredIndex - start;
+            openCard(pageIndex);
+        }, 300);
     }
 
     function closeModal() {
