@@ -898,7 +898,7 @@
                 applyFilters();
                 setView(currentView);
 
-                /// ===== АВТО-ОТКРЫТИЕ ПО ID ИЗ URL =====
+                // ===== АВТО-ОТКРЫТИЕ ПО ID ИЗ URL =====
                 const urlParams = new URLSearchParams(window.location.search);
                 const id = urlParams.get('id');
                 if (id !== null) {
@@ -906,10 +906,8 @@
                     if (!isNaN(index) && index >= 0 && index < allData.length) {
                         // Открываем книгу по индексу в allData
                         const item = allData[index];
-                        // Находим её позицию в filteredData
                         let filteredIndex = filteredData.indexOf(item);
                         if (filteredIndex === -1) {
-                            // Если не в фильтре — сбрасываем
                             resetFilters();
                             filteredIndex = filteredData.indexOf(item);
                         }
@@ -1225,11 +1223,9 @@
         const item = filteredData[index];
         if (!item) return;
 
-        // ===== URL = ИНДЕКС В allData =====
-        const newUrl = `${window.location.pathname}?id=${index}`;
-        window.history.pushState({ id: index }, '', newUrl);
-        // =================================
-        
+        // ===== НЕ МЕНЯЕМ URL =====
+        // =========================
+
         document.getElementById('modalTitle').textContent = item['Название'] || 'Без названия';
 
         // ===== ОБЛОЖКА =====
@@ -1352,34 +1348,6 @@
         // ============================
     }
 
-    function openCardById(id) {
-        const index = parseInt(id);
-        if (isNaN(index) || index < 0 || index >= allData.length) {
-            alert('Издание не найдено');
-            return;
-        }
-    
-        const item = allData[index];
-        let filteredIndex = filteredData.indexOf(item);
-        
-        if (filteredIndex === -1) {
-            resetFilters();
-            filteredIndex = filteredData.indexOf(item);
-            if (filteredIndex === -1) {
-                alert('Издание не найдено после сброса фильтров');
-                return;
-            }
-        }
-    
-        const page = Math.floor(filteredIndex / perPage) + 1;
-        currentPage = page;
-        
-        setTimeout(() => {
-            const start = (currentPage - 1) * perPage;
-            const pageIndex = filteredIndex - start;
-            openCard(pageIndex);
-        }, 300);
-    }
     document.getElementById('modalOverlay').addEventListener('click', function(e) {
         if (e.target === this) closeModal();
     });
