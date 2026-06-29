@@ -1209,7 +1209,7 @@
         if (!item) return;
 
         // ===== МЕНЯЕМ URL =====
-        const id = item['ID_альбома'] || index;
+        const id = allData.indexOf(item);
         const newUrl = `${window.location.pathname}?id=${id}`;
         window.history.pushState({ id: id }, '', newUrl);
         // =====================
