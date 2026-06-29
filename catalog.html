@@ -897,6 +897,17 @@
                 populateAdvFields();
                 applyFilters();
                 setView(currentView);
+
+                // ===== АВТО-ОТКРЫТИЕ ПО ID ИЗ URL =====
+                const urlParams = new URLSearchParams(window.location.search);
+                const id = urlParams.get('id');
+                if (id) {
+                    const index = allData.findIndex(item => item['ID_альбома'] == id);
+                    if (index !== -1) {
+                        setTimeout(() => openCard(index), 300);
+                    }
+                }
+                // =====================================
             })
             .catch(err => {
                 document.getElementById('catalogBody').innerHTML =
@@ -1196,36 +1207,15 @@
     function openCard(index) {
         const item = filteredData[index];
         if (!item) return;
-    
-        document.getElementById('modalTitle').textContent = item['Название'] || 'Без названия';
-    
-        // ===== ССЫЛКА НА ИЗДАНИЕ =====
-        const linkContainer = document.getElementById('bookLinkContainer');
-        linkContainer.innerHTML = ''; // очищаем перед вставкой
-    
+
+        // ===== МЕНЯЕМ URL =====
         const id = item['ID_альбома'] || index;
-        const url = `${window.location.origin}${window.location.pathname}?id=${id}`;
-    
-        const link = document.createElement('a');
-        link.href = url;
-        link.textContent = '🔗 Прямая ссылка на издание';
-        link.style.cssText = `
-            color: var(--accent);
-            text-decoration: none;
-            border-bottom: 1px dashed var(--accent);
-            cursor: pointer;
-        `;
-        link.onclick = (e) => {
-            e.preventDefault();
-            navigator.clipboard.writeText(url).then(() => {
-                alert('✅ Ссылка скопирована в буфер обмена');
-            }).catch(() => {
-                prompt('Скопируйте ссылку вручную:', url);
-            });
-        };
-        linkContainer.appendChild(link);
-        // =================================
-    
+        const newUrl = `${window.location.pathname}?id=${id}`;
+        window.history.pushState({ id: id }, '', newUrl);
+        // =====================
+
+        document.getElementById('modalTitle').textContent = item['Название'] || 'Без названия';
+
         // ===== ОБЛОЖКА =====
         const coverContainer = document.getElementById('modalCover');
         coverContainer.innerHTML = '';
@@ -1263,7 +1253,7 @@
             msg.textContent = 'Нет обложки';
             coverWrapper.appendChild(msg);
         }
-    
+
         // ===== КНОПКА БРОНИРОВАНИЯ =====
         const reserveBtn = document.createElement('button');
         reserveBtn.textContent = '📚 Забронировать';
@@ -1289,13 +1279,13 @@
         };
         coverWrapper.appendChild(reserveBtn);
         coverContainer.appendChild(coverWrapper);
-    
-        // ===== ПОЛЯ СПРАВА =====
+
+        // ===== ПОЛЯ =====
         const fieldsContainer = document.getElementById('modalFields');
         fieldsContainer.innerHTML = '';
         const grid = document.createElement('div');
         grid.className = 'fields-grid';
-    
+
         const allFieldKeys = [
             'Название', 'Тип литературы', 'Серия', 'Подсерия', 
             'Номер в серии', 'Номер в подсерии', 'Выпуски (если есть)',
@@ -1305,7 +1295,7 @@
             'Страницы', 'Число издания', 'Месяц издания',
             'Год издания', 'Год переиздания', 'Страна', 'Язык', 'Количество'
         ];
-    
+
         allFieldKeys.forEach(fieldKey => {
             const value = item[fieldKey];
             const hasValue = value && String(value).trim() !== '';
@@ -1319,7 +1309,7 @@
                 grid.appendChild(div);
             }
         });
-    
+
         if (grid.children.length === 0) {
             const div = document.createElement('div');
             div.className = 'field';
@@ -1330,7 +1320,7 @@
             div.textContent = 'Нет дополнительных данных';
             grid.appendChild(div);
         }
-    
+
         fieldsContainer.appendChild(grid);
         document.getElementById('modalOverlay').classList.add('open');
         document.body.style.overflow = 'hidden';
@@ -1339,48 +1329,12 @@
     function closeModal() {
         document.getElementById('modalOverlay').classList.remove('open');
         document.body.style.overflow = '';
-    
-        // ===== УБИРАЕМ ПАРАМЕТР ИЗ URL =====
+
+        // ===== УБИРАЕМ ID ИЗ URL =====
         const newUrl = window.location.pathname;
         window.history.pushState({}, '', newUrl);
-        // ====================================
+        // ============================
     }
-
-    // ===== АВТООТКРЫТИЕ ПО ID В URL =====
-    function openCardById(id) {
-        // Ищем книгу по ID_альбома
-        const index = allData.findIndex(item => item['ID_альбома'] == id);
-        if (index === -1) return;
-    
-        // Применяем фильтры, чтобы найти книгу в отображаемом списке
-        applyFilters();
-        const filteredIndex = filteredData.findIndex(item => item['ID_альбома'] == id);
-        if (filteredIndex === -1) {
-            // Если книга не в фильтре — сбрасываем фильтры
-            resetFilters();
-            // Ищем снова
-            const newIndex = filteredData.findIndex(item => item['ID_альбома'] == id);
-            if (newIndex === -1) return;
-            openCard(newIndex);
-        } else {
-            openCard(filteredIndex);
-        }
-    }
-    
-    // При загрузке страницы
-    document.addEventListener('DOMContentLoaded', function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const id = urlParams.get('id');
-        if (id) {
-            // Ждём загрузки данных
-            const checkData = setInterval(() => {
-                if (allData.length > 0) {
-                    clearInterval(checkData);
-                    openCardById(id);
-                }
-            }, 100);
-        }
-    });
 
     document.getElementById('modalOverlay').addEventListener('click', function(e) {
         if (e.target === this) closeModal();
