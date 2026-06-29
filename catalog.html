@@ -1208,16 +1208,10 @@
         const item = filteredData[index];
         if (!item) return;
 
-        // ===== НЕ ИЩЕМ В allData, А ИСПОЛЬЗУЕМ ПЕРЕДАННЫЙ ИНДЕКС =====
-        // Но нам нужен индекс в allData, чтобы сохранить в URL.
-        // Поэтому ищем по уникальному полю (например, по обложке или названию + автору)
-        const realIndex = allData.findIndex(b => b['ID_альбома'] === item['ID_альбома']);
-        // Если ID_альбома нет — используем позицию в filteredData
-        const finalIndex = realIndex !== -1 ? realIndex : index;
-        const newUrl = `${window.location.pathname}?id=${finalIndex}`;
-        window.history.pushState({ id: finalIndex }, '', newUrl);
-        // ===========================================================
-
+        // ===== ИСПОЛЬЗУЕМ ИНДЕКС ИЗ FILTEREDDATA =====
+        const newUrl = `${window.location.pathname}?id=${index}`;
+        window.history.pushState({ id: index }, '', newUrl);
+        // ============================================
         document.getElementById('modalTitle').textContent = item['Название'] || 'Без названия';
 
         // ===== ОБЛОЖКА =====
@@ -1342,28 +1336,19 @@
 
     function openCardById(id) {
         const index = parseInt(id);
-        if (isNaN(index) || index < 0 || index >= allData.length) {
+        if (isNaN(index) || index < 0 || index >= filteredData.length) {
+            alert('Издание не найдено в текущем фильтре');
+            return;
+        }
+    
+        const item = filteredData[index];
+        if (!item) {
             alert('Издание не найдено');
             return;
         }
-
-        const item = allData[index];
-        let filteredIndex = filteredData.indexOf(item);
-        
-        if (filteredIndex === -1) {
-            resetFilters();
-            filteredIndex = filteredData.indexOf(item);
-            if (filteredIndex === -1) return;
-        }
-
-        const page = Math.floor(filteredIndex / perPage) + 1;
-        currentPage = page;
-        
-        setTimeout(() => {
-            const start = (currentPage - 1) * perPage;
-            const pageIndex = filteredIndex - start;
-            openCard(pageIndex);
-        }, 500);
+    
+        // Открываем карточку
+        openCard(index);
     }
 
     document.getElementById('modalOverlay').addEventListener('click', function(e) {
