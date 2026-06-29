@@ -1202,17 +1202,17 @@
     }
 
     // ============================================================
-    //  МОДАЛКА
+    //  МОДАЛКА + ССЫЛКИ
     // ============================================================
     function openCard(index) {
         const item = filteredData[index];
         if (!item) return;
 
-        // ===== МЕНЯЕМ URL =====
-        const id = allData.indexOf(item);
-        const newUrl = `${window.location.pathname}?id=${id}`;
-        window.history.pushState({ id: id }, '', newUrl);
-        // =====================
+        // ===== МЕНЯЕМ URL НА ИНДЕКС В allData =====
+        const realIndex = allData.indexOf(item);
+        const newUrl = `${window.location.pathname}?id=${realIndex}`;
+        window.history.pushState({ id: realIndex }, '', newUrl);
+        // ==========================================
 
         document.getElementById('modalTitle').textContent = item['Название'] || 'Без названия';
 
@@ -1326,40 +1326,6 @@
         document.body.style.overflow = 'hidden';
     }
 
-    function openCardById(id) {
-        const index = parseInt(id);
-        if (isNaN(index) || index < 0 || index >= allData.length) {
-            alert('Издание не найдено');
-            return;
-        }
-    
-        const item = allData[index];
-        
-        // Проверяем, есть ли книга в filteredData (с учётом фильтров)
-        let filteredIndex = filteredData.indexOf(item);
-        
-        if (filteredIndex === -1) {
-            // Если книга не в фильтре — сбрасываем фильтры
-            resetFilters();
-            filteredIndex = filteredData.indexOf(item);
-            if (filteredIndex === -1) return;
-        }
-    
-        // Вычисляем страницу, на которой находится книга
-        const page = Math.floor(filteredIndex / perPage) + 1;
-        
-        // Переключаемся на нужную страницу
-        currentPage = page;
-        
-        // Открываем модалку с задержкой (чтобы страница отрисовалась)
-        setTimeout(() => {
-            // Находим позицию книги на текущей странице
-            const start = (currentPage - 1) * perPage;
-            const pageIndex = filteredIndex - start;
-            openCard(pageIndex);
-        }, 200);
-    }
-
     function closeModal() {
         document.getElementById('modalOverlay').classList.remove('open');
         document.body.style.overflow = '';
@@ -1368,6 +1334,32 @@
         const newUrl = window.location.pathname;
         window.history.pushState({}, '', newUrl);
         // ============================
+    }
+
+    function openCardById(id) {
+        const index = parseInt(id);
+        if (isNaN(index) || index < 0 || index >= allData.length) {
+            alert('Издание не найдено');
+            return;
+        }
+
+        const item = allData[index];
+        let filteredIndex = filteredData.indexOf(item);
+        
+        if (filteredIndex === -1) {
+            resetFilters();
+            filteredIndex = filteredData.indexOf(item);
+            if (filteredIndex === -1) return;
+        }
+
+        const page = Math.floor(filteredIndex / perPage) + 1;
+        currentPage = page;
+        
+        setTimeout(() => {
+            const start = (currentPage - 1) * perPage;
+            const pageIndex = filteredIndex - start;
+            openCard(pageIndex);
+        }, 200);
     }
 
     document.getElementById('modalOverlay').addEventListener('click', function(e) {
