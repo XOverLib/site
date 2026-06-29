@@ -898,13 +898,30 @@
                 applyFilters();
                 setView(currentView);
 
-                // ===== АВТО-ОТКРЫТИЕ ПО ID ИЗ URL =====
+                /// ===== АВТО-ОТКРЫТИЕ ПО ID ИЗ URL =====
                 const urlParams = new URLSearchParams(window.location.search);
                 const id = urlParams.get('id');
                 if (id !== null) {
                     const index = parseInt(id);
                     if (!isNaN(index) && index >= 0 && index < allData.length) {
-                        setTimeout(() => openCardById(index), 300);
+                        // Открываем книгу по индексу в allData
+                        const item = allData[index];
+                        // Находим её позицию в filteredData
+                        let filteredIndex = filteredData.indexOf(item);
+                        if (filteredIndex === -1) {
+                            // Если не в фильтре — сбрасываем
+                            resetFilters();
+                            filteredIndex = filteredData.indexOf(item);
+                        }
+                        if (filteredIndex !== -1) {
+                            const page = Math.floor(filteredIndex / perPage) + 1;
+                            currentPage = page;
+                            setTimeout(() => {
+                                const start = (currentPage - 1) * perPage;
+                                const pageIndex = filteredIndex - start;
+                                openCard(pageIndex);
+                            }, 300);
+                        }
                     }
                 }
                 // =====================================
@@ -1342,7 +1359,6 @@
             return;
         }
     
-        // Проверяем, есть ли книга в filteredData (для открытия на странице)
         const item = allData[index];
         let filteredIndex = filteredData.indexOf(item);
         
@@ -1362,9 +1378,8 @@
             const start = (currentPage - 1) * perPage;
             const pageIndex = filteredIndex - start;
             openCard(pageIndex);
-        }, 200);
+        }, 300);
     }
-
     document.getElementById('modalOverlay').addEventListener('click', function(e) {
         if (e.target === this) closeModal();
     });
