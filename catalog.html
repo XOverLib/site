@@ -135,8 +135,9 @@
         .search-box {
             display: flex;
             gap: 0.5rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             flex-wrap: wrap;
+            align-items: center;
         }
         .search-box input {
             flex: 1;
@@ -151,17 +152,6 @@
         }
         .search-box input:focus { outline: none; border-color: var(--accent); }
         .search-box input::placeholder { color: var(--text-muted); }
-        .search-box select {
-            padding: 0.6rem 1rem;
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 1rem;
-            background: var(--bg-input);
-            color: var(--text-primary);
-            cursor: pointer;
-            transition: border-color 0.3s, background 0.3s, color 0.3s;
-        }
-        .search-box select:focus { outline: none; border-color: var(--accent); }
         .search-box button {
             padding: 0.6rem 1.5rem;
             background: var(--accent);
@@ -171,6 +161,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: background 0.3s;
+            white-space: nowrap;
         }
         .search-box button:hover { background: var(--accent-hover); }
         .search-box .reset-btn {
@@ -178,6 +169,49 @@
             color: var(--text-primary);
         }
         .search-box .reset-btn:hover { background: var(--text-muted); }
+        .search-box .adv-btn {
+            background: #6c757d;
+            color: white;
+        }
+        .search-box .adv-btn:hover { background: #5a6268; }
+
+        .adv-panel {
+            display: none;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: var(--bg-toggle);
+            border-radius: 12px;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        .adv-panel select {
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            min-width: 150px;
+        }
+        .adv-panel select:focus { outline: none; border-color: var(--accent); }
+        .adv-panel button {
+            padding: 0.4rem 1.2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .adv-panel .apply-btn {
+            background: var(--accent);
+            color: white;
+        }
+        .adv-panel .apply-btn:hover { background: var(--accent-hover); }
+        .adv-panel .clear-btn {
+            background: var(--border-color);
+            color: var(--text-primary);
+        }
+        .adv-panel .clear-btn:hover { background: var(--text-muted); }
 
         .view-toggle {
             display: flex;
@@ -480,7 +514,7 @@
             border-radius: 8px;
             overflow: hidden;
             display: flex;
-            flex-direction: column;   /* ← ЭТО ГЛАВНОЕ: вертикальное расположение */
+            flex-direction: column;
             align-items: center;
             justify-content: flex-start;
             aspect-ratio: auto;
@@ -570,6 +604,13 @@
                 width: 100%;
                 justify-content: center;
             }
+            .adv-panel {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .adv-panel select {
+                width: 100%;
+            }
         }
 
         @media (max-width: 768px) {
@@ -628,25 +669,27 @@
     <h1 id="pageHeading">Каталог коллекции</h1>
     <div class="subhead" id="pageSubhead">Все издания, которые есть в фонде XOVER</div>
 
+    <!-- ===== ПОИСК ===== -->
     <div class="search-box">
         <input type="text" id="searchInput" placeholder="Поиск по названию, автору, серии..." oninput="applyFilters()">
         <button id="searchBtn" onclick="applyFilters()">Найти</button>
         <button class="reset-btn" id="resetBtn" onclick="resetFilters()">Сбросить</button>
-        <button class="btn" id="advancedSearchBtn" onclick="toggleAdvancedSearch()">🔍 Расширенный поиск</button>
-    </div>
-    
-    <!-- Блок расширенного поиска (скрыт по умолчанию) -->
-    <div id="advancedSearch" style="display:none; margin-bottom: 1rem; padding: 0.8rem; background: var(--bg-toggle); border-radius: 12px; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
-        <select id="advField" onchange="updateAdvValues()" style="padding: 0.4rem 0.8rem; border-radius: 8px; border: 2px solid var(--border-color); background: var(--bg-input); color: var(--text-primary);">
-            <option value="">Выберите поле...</option>
-        </select>
-        <select id="advValue" style="padding: 0.4rem 0.8rem; border-radius: 8px; border: 2px solid var(--border-color); background: var(--bg-input); color: var(--text-primary);">
-            <option value="">Выберите значение...</option>
-        </select>
-        <button onclick="applyAdvancedFilter()" style="padding: 0.4rem 1.2rem; background: var(--accent); color: #fff; border: none; border-radius: 8px; cursor: pointer;">Применить</button>
-        <button onclick="clearAdvancedFilter()" style="padding: 0.4rem 1.2rem; background: var(--border-color); color: var(--text-primary); border: none; border-radius: 8px; cursor: pointer;">Очистить</button>
+        <button class="adv-btn" id="advancedSearchBtn" onclick="toggleAdvancedSearch()">🔍 Расширенный поиск</button>
     </div>
 
+    <!-- ===== РАСШИРЕННЫЙ ПОИСК ===== -->
+    <div class="adv-panel" id="advancedSearch">
+        <select id="advField" onchange="updateAdvValues()">
+            <option value="">Выберите поле...</option>
+        </select>
+        <select id="advValue">
+            <option value="">Выберите значение...</option>
+        </select>
+        <button class="apply-btn" onclick="applyAdvancedFilter()">Применить</button>
+        <button class="clear-btn" onclick="clearAdvancedFilter()">Очистить</button>
+    </div>
+
+    <!-- ===== ВИД ОТОБРАЖЕНИЯ ===== -->
     <div class="view-toggle">
         <span class="label" id="viewLabel">Вид отображения:</span>
         <div class="buttons">
@@ -655,6 +698,7 @@
         </div>
     </div>
 
+    <!-- ===== СПИСОК ===== -->
     <div id="listContainer">
         <div class="table-wrapper">
             <table>
@@ -673,6 +717,7 @@
         </div>
     </div>
 
+    <!-- ===== ПЛИТКА ===== -->
     <div id="gridContainer" class="hidden">
         <div class="grid-view" id="gridBody"></div>
     </div>
@@ -682,11 +727,13 @@
 
 </div>
 
+<!-- ===== ТУЛТИП ===== -->
 <div class="cover-tooltip" id="coverTooltip">
     <img id="tooltipImage" src="" alt="Обложка" />
     <div class="no-cover-big" id="tooltipNoCover" style="display:none;">Нет обложки</div>
 </div>
 
+<!-- ===== МОДАЛКА ===== -->
 <div class="modal-overlay" id="modalOverlay">
     <div class="modal" id="modal">
         <button class="modal-close" onclick="closeModal()">✕</button>
@@ -700,11 +747,12 @@
 </div>
 
 <script>
-    // ===== ПЕРЕВОДЫ =====
+    // ============================================================
+    //  ПЕРЕВОДЫ
+    // ============================================================
     let langData = {};
     let currentLang = 'ru';
 
-    // Список поддерживаемых языков с их названиями
     const languageNames = {
         'am': 'Հայերեն',
         'be': 'Беларуская',
@@ -728,18 +776,12 @@
 
     function detectLanguage() {
         const savedLang = localStorage.getItem('catalog_lang');
-        if (savedLang && langData[savedLang]) {
-            return savedLang;
-        }
+        if (savedLang && langData[savedLang]) return savedLang;
         const urlParams = new URLSearchParams(window.location.search);
         const langParam = urlParams.get('lang');
-        if (langParam && langData[langParam]) {
-            return langParam;
-        }
+        if (langParam && langData[langParam]) return langParam;
         const browserLang = navigator.language.split('-')[0];
-        if (langData[browserLang]) {
-            return browserLang;
-        }
+        if (langData[browserLang]) return browserLang;
         return 'ru';
     }
 
@@ -757,8 +799,6 @@
         document.getElementById('pageSubhead').textContent = t('subhead');
         document.getElementById('backLink').textContent = t('back_link');
         document.getElementById('searchInput').placeholder = t('search_placeholder');
-        langFilter.options[0].textContent = t('language_filter');
-        typeFilter.options[0].textContent = t('type_filter');
         document.getElementById('searchBtn').textContent = t('search_button');
         document.getElementById('resetBtn').textContent = t('reset_button');
         document.getElementById('viewLabel').textContent = t('view_label');
@@ -785,7 +825,9 @@
         }
     }
 
-    // ===== ТЕМА =====
+    // ============================================================
+    //  ТЕМА
+    // ============================================================
     function toggleTheme() {
         const html = document.documentElement;
         const currentTheme = html.getAttribute('data-theme');
@@ -810,7 +852,9 @@
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
 
-    // ===== ВИД ОТОБРАЖЕНИЯ =====
+    // ============================================================
+    //  ВИД
+    // ============================================================
     const savedView = localStorage.getItem('view') || 'list';
     let currentView = savedView;
 
@@ -824,7 +868,9 @@
         renderAll();
     }
 
-    // ===== ОСТАЛЬНОЙ КОД =====
+    // ============================================================
+    //  ДАННЫЕ
+    // ============================================================
     let allData = [];
     let filteredData = [];
     let currentPage = 1;
@@ -837,7 +883,9 @@
     const tooltipNoCover = document.getElementById('tooltipNoCover');
     let tooltipTimeout = null;
 
-    // ===== ЗАГРУЗКА ДАННЫХ =====
+    // ============================================================
+    //  ЗАГРУЗКА
+    // ============================================================
     function loadCatalog() {
         fetch('catalog.json')
             .then(res => {
@@ -846,7 +894,7 @@
             })
             .then(data => {
                 allData = data;
-                populateFilters(data);
+                populateAdvFields();
                 applyFilters();
                 setView(currentView);
             })
@@ -877,57 +925,31 @@
             loadCatalog();
         });
 
-    function populateFilters(data) {
-        const languages = new Set();
-        const types = new Set();
-        data.forEach(item => {
-            if (item['Язык']) languages.add(item['Язык']);
-            if (item['Тип литературы']) types.add(item['Тип литературы']);
-        });
-        const langSelect = document.getElementById('languageFilter');
-        const firstOption = langSelect.options[0];
-        langSelect.innerHTML = '';
-        langSelect.appendChild(firstOption);
-        languages.forEach(l => {
-            const opt = document.createElement('option');
-            opt.value = l;
-            opt.textContent = l;
-            langSelect.appendChild(opt);
-        });
-        const typeSelect = document.getElementById('typeFilter');
-        const firstTypeOption = typeSelect.options[0];
-        typeSelect.innerHTML = '';
-        typeSelect.appendChild(firstTypeOption);
-        types.forEach(t => {
-            const opt = document.createElement('option');
-            opt.value = t;
-            opt.textContent = t;
-            typeSelect.appendChild(opt);
-        });
-    }
-
+    // ============================================================
+    //  ФИЛЬТРЫ
+    // ============================================================
     function applyFilters() {
         const search = document.getElementById('searchInput').value.toLowerCase().trim();
-    
+
         filteredData = allData.filter(item => {
             const title = (item['Название'] || '').toLowerCase();
             const authors = (item['Авторы'] || '').toLowerCase();
             const series = (item['Серия'] || '').toLowerCase();
             const matchSearch = !search || title.includes(search) || authors.includes(search) || series.includes(search);
-    
-            // Расширенный фильтр
+
             let matchAdv = true;
             if (advField && advValue) {
                 const itemVal = item[advField] ? item[advField].toString().trim() : '';
                 matchAdv = itemVal === advValue;
             }
-    
+
             return matchSearch && matchAdv;
         });
-    
+
         currentPage = 1;
         renderAll();
     }
+
     function resetFilters() {
         document.getElementById('searchInput').value = '';
         advField = '';
@@ -936,6 +958,72 @@
         document.getElementById('advValue').value = '';
         applyFilters();
     }
+
+    // ============================================================
+    //  РАСШИРЕННЫЙ ПОИСК
+    // ============================================================
+    function toggleAdvancedSearch() {
+        const panel = document.getElementById('advancedSearch');
+        if (panel.style.display === 'none' || panel.style.display === '') {
+            panel.style.display = 'flex';
+            populateAdvFields();
+        } else {
+            panel.style.display = 'none';
+        }
+    }
+
+    function populateAdvFields() {
+        const fieldSelect = document.getElementById('advField');
+        const fields = ['Язык', 'Тип литературы', 'Авторы', 'Серия', 'Издательство оригинал', 'Издательство РФ', 'Вселенная', 'Год издания'];
+        fieldSelect.innerHTML = '<option value="">Выберите поле...</option>';
+        fields.forEach(f => {
+            const opt = document.createElement('option');
+            opt.value = f;
+            opt.textContent = f;
+            fieldSelect.appendChild(opt);
+        });
+    }
+
+    function updateAdvValues() {
+        const field = document.getElementById('advField').value;
+        const valueSelect = document.getElementById('advValue');
+        valueSelect.innerHTML = '<option value="">Выберите значение...</option>';
+        if (!field) return;
+
+        const values = new Set();
+        allData.forEach(item => {
+            const val = item[field];
+            if (val && val.toString().trim() !== '') {
+                values.add(val.toString().trim());
+            }
+        });
+
+        const sorted = Array.from(values).sort((a, b) => a.localeCompare(b));
+        sorted.forEach(v => {
+            const opt = document.createElement('option');
+            opt.value = v;
+            opt.textContent = v;
+            valueSelect.appendChild(opt);
+        });
+    }
+
+    function applyAdvancedFilter() {
+        advField = document.getElementById('advField').value;
+        advValue = document.getElementById('advValue').value;
+        applyFilters();
+    }
+
+    function clearAdvancedFilter() {
+        document.getElementById('advField').value = '';
+        document.getElementById('advValue').value = '';
+        advField = '';
+        advValue = '';
+        applyFilters();
+    }
+
+    // ============================================================
+    //  ОТРИСОВКА
+    // ============================================================
     function renderAll() {
         renderTable();
         renderGrid();
@@ -1016,6 +1104,9 @@
         }
     }
 
+    // ============================================================
+    //  ТУЛТИП
+    // ============================================================
     function showTooltip(event, coverUrl) {
         clearTimeout(tooltipTimeout);
         tooltipImg.style.display = 'none';
@@ -1069,6 +1160,9 @@
 
     document.addEventListener('scroll', hideTooltip);
 
+    // ============================================================
+    //  ПАГИНАЦИЯ
+    // ============================================================
     function renderPagination() {
         const totalPages = Math.ceil(filteredData.length / perPage);
         const pagination = document.getElementById('pagination');
@@ -1096,18 +1190,17 @@
         window.scrollTo({ top: document.querySelector('.view-toggle').offsetTop - 20, behavior: 'smooth' });
     }
 
-    // ===== КАРТОЧКА С КНОПКОЙ БРОНИРОВАНИЯ =====
+    // ============================================================
+    //  МОДАЛКА
+    // ============================================================
     function openCard(index) {
         const item = filteredData[index];
         if (!item) return;
     
         document.getElementById('modalTitle').textContent = item['Название'] || 'Без названия';
     
-        // ===== ЛЕВЫЙ КОНТЕЙНЕР (обложка + кнопка под ней) =====
         const coverContainer = document.getElementById('modalCover');
         coverContainer.innerHTML = '';
-    
-        // Создаём вертикальный блок для обложки и кнопки
         const coverWrapper = document.createElement('div');
         coverWrapper.style.cssText = `
             display: flex;
@@ -1115,8 +1208,6 @@
             align-items: center;
             width: 100%;
         `;
-    
-        // ===== ОБЛОЖКА =====
         const coverUrl = item['превью'] || '';
         if (coverUrl && coverUrl.trim() !== '') {
             const img = document.createElement('img');
@@ -1145,7 +1236,6 @@
             coverWrapper.appendChild(msg);
         }
     
-        // ===== КНОПКА БРОНИРОВАНИЯ (ПОД ОБЛОЖКОЙ) =====
         const reserveBtn = document.createElement('button');
         reserveBtn.textContent = '📚 Забронировать';
         reserveBtn.style.cssText = `
@@ -1169,14 +1259,10 @@
             reserveBook(item['Название'] || 'Без названия');
         };
         coverWrapper.appendChild(reserveBtn);
-    
-        // Вставляем вертикальный блок в левый контейнер
         coverContainer.appendChild(coverWrapper);
     
-        // ===== ПОЛЯ СПРАВА =====
         const fieldsContainer = document.getElementById('modalFields');
         fieldsContainer.innerHTML = '';
-    
         const grid = document.createElement('div');
         grid.className = 'fields-grid';
     
@@ -1216,7 +1302,6 @@
         }
     
         fieldsContainer.appendChild(grid);
-    
         document.getElementById('modalOverlay').classList.add('open');
         document.body.style.overflow = 'hidden';
     }
@@ -1234,9 +1319,10 @@
         if (e.key === 'Escape') closeModal();
     });
 
-    // ===== БРОНИРОВАНИЕ В GOOGLE SHEETS =====
+    // ============================================================
+    //  БРОНИРОВАНИЕ
+    // ============================================================
     async function reserveBook(bookTitle) {
-        // Создаём оверлей
         const overlay = document.createElement('div');
         overlay.style.cssText = `
             position: fixed;
@@ -1253,7 +1339,6 @@
             padding: 1rem;
         `;
     
-        // Контейнер для камеры
         const container = document.createElement('div');
         container.id = 'qr-reader';
         container.style.cssText = `
@@ -1386,18 +1471,9 @@
     
     async function sendReservation(bookTitle, qrData) {
         const url = SCRIPT_URL;
-    
-        alert('📦 1. sendReservation вызвана');
-        alert('📦 2. bookTitle: ' + bookTitle);
-        alert('📦 3. qrData: ' + qrData);
-        alert('📦 4. URL: ' + url);
-    
         const now = new Date();
         const var_date = now.toLocaleDateString('ru-RU');
         const var_time = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
-    
-        alert('📦 5. Дата: ' + var_date);
-        alert('📦 6. Время: ' + var_time);
     
         const data = {
             book: bookTitle,
@@ -1406,130 +1482,17 @@
             time: var_time
         };
     
-        //alert('📦 7. Данные: ' + JSON.stringify(data));
-    
         try {
-            alert('⏳ 8. Отправка fetch...');
-            const response = await fetch(url, {
+            await fetch(url, {
                 method: 'POST',
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
-            alert('✅ 9. Книга забронирована!');
         } catch (error) {
-            alert('❌ 10. Ошибка: ' + error.message);
             console.error('Ошибка:', error);
         }
     }
-
-    // ===== РАСШИРЕННЫЙ ПОИСК =====
-    let advField = '';
-    let advValue = '';
-    
-    function toggleAdvancedSearch() {
-        const panel = document.getElementById('advancedSearch');
-        if (panel.style.display === 'none' || panel.style.display === '') {
-            panel.style.display = 'flex';
-            populateAdvFields();
-        } else {
-            panel.style.display = 'none';
-        }
-    }
-    
-    function populateAdvFields() {
-        const fieldSelect = document.getElementById('advField');
-        const fields = ['Язык', 'Тип литературы', 'Авторы', 'Серия', 'Издательство оригинал', 'Издательство РФ', 'Вселенная', 'Год издания'];
-        fieldSelect.innerHTML = '<option value="">Выберите поле...</option>';
-        fields.forEach(f => {
-            const opt = document.createElement('option');
-            opt.value = f;
-            opt.textContent = f;
-            fieldSelect.appendChild(opt);
-        });
-    }
-    
-    function updateAdvValues() {
-        const field = document.getElementById('advField').value;
-        const valueSelect = document.getElementById('advValue');
-        valueSelect.innerHTML = '<option value="">Выберите значение...</option>';
-        if (!field) return;
-    
-        const values = new Set();
-        allData.forEach(item => {
-            const val = item[field];
-            if (val && val.toString().trim() !== '') {
-                values.add(val.toString().trim());
-            }
-        });
-    
-        const sorted = Array.from(values).sort((a, b) => a.localeCompare(b));
-        sorted.forEach(v => {
-            const opt = document.createElement('option');
-            opt.value = v;
-            opt.textContent = v;
-            valueSelect.appendChild(opt);
-        });
-    }
-    
-    function applyAdvancedFilter() {
-        advField = document.getElementById('advField').value;
-        advValue = document.getElementById('advValue').value;
-        applyFilters();
-    }
-    
-    function clearAdvancedFilter() {
-        document.getElementById('advField').value = '';
-        document.getElementById('advValue').value = '';
-        advField = '';
-        advValue = '';
-        applyFilters();
-    }
-    
-    // ===== ОБНОВЛЁННАЯ applyFilters =====
-    function applyFilters() {
-        const search = document.getElementById('searchInput').value.toLowerCase().trim();
-        const lang = document.getElementById('languageFilter').value;
-        const type = document.getElementById('typeFilter').value;
-    
-        filteredData = allData.filter(item => {
-            // текстовый поиск
-            const title = (item['Название'] || '').toLowerCase();
-            const authors = (item['Авторы'] || '').toLowerCase();
-            const series = (item['Серия'] || '').toLowerCase();
-            const matchSearch = !search || title.includes(search) || authors.includes(search) || series.includes(search);
-    
-            // фильтры (язык и тип — пока оставим, позже уберём)
-            const matchLang = !lang || item['Язык'] === lang;
-            const matchType = !type || item['Тип литературы'] === type;
-    
-            // расширенный фильтр
-            let matchAdv = true;
-            if (advField && advValue) {
-                const itemVal = item[advField] ? item[advField].toString().trim() : '';
-                matchAdv = itemVal === advValue;
-            }
-    
-            return matchSearch && matchLang && matchType && matchAdv;
-        });
-    
-        currentPage = 1;
-        renderAll();
-    }
-    
 </script>
-<!-- Yandex.Metrika counter -->
-        <script type="text/javascript">
-            (function(m,e,t,r,i,k,a){
-                m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-                m[i].l=1*new Date();
-                for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-                k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-            })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=110064832', 'ym');
-        
-            ym(110064832, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-        </script>
-        <noscript><div><img src="https://mc.yandex.ru/watch/110064832" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    <!-- /Yandex.Metrika counter -->
 </body>
 </html>
