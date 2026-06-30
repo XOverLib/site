@@ -995,12 +995,30 @@
 
     function populateAdvFields() {
         const fieldSelect = document.getElementById('advField');
-        const fields = ['Язык', 'Тип литературы', 'Авторы', 'Серия', 'Издательство оригинал', 'Издательство РФ', 'Вселенная', 'Год издания'];
+        // Очищаем список
         fieldSelect.innerHTML = '<option value="">Выберите поле...</option>';
-        fields.forEach(f => {
+    
+        // Собираем все ключи из всех объектов allData
+        const allKeys = new Set();
+        allData.forEach(item => {
+            Object.keys(item).forEach(key => {
+                // Исключаем служебные поля и поля с пустыми значениями
+                if (key && key.trim() !== '' && key !== 'ID_альбома' && key !== 'Название_альбома') {
+                    // Проверяем, есть ли у этого поля хоть одно значение
+                    const hasValue = allData.some(obj => obj[key] && obj[key].toString().trim() !== '');
+                    if (hasValue) {
+                        allKeys.add(key);
+                    }
+                }
+            });
+        });
+    
+        // Сортируем и добавляем в выпадающий список
+        const sortedKeys = Array.from(allKeys).sort();
+        sortedKeys.forEach(key => {
             const opt = document.createElement('option');
-            opt.value = f;
-            opt.textContent = f;
+            opt.value = key;
+            opt.textContent = key;
             fieldSelect.appendChild(opt);
         });
     }
