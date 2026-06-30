@@ -888,16 +888,13 @@
     // ============================================================
     function loadCatalog() {
         fetch('catalog.json')
-            .then(res => {
-                if (!res.ok) throw new Error('Не удалось загрузить каталог');
-                return res.json();
-            })
+            .then(res => res.json())
             .then(data => {
                 allData = data;
                 populateAdvFields();
                 applyFilters();
                 setView(currentView);
-
+    
                 // ===== АВТО-ОТКРЫТИЕ ПО ID ИЗ URL =====
                 const urlParams = new URLSearchParams(window.location.search);
                 const id = urlParams.get('id');
@@ -905,7 +902,6 @@
                     const index = parseInt(id);
                     if (!isNaN(index) && index >= 0 && index < allData.length) {
                         const item = allData[index];
-                        // Находим позицию в filteredData
                         let filteredIndex = filteredData.indexOf(item);
                         if (filteredIndex === -1) {
                             resetFilters();
@@ -922,7 +918,7 @@
                         }
                     }
                 }
-                // =====================================
+                // ================================================
             })
             .catch(err => {
                 document.getElementById('catalogBody').innerHTML =
