@@ -1080,7 +1080,7 @@
                 } else {
                     coverHtml = `<span class="no-cover">${t('no_cover')}</span>`;
                 }
-                return `<tr onclick="openCard(${start + idx})">
+                return `<tr onclick="openCard(currentPage, ${idx})"> ... </tr>`;
                     <td class="col-cover">${coverHtml}</td>
                     <td class="col-title">${item['Название'] || ''}</td>
                     <td class="col-series">${item['Серия'] || ''}</td>
@@ -1109,7 +1109,7 @@
                 } else {
                     coverHtml = `<div class="no-cover">${t('no_cover_grid')}</div>`;
                 }
-                return `<div class="grid-item" onclick="openCard(${start + idx})">
+                return `<div class="grid-item" onclick="openCard(currentPage, ${idx})"> ... </div>`;
                     <div class="grid-cover">${coverHtml}</div>
                     <div class="grid-info">
                         <div class="grid-title">${item['Название'] || 'Без названия'}</div>
