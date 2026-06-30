@@ -907,6 +907,8 @@
     const perPage = 25;
     let advField = '';
     let advValue = '';
+    let currentCardIndex = 0;
+    let currentCardPage = 1;
 
     const tooltip = document.getElementById('coverTooltip');
     const tooltipImg = document.getElementById('tooltipImage');
@@ -1264,9 +1266,7 @@
     // ============================================================
     function openCard(page, pageIndex) {
         // ===== ПЕРЕКЛЮЧАЕМ СТРАНИЦУ =====
-        console.log('🔄 openCard: переключаем на страницу', page);
         goToPage(page);
-        console.log('🔄 после goToPage, currentPage =', currentPage);
     
         // ===== ЖДЁМ ОТРИСОВКИ, ПОТОМ ОТКРЫВАЕМ МОДАЛКУ =====
         setTimeout(() => {
@@ -1282,6 +1282,11 @@
             // ==========================================
     
             document.getElementById('modalTitle').textContent = item['Название'] || 'Без названия';
+
+            // ===== СОХРАНЯЕМ ТЕКУЩУЮ ПОЗИЦИЮ =====
+            currentCardIndex = pageIndex;
+            currentCardPage = page;
+            // =====================================
     
             // ===== ОБЛОЖКА =====
             const coverContainer = document.getElementById('modalCover');
@@ -1396,27 +1401,23 @@
     
     function prevCard() {
         if (currentCardIndex > 0) {
-            openCard(currentPage, currentCardIndex - 1);
-        } else if (currentPage > 1) {
+            // Просто переключаем на предыдущую книгу на той же странице
+            openCard(currentCardPage, currentCardIndex - 1);
+        } else if (currentCardPage > 1) {
             // Переход на предыдущую страницу, на последний элемент
-            goToPage(currentPage - 1);
-            setTimeout(() => {
-                const lastIndex = Math.min(perPage, filteredData.length - (currentPage - 1) * perPage) - 1;
-                openCard(currentPage, lastIndex);
-            }, 300);
+            const prevPage = currentCardPage - 1;
+            const lastIndex = Math.min(perPage - 1, filteredData.length - (prevPage - 1) * perPage - 1);
+            openCard(prevPage, lastIndex);
         }
     }
     
     function nextCard() {
-        const totalOnPage = Math.min(perPage, filteredData.length - (currentPage - 1) * perPage);
+        const totalOnPage = Math.min(perPage, filteredData.length - (currentCardPage - 1) * perPage);
         if (currentCardIndex < totalOnPage - 1) {
-            openCard(currentPage, currentCardIndex + 1);
-        } else if (currentPage * perPage < filteredData.length) {
+            openCard(currentCardPage, currentCardIndex + 1);
+        } else if (currentCardPage * perPage < filteredData.length) {
             // Переход на следующую страницу, на первый элемент
-            goToPage(currentPage + 1);
-            setTimeout(() => {
-                openCard(currentPage, 0);
-            }, 300);
+            openCard(currentCardPage + 1, 0);
         }
     }
 
