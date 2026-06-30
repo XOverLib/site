@@ -1216,7 +1216,9 @@
     // ============================================================
     function openCard(page, pageIndex) {
         // ===== ПЕРЕКЛЮЧАЕМ СТРАНИЦУ =====
+        console.log('🔄 openCard: переключаем на страницу', page);
         goToPage(page);
+        console.log('🔄 после goToPage, currentPage =', currentPage);
     
         // ===== ЖДЁМ ОТРИСОВКИ, ПОТОМ ОТКРЫВАЕМ МОДАЛКУ =====
         setTimeout(() => {
