@@ -1223,7 +1223,7 @@
         const item = filteredData[index];
         if (!item) return;
 
-        / ===== МЕНЯЕМ URL НА ИНДЕКС В allData =====
+        // ===== МЕНЯЕМ URL НА ИНДЕКС В allData =====
         const indexInAllData = allData.indexOf(item);
         const newUrl = `${window.location.pathname}?id=${indexInAllData}`;
         window.history.pushState({ id: indexInAllData }, '', newUrl);
