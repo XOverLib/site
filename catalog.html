@@ -887,7 +887,6 @@
     //  ЗАГРУЗКА
     // ============================================================
     function loadCatalog() {
-        console.log('=== loadCatalog ===');
         fetch('catalog.json')
             .then(res => {
                 if (!res.ok) throw new Error('Не удалось загрузить каталог');
@@ -895,62 +894,32 @@
             })
             .then(data => {
                 allData = data;
-                console.log('allData.length:', allData.length);
-                
                 populateAdvFields();
                 applyFilters();
                 setView(currentView);
     
-                console.log('filteredData.length:', filteredData.length);
-                console.log('currentPage:', currentPage);
-    
                 // ===== АВТО-ОТКРЫТИЕ ПО ID ИЗ URL =====
                 const urlParams = new URLSearchParams(window.location.search);
                 const id = urlParams.get('id');
-                console.log('id из URL:', id);
-    
                 if (id !== null) {
                     const index = parseInt(id);
-                    console.log('index (парсинг):', index);
                     if (!isNaN(index) && index >= 0 && index < allData.length) {
                         const item = allData[index];
-                        console.log('Книга по индексу:', item ? item['Название'] : 'не найдена');
-    
                         let filteredIndex = filteredData.indexOf(item);
-                        console.log('filteredIndex (до сброса):', filteredIndex);
-    
                         if (filteredIndex === -1) {
-                            console.log('Сбрасываем фильтры...');
                             resetFilters();
                             filteredIndex = filteredData.indexOf(item);
-                            console.log('filteredIndex (после сброса):', filteredIndex);
                         }
-    
                         if (filteredIndex !== -1) {
                             const page = Math.floor(filteredIndex / perPage) + 1;
-                            console.log('Страница:', page, 'переназначаем currentPage');
-                            currentPage = page;
-    
-                            setTimeout(() => {
-                                const start = (currentPage - 1) * perPage;
-                                const pageIndex = filteredIndex - start;
-                                console.log('pageIndex:', pageIndex);
-                                console.log('Вызываем openCard с pageIndex');
-                                openCard(pageIndex);
-                            }, 500);
-                        } else {
-                            console.log('❌ filteredIndex === -1, книга не найдена после сброса фильтров');
+                            const pageIndex = filteredIndex - (page - 1) * perPage;
+                            openCard(page, pageIndex);
                         }
-                    } else {
-                        console.log('❌ Индекс вне диапазона или не число');
                     }
-                } else {
-                    console.log('ℹ️ ID в URL отсутствует');
                 }
                 // =====================================
             })
             .catch(err => {
-                console.error('❌ Ошибка загрузки каталога:', err);
                 document.getElementById('catalogBody').innerHTML =
                     `<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--accent);">
                         ❌ Ошибка загрузки каталога: ${err.message}
@@ -1245,126 +1214,134 @@
     // ============================================================
     //  МОДАЛКА + ССЫЛКИ
     // ============================================================
-    function openCard(index) {
-        const item = filteredData[index];
-        if (!item) return;
-
-        // ===== МЕНЯЕМ URL НА ИНДЕКС В allData =====
-        const indexInAllData = allData.indexOf(item);
-        const newUrl = `${window.location.pathname}?id=${indexInAllData}`;
-        window.history.pushState({ id: indexInAllData }, '', newUrl);
-        // ==========================================
-
-        document.getElementById('modalTitle').textContent = item['Название'] || 'Без названия';
-
-        // ===== ОБЛОЖКА =====
-        const coverContainer = document.getElementById('modalCover');
-        coverContainer.innerHTML = '';
-        const coverWrapper = document.createElement('div');
-        coverWrapper.style.cssText = `
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-        `;
-        const coverUrl = item['превью'] || '';
-        if (coverUrl && coverUrl.trim() !== '') {
-            const img = document.createElement('img');
-            img.src = coverUrl;
-            img.alt = 'Обложка';
-            img.loading = 'lazy';
-            img.style.cssText = `
+    function openCard(page, pageIndex) {
+        // ===== ПЕРЕКЛЮЧАЕМ СТРАНИЦУ =====
+        goToPage(page);
+    
+        // ===== ЖДЁМ ОТРИСОВКИ, ПОТОМ ОТКРЫВАЕМ МОДАЛКУ =====
+        setTimeout(() => {
+            const start = (page - 1) * perPage;
+            const realIndex = start + pageIndex;
+            const item = filteredData[realIndex];
+            if (!item) return;
+    
+            // ===== МЕНЯЕМ URL НА ИНДЕКС В allData =====
+            const indexInAllData = allData.indexOf(item);
+            const newUrl = `${window.location.pathname}?id=${indexInAllData}`;
+            window.history.pushState({ id: indexInAllData }, '', newUrl);
+            // ==========================================
+    
+            document.getElementById('modalTitle').textContent = item['Название'] || 'Без названия';
+    
+            // ===== ОБЛОЖКА =====
+            const coverContainer = document.getElementById('modalCover');
+            coverContainer.innerHTML = '';
+            const coverWrapper = document.createElement('div');
+            coverWrapper.style.cssText = `
+                display: flex;
+                flex-direction: column;
+                align-items: center;
                 width: 100%;
-                height: auto;
-                max-height: 300px;
-                object-fit: contain;
-                border-radius: 4px;
             `;
-            img.onerror = function() {
-                this.style.display = 'none';
+            const coverUrl = item['превью'] || '';
+            if (coverUrl && coverUrl.trim() !== '') {
+                const img = document.createElement('img');
+                img.src = coverUrl;
+                img.alt = 'Обложка';
+                img.loading = 'lazy';
+                img.style.cssText = `
+                    width: 100%;
+                    height: auto;
+                    max-height: 300px;
+                    object-fit: contain;
+                    border-radius: 4px;
+                `;
+                img.onerror = function() {
+                    this.style.display = 'none';
+                    const msg = document.createElement('div');
+                    msg.className = 'no-cover';
+                    msg.textContent = 'Нет обложки';
+                    coverWrapper.appendChild(msg);
+                };
+                coverWrapper.appendChild(img);
+            } else {
                 const msg = document.createElement('div');
                 msg.className = 'no-cover';
                 msg.textContent = 'Нет обложки';
                 coverWrapper.appendChild(msg);
+            }
+    
+            // ===== КНОПКА БРОНИРОВАНИЯ =====
+            const reserveBtn = document.createElement('button');
+            reserveBtn.textContent = '📚 Забронировать';
+            reserveBtn.style.cssText = `
+                display: block;
+                width: 100%;
+                margin-top: 0.6rem;
+                padding: 0.4rem 0;
+                background: var(--accent);
+                color: white;
+                border: none;
+                border-radius: 6px;
+                font-weight: 600;
+                font-size: 0.85rem;
+                cursor: pointer;
+                transition: background 0.2s;
+                text-align: center;
+            `;
+            reserveBtn.onmouseover = () => reserveBtn.style.background = 'var(--accent-hover)';
+            reserveBtn.onmouseout = () => reserveBtn.style.background = 'var(--accent)';
+            reserveBtn.onclick = () => {
+                reserveBook(item['Название'] || 'Без названия');
             };
-            coverWrapper.appendChild(img);
-        } else {
-            const msg = document.createElement('div');
-            msg.className = 'no-cover';
-            msg.textContent = 'Нет обложки';
-            coverWrapper.appendChild(msg);
-        }
-
-        // ===== КНОПКА БРОНИРОВАНИЯ =====
-        const reserveBtn = document.createElement('button');
-        reserveBtn.textContent = '📚 Забронировать';
-        reserveBtn.style.cssText = `
-            display: block;
-            width: 100%;
-            margin-top: 0.6rem;
-            padding: 0.4rem 0;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: background 0.2s;
-            text-align: center;
-        `;
-        reserveBtn.onmouseover = () => reserveBtn.style.background = 'var(--accent-hover)';
-        reserveBtn.onmouseout = () => reserveBtn.style.background = 'var(--accent)';
-        reserveBtn.onclick = () => {
-            reserveBook(item['Название'] || 'Без названия');
-        };
-        coverWrapper.appendChild(reserveBtn);
-        coverContainer.appendChild(coverWrapper);
-
-        // ===== ПОЛЯ =====
-        const fieldsContainer = document.getElementById('modalFields');
-        fieldsContainer.innerHTML = '';
-        const grid = document.createElement('div');
-        grid.className = 'fields-grid';
-
-        const allFieldKeys = [
-            'Название', 'Тип литературы', 'Серия', 'Подсерия', 
-            'Номер в серии', 'Номер в подсерии', 'Выпуски (если есть)',
-            'Авторы', 'Издательство оригинал', 'Издательство РФ',
-            'ISBN', 'Тираж', 'Вселенная', 'Тип издания', 
-            'Размеры', 'Масса', 'Бумага', 'Издание',
-            'Страницы', 'Число издания', 'Месяц издания',
-            'Год издания', 'Год переиздания', 'Страна', 'Язык', 'Количество'
-        ];
-
-        allFieldKeys.forEach(fieldKey => {
-            const value = item[fieldKey];
-            const hasValue = value && String(value).trim() !== '';
-            if (hasValue) {
+            coverWrapper.appendChild(reserveBtn);
+            coverContainer.appendChild(coverWrapper);
+    
+            // ===== ПОЛЯ =====
+            const fieldsContainer = document.getElementById('modalFields');
+            fieldsContainer.innerHTML = '';
+            const grid = document.createElement('div');
+            grid.className = 'fields-grid';
+    
+            const allFieldKeys = [
+                'Название', 'Тип литературы', 'Серия', 'Подсерия', 
+                'Номер в серии', 'Номер в подсерии', 'Выпуски (если есть)',
+                'Авторы', 'Издательство оригинал', 'Издательство РФ',
+                'ISBN', 'Тираж', 'Вселенная', 'Тип издания', 
+                'Размеры', 'Масса', 'Бумага', 'Издание',
+                'Страницы', 'Число издания', 'Месяц издания',
+                'Год издания', 'Год переиздания', 'Страна', 'Язык', 'Количество'
+            ];
+    
+            allFieldKeys.forEach(fieldKey => {
+                const value = item[fieldKey];
+                const hasValue = value && String(value).trim() !== '';
+                if (hasValue) {
+                    const div = document.createElement('div');
+                    div.className = 'field';
+                    div.innerHTML = `
+                        <div class="field-label">${fieldKey}</div>
+                        <div class="field-value">${value}</div>
+                    `;
+                    grid.appendChild(div);
+                }
+            });
+    
+            if (grid.children.length === 0) {
                 const div = document.createElement('div');
                 div.className = 'field';
-                div.innerHTML = `
-                    <div class="field-label">${fieldKey}</div>
-                    <div class="field-value">${value}</div>
-                `;
+                div.style.gridColumn = '1 / -1';
+                div.style.textAlign = 'center';
+                div.style.padding = '1rem';
+                div.style.color = 'var(--text-muted)';
+                div.textContent = 'Нет дополнительных данных';
                 grid.appendChild(div);
             }
-        });
-
-        if (grid.children.length === 0) {
-            const div = document.createElement('div');
-            div.className = 'field';
-            div.style.gridColumn = '1 / -1';
-            div.style.textAlign = 'center';
-            div.style.padding = '1rem';
-            div.style.color = 'var(--text-muted)';
-            div.textContent = 'Нет дополнительных данных';
-            grid.appendChild(div);
-        }
-
-        fieldsContainer.appendChild(grid);
-        document.getElementById('modalOverlay').classList.add('open');
-        document.body.style.overflow = 'hidden';
+    
+            fieldsContainer.appendChild(grid);
+            document.getElementById('modalOverlay').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }, 300);
     }
 
     function openCardById(id) {
