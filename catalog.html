@@ -471,6 +471,30 @@
             position: relative;
             color: var(--text-primary);
         }
+        .modal-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            font-size: 3rem;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            z-index: 10;
+            border-radius: 8px;
+            transition: 0.2s;
+            line-height: 1;
+        }
+        .modal-nav:hover {
+            background: rgba(0,0,0,0.8);
+        }
+        .modal-nav-left {
+            left: 10px;
+        }
+        .modal-nav-right {
+            right: 10px;
+        }
         .modal-close {
             position: absolute;
             top: 1rem;
@@ -693,8 +717,8 @@
     <div class="view-toggle">
         <span class="label" id="viewLabel">Вид отображения:</span>
         <div class="buttons">
-            <button id="viewList" class="active" onclick="setView('list')">📋 Список</button>
-            <button id="viewGrid" onclick="setView('grid')">📐 Плитка</button>
+            <button id="viewList" onclick="setView('list')">📋 Список</button>
+            <button id="viewGrid" class="active" onclick="setView('grid')">📐 Плитка</button>
         </div>
     </div>
 
@@ -737,6 +761,12 @@
 <div class="modal-overlay" id="modalOverlay">
     <div class="modal" id="modal">
         <button class="modal-close" onclick="closeModal()">✕</button>
+        
+        <!-- ===== СТРЕЛКИ ===== -->
+        <button class="modal-nav modal-nav-left" onclick="prevCard()">‹</button>
+        <button class="modal-nav modal-nav-right" onclick="nextCard()">›</button>
+        <!-- ==================== -->
+
         <h2 id="modalTitle">Название</h2>
         <div class="card-layout" id="modalBody">
             <div class="card-cover" id="modalCover"></div>
@@ -855,7 +885,7 @@
     // ============================================================
     //  ВИД
     // ============================================================
-    const savedView = localStorage.getItem('view') || 'list';
+    const savedView = localStorage.getItem('view') || 'grid';
     let currentView = savedView;
 
     function setView(view) {
@@ -1219,6 +1249,16 @@
         window.scrollTo({ top: document.querySelector('.view-toggle').offsetTop - 20, behavior: 'smooth' });
     }
 
+    function getCurrentCardIndex() {
+        // Получаем текущий элемент из модалки
+        const title = document.getElementById('modalTitle').textContent;
+        // Ищем книгу в filteredData по названию (или можно хранить индекс в переменной)
+        // Но проще: хранить текущий индекс в глобальной переменной
+        return currentCardIndex;
+    }
+    
+    let currentCardIndex = 0; // глобальная переменная
+
     // ============================================================
     //  МОДАЛКА + ССЫЛКИ
     // ============================================================
@@ -1353,6 +1393,32 @@
             document.body.style.overflow = 'hidden';
         }, 300);
     }
+    
+    function prevCard() {
+        if (currentCardIndex > 0) {
+            openCard(currentPage, currentCardIndex - 1);
+        } else if (currentPage > 1) {
+            // Переход на предыдущую страницу, на последний элемент
+            goToPage(currentPage - 1);
+            setTimeout(() => {
+                const lastIndex = Math.min(perPage, filteredData.length - (currentPage - 1) * perPage) - 1;
+                openCard(currentPage, lastIndex);
+            }, 300);
+        }
+    }
+    
+    function nextCard() {
+        const totalOnPage = Math.min(perPage, filteredData.length - (currentPage - 1) * perPage);
+        if (currentCardIndex < totalOnPage - 1) {
+            openCard(currentPage, currentCardIndex + 1);
+        } else if (currentPage * perPage < filteredData.length) {
+            // Переход на следующую страницу, на первый элемент
+            goToPage(currentPage + 1);
+            setTimeout(() => {
+                openCard(currentPage, 0);
+            }, 300);
+        }
+    }
 
     function openCardById(id) {
         const index = parseInt(id);
@@ -1399,6 +1465,19 @@
 
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') closeModal();
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (!document.getElementById('modalOverlay').classList.contains('open')) return;
+        if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            prevCard();
+        } else if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            nextCard();
+        } else if (e.key === 'Escape') {
+            closeModal();
+        }
     });
 
     // ============================================================
