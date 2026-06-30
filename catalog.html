@@ -887,40 +887,70 @@
     //  ЗАГРУЗКА
     // ============================================================
     function loadCatalog() {
+        console.log('=== loadCatalog ===');
         fetch('catalog.json')
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) throw new Error('Не удалось загрузить каталог');
+                return res.json();
+            })
             .then(data => {
                 allData = data;
+                console.log('allData.length:', allData.length);
+                
                 populateAdvFields();
                 applyFilters();
                 setView(currentView);
     
+                console.log('filteredData.length:', filteredData.length);
+                console.log('currentPage:', currentPage);
+    
                 // ===== АВТО-ОТКРЫТИЕ ПО ID ИЗ URL =====
                 const urlParams = new URLSearchParams(window.location.search);
                 const id = urlParams.get('id');
+                console.log('id из URL:', id);
+    
                 if (id !== null) {
                     const index = parseInt(id);
+                    console.log('index (парсинг):', index);
                     if (!isNaN(index) && index >= 0 && index < allData.length) {
                         const item = allData[index];
+                        console.log('Книга по индексу:', item ? item['Название'] : 'не найдена');
+    
                         let filteredIndex = filteredData.indexOf(item);
+                        console.log('filteredIndex (до сброса):', filteredIndex);
+    
                         if (filteredIndex === -1) {
+                            console.log('Сбрасываем фильтры...');
                             resetFilters();
                             filteredIndex = filteredData.indexOf(item);
+                            console.log('filteredIndex (после сброса):', filteredIndex);
                         }
+    
                         if (filteredIndex !== -1) {
                             const page = Math.floor(filteredIndex / perPage) + 1;
+                            console.log('Страница:', page, 'переназначаем currentPage');
                             currentPage = page;
+    
                             setTimeout(() => {
                                 const start = (currentPage - 1) * perPage;
                                 const pageIndex = filteredIndex - start;
+                                console.log('pageIndex:', pageIndex);
+                                console.log('Вызываем openCard с pageIndex');
                                 openCard(pageIndex);
-                            }, 300);
+                            }, 500);
+                        } else {
+                            console.log('❌ filteredIndex === -1, книга не найдена после сброса фильтров');
                         }
+                    } else {
+                        console.log('❌ Индекс вне диапазона или не число');
                     }
+                } else {
+                    console.log('ℹ️ ID в URL отсутствует');
                 }
-                // ================================================
+                // =====================================
             })
             .catch(err => {
+                console.error('❌ Ошибка загрузки каталога:', err);
                 document.getElementById('catalogBody').innerHTML =
                     `<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--accent);">
                         ❌ Ошибка загрузки каталога: ${err.message}
