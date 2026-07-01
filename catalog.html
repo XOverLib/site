@@ -1545,11 +1545,12 @@
             font-size: 0.95rem;
             cursor: pointer;
         `;
+        fileBtn.style.display = 'none'; // скрыта по умолчанию
+    
         const fileInput = document.createElement('input');
         fileInput.type = 'file';
         fileInput.accept = 'image/*';
         fileInput.style.display = 'none';
-        fileBtn.onclick = () => fileInput.click();
         // =================================
     
         const cancelBtn = document.createElement('button');
@@ -1597,10 +1598,12 @@
         document.addEventListener('keydown', escHandler);
     
         // ===== ОБРАБОТКА ЗАГРУЗКИ ФОТО =====
+        fileBtn.onclick = () => fileInput.click();
+    
         fileInput.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
-            
+    
             statusMsg.textContent = '⏳ Распознавание QR-кода...';
             const reader = new FileReader();
             reader.onload = function(ev) {
@@ -1612,8 +1615,7 @@
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0);
                     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                    
-                    // Пробуем распознать через jsQR
+    
                     const code = jsQR(imageData.data, imageData.width, imageData.height);
                     if (code && code.data) {
                         statusMsg.textContent = '✅ QR-код распознан!';
