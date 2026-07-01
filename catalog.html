@@ -1658,7 +1658,7 @@
             statusMsg.textContent = '✅ Камера работает, наведите на QR-код';
         } catch (err) {
             console.warn('Ошибка камеры:', err);
-            statusMsg.textContent = '❌ Камера не доступна. Используйте загрузку фото.';
+            statusMsg.textContent = '❌ Камера недоступна. Используйте загрузку фото.';
             container.style.display = 'none';
             fileBtn.style.display = 'block';
         }
