@@ -1686,8 +1686,11 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
+            // ===== ПОКАЗЫВАЕМ СООБЩЕНИЕ ОБ УСПЕХЕ =====
+            alert('✅ Книга забронирована! Администратор увидит заявку в таблице.');
         } catch (error) {
             console.error('Ошибка:', error);
+            alert('❌ Ошибка бронирования. Попробуйте позже.');
         }
     }
 </script>
