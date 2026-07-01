@@ -654,6 +654,7 @@
         }
     </style>
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
     <script src="config.js"></script>
 </head>
 <body>
@@ -1483,6 +1484,7 @@
     //  БРОНИРОВАНИЕ
     // ============================================================
     async function reserveBook(bookTitle) {
+        // Создаём оверлей
         const overlay = document.createElement('div');
         overlay.style.cssText = `
             position: fixed;
@@ -1499,6 +1501,7 @@
             padding: 1rem;
         `;
     
+        // Контейнер для камеры
         const container = document.createElement('div');
         container.id = 'qr-reader';
         container.style.cssText = `
@@ -1530,9 +1533,10 @@
             justify-content: center;
         `;
     
-        const manualBtn = document.createElement('button');
-        manualBtn.textContent = '⌨ Ввести вручную';
-        manualBtn.style.cssText = `
+        // ===== КНОПКА ЗАГРУЗКИ ФОТО =====
+        const fileBtn = document.createElement('button');
+        fileBtn.textContent = '📁 Загрузить фото QR-кода';
+        fileBtn.style.cssText = `
             padding: 0.6rem 1.5rem;
             background: var(--accent, #c44536);
             color: white;
@@ -1541,6 +1545,12 @@
             font-size: 0.95rem;
             cursor: pointer;
         `;
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = 'image/*';
+        fileInput.style.display = 'none';
+        fileBtn.onclick = () => fileInput.click();
+        // =================================
     
         const cancelBtn = document.createElement('button');
         cancelBtn.textContent = '❌ Отмена';
@@ -1554,7 +1564,8 @@
             cursor: pointer;
         `;
     
-        controls.appendChild(manualBtn);
+        controls.appendChild(fileBtn);
+        controls.appendChild(fileInput);
         controls.appendChild(cancelBtn);
         overlay.appendChild(controls);
         document.body.appendChild(overlay);
@@ -1573,14 +1584,6 @@
             }
         }
     
-        manualBtn.onclick = () => {
-            cleanup();
-            const qrData = prompt('Введите строку из QR-кода:');
-            if (qrData) {
-                sendReservation(bookTitle, qrData);
-            }
-        };
-    
         cancelBtn.onclick = () => {
             cleanup();
         };
@@ -1592,6 +1595,41 @@
             }
         };
         document.addEventListener('keydown', escHandler);
+    
+        // ===== ОБРАБОТКА ЗАГРУЗКИ ФОТО =====
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            statusMsg.textContent = '⏳ Распознавание QR-кода...';
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    
+                    // Пробуем распознать через jsQR
+                    const code = jsQR(imageData.data, imageData.width, imageData.height);
+                    if (code && code.data) {
+                        statusMsg.textContent = '✅ QR-код распознан!';
+                        cleanup();
+                        document.removeEventListener('keydown', escHandler);
+                        sendReservation(bookTitle, code.data);
+                    } else {
+                        statusMsg.textContent = '❌ Не удалось распознать QR-код. Попробуйте другое фото.';
+                    }
+                };
+                img.src = ev.target.result;
+            };
+            reader.readAsDataURL(file);
+            fileInput.value = '';
+        });
+        // ==================================
     
         try {
             const Html5Qrcode = window.Html5Qrcode;
@@ -1619,13 +1657,10 @@
             );
             statusMsg.textContent = '✅ Камера работает, наведите на QR-код';
         } catch (err) {
-            console.warn('Ошибка:', err);
-            cleanup();
-            document.removeEventListener('keydown', escHandler);
-            const qrData = prompt('Не удалось открыть камеру. Введите строку из QR-кода:');
-            if (qrData) {
-                sendReservation(bookTitle, qrData);
-            }
+            console.warn('Ошибка камеры:', err);
+            statusMsg.textContent = '❌ Камера не доступна. Используйте загрузку фото.';
+            container.style.display = 'none';
+            fileBtn.style.display = 'block';
         }
     }
     
