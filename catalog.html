@@ -920,7 +920,7 @@
     //  ЗАГРУЗКА
     // ============================================================
     function loadCatalog() {
-        fetch('catalog.json')
+        fetch('https://raw.githubusercontent.com/XOverLib/site/main/catalog.json')
             .then(res => {
                 if (!res.ok) throw new Error('Не удалось загрузить каталог');
                 return res.json();
