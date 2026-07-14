@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -51,11 +51,6 @@
             background: #c44536;
             color: #fff;
         }
-        .lang-btn svg {
-            height: 1.2em;
-            vertical-align: middle;
-        }
-
         .logo-area {
             display: flex;
             align-items: center;
@@ -66,7 +61,6 @@
             height: 60px;
             width: auto;
         }
-
         h1 {
             font-size: 3rem;
             font-weight: 700;
@@ -99,7 +93,6 @@
             font-weight: 300;
             color: #c44536;
         }
-
         .section-title {
             font-size: 1.8rem;
             font-weight: 600;
@@ -130,7 +123,6 @@
             font-size: 0.9rem;
             color: #c44536;
         }
-
         ul {
             padding-left: 1.5rem;
             margin: 0.8rem 0 1.5rem;
@@ -180,13 +172,6 @@
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.06);
         }
-        .recent-item .caption {
-            margin-top: 0.4rem;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: #0b1a2e;
-        }
-
         @media (max-width: 600px) {
             h1 {
                 font-size: 2.2rem;
@@ -292,6 +277,7 @@
     <script>
         let translations = {};
         let stats = {};
+        let catalogData = [];
 
         // ===== ЗАГРУЗКА ДАННЫХ =====
         async function loadTranslations() {
@@ -306,6 +292,17 @@
             return stats;
         }
 
+        async function loadCatalog() {
+            try {
+                const response = await fetch('catalog.json');
+                catalogData = await response.json();
+                return catalogData;
+            } catch (error) {
+                console.error('Ошибка загрузки каталога:', error);
+                return [];
+            }
+        }
+
         // ===== ПОДСТАНОВКА ЧИСЕЛ =====
         function replacePlaceholders(text) {
             if (!text) return text;
@@ -313,6 +310,32 @@
                 text = text.replace(new RegExp(`\\{${key}\\}`, 'g'), value);
             }
             return text;
+        }
+
+        // ===== ОТРИСОВКА ПОСЛЕДНИХ ПОСТУПЛЕНИЙ (ТОЛЬКО КАРТИНКИ) =====
+        function renderRecentItems() {
+            const grid = document.getElementById('recent-grid');
+            grid.innerHTML = '';
+
+            if (!catalogData || catalogData.length === 0) {
+                grid.innerHTML = '<p style="color: #999; text-align: center;">Нет данных</p>';
+                return;
+            }
+
+            // Берём последние 4 записи (новые — в конце)
+            const recent = catalogData.slice(-4).reverse();
+
+            recent.forEach(item => {
+                const cover = item['превью'] || '';
+                if (cover && cover.trim() !== '') {
+                    const div = document.createElement('div');
+                    div.className = 'recent-item';
+                    div.innerHTML = `
+                        <img src="${cover}" alt="Обложка" onerror="this.style.display='none'">
+                    `;
+                    grid.appendChild(div);
+                }
+            });
         }
 
         // ===== УСТАНОВКА ЯЗЫКА =====
@@ -353,31 +376,18 @@
             document.getElementById('nav_title').textContent = tr('nav_title');
             document.getElementById('nav_vk').textContent = tr('nav_vk');
             document.getElementById('nav_tg').textContent = tr('nav_tg');
-            document.getElementById('nav_gcd').textContent = tr('nav_gcd');
             document.getElementById('nav_arrow').textContent = tr('nav_arrow');
             document.getElementById('nav_catalog').textContent = tr('nav_catalog');
             document.getElementById('footer').innerHTML = tr('footer');
 
-            // ===== ЧИСЛА В GCD СТАТИСТИКЕ (берутся напрямую из stats) =====
+            // ===== ЧИСЛА В GCD СТАТИСТИКЕ =====
             document.getElementById('stat_imp').textContent = stats.imp || '';
             document.getElementById('stat_world').textContent = stats.world_rank_number || '';
             document.getElementById('stat_russia').textContent = stats.russia_rank_number || '';
             document.getElementById('stat_gap').textContent = stats.gap || '';
 
-            // ===== КАРТИНКИ =====
-            const grid = document.getElementById('recent-grid');
-            grid.innerHTML = '';
-            if (t.recent_items && t.recent_items.length > 0) {
-                t.recent_items.forEach(item => {
-                    const div = document.createElement('div');
-                    div.className = 'recent-item';
-                    div.innerHTML = `
-                        <img src="${item.img}" alt="${item.caption}">
-                        <div class="caption">${item.caption}</div>
-                    `;
-                    grid.appendChild(div);
-                });
-            }
+            // ===== ПОСЛЕДНИЕ ПОСТУПЛЕНИЯ (только картинки) =====
+            renderRecentItems();
 
             // ===== АКТИВНАЯ КНОПКА ЯЗЫКА =====
             document.querySelectorAll('.lang-btn').forEach(btn => {
@@ -390,7 +400,7 @@
         // ===== ЗАПУСК =====
         document.addEventListener('DOMContentLoaded', async () => {
             try {
-                await Promise.all([loadTranslations(), loadStats()]);
+                await Promise.all([loadTranslations(), loadStats(), loadCatalog()]);
                 setLanguage('ru');
             } catch (error) {
                 console.error('Ошибка загрузки данных:', error);
